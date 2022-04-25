@@ -4,7 +4,7 @@ import { filterMemberItems } from "../store/selectors";
 import { useSelector } from "react-redux";
 import { FONTS, SIZES, COLORS } from "../constants";
 
-export default function SellerOtherItems({ sellerId, itemId, navigation }) {
+export default function SellerOtherItems({ userId, sellerId, itemId, navigation }) {
   const getOtherItems = useMemo(filterMemberItems, []);
   const otherItems = useSelector((state) =>
     getOtherItems(state, sellerId, itemId, "four-other-items")
@@ -28,6 +28,7 @@ export default function SellerOtherItems({ sellerId, itemId, navigation }) {
             key={itemId}
             onPress={() => {
               navigation.navigate("ItemDetails", {
+                userId,
                 sellerId,
                 itemId,
               });

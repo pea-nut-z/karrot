@@ -20,7 +20,7 @@ export default function NotificationsTabs({ route, navigation }) {
         />
       </View>
       <MaterialTopTabs.Navigator
-        tabBarOptions={{ indicatorStyle: { backgroundColor: COLORS.primary } }}
+        screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
       >
         <MaterialTopTabs.Screen
           name="Activity"

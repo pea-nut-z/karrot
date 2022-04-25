@@ -30,7 +30,7 @@ export default function ItemDetails({ route, navigation }) {
     return state["listings"][sellerId][itemId];
   });
 
-  const itemImages = item.images;
+  const images = item.images;
   const useImgStyle = typeof item.images[0] === "number" ? false : true;
 
   // USER'S FAVOURITES
@@ -49,11 +49,13 @@ export default function ItemDetails({ route, navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({
-      type: actions.ITEM_VIEW_INCREMENTED,
-      sellerId,
-      itemId,
-    });
+    if (userId !== sellerId) {
+      dispatch({
+        type: actions.ITEM_VIEW_INCREMENTED,
+        sellerId,
+        itemId,
+      });
+    }
   }, []);
 
   return (
@@ -75,7 +77,7 @@ export default function ItemDetails({ route, navigation }) {
       </View>
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         {/* HEADER ADJESTMENT */}
-        {useImgStyle && <ImageScrollView images={itemImages} />}
+        {useImgStyle && <ImageScrollView images={images} />}
         {!useImgStyle && <View style={{ height: 105 }} />}
 
         {/* SELLER INFO */}
@@ -242,7 +244,12 @@ export default function ItemDetails({ route, navigation }) {
               </TouchableOpacity>
             </View>
             {/* FOUR OTHER ITEMS */}
-            <SellerOtherItems sellerId={sellerId} itemId={itemId} navigation={navigation} />
+            <SellerOtherItems
+              userId={userId}
+              sellerId={sellerId}
+              itemId={itemId}
+              navigation={navigation}
+            />
           </View>
         )}
       </KeyboardAwareScrollView>

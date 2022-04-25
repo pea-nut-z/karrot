@@ -78,14 +78,15 @@ const CustomTabBar = (props) => {
 export default function BottomMainTabs() {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        showLabel: false,
-        style: {
-          borderTopWidth: 0,
-          elevation: 0,
-
-          backgroundColor: "transparent",
-        },
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: [
+          {
+            display: "flex",
+          },
+          null,
+        ],
       }}
       tabBar={(props) => <CustomTabBar props={props} />}
     >

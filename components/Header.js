@@ -212,8 +212,6 @@ export default function Header({
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
         {useRightBtns &&
@@ -243,7 +241,7 @@ export default function Header({
           <View
             style={{
               flexDirection: "row",
-              // justifyContent: "space-between",
+              justifyContent: "space-between",
               alignItems: "center",
             }}
           >
@@ -272,7 +270,6 @@ export default function Header({
               <Text
                 style={{
                   ...styles.boldText,
-                  width: 210,
                 }}
               >
                 {title}

@@ -14,7 +14,7 @@ export default function UserItemsTabs({ route, navigation }) {
     <>
       <Header navigation={navigation} title={"Listings"} useBackBtn={true} />
       <MaterialTopTabs.Navigator
-        tabBarOptions={{ indicatorStyle: { backgroundColor: COLORS.primary } }}
+        screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
       >
         <MaterialTopTabs.Screen
           name="Active"

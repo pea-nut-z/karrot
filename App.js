@@ -5,7 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {
   // Login,
   // Signup,
-  Home,
   Sell,
   ItemDetails,
   Categories,
@@ -45,13 +44,13 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={"Home"}
+          initialRouteName={"BottomMainTabs"}
           // initialRouteName={"Login"}
         >
           {/* HOME */}
           {/* <Stack.Screen name="Login" component={Login} /> */}
           {/* <Stack.Screen name="Signup" component={Signup} /> */}
-          <Stack.Screen name="Home" component={BottomMainTabs} />
+          <Stack.Screen name="BottomMainTabs" component={BottomMainTabs} />
           <Stack.Screen name="Sell" component={Sell} />
           <Stack.Screen name="SellerItemsTabs" component={SellerItemsTabs} />
           {/* CATEGORIES */}

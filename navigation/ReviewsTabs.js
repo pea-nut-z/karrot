@@ -15,7 +15,7 @@ export default function ReviewsTabs({ route, navigation }) {
         <Header title={"Reviews"} navigation={navigation} useBackBtn={true} />
       </View>
       <MaterialTopTabs.Navigator
-        tabBarOptions={{ indicatorStyle: { backgroundColor: COLORS.primary } }}
+        screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
       >
         <MaterialTopTabs.Screen
           name="All"

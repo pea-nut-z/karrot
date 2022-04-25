@@ -85,7 +85,7 @@ export default function Rate({ route, navigation }) {
       <View style={{ flex: 7, ...styles.container }}>
         <Text style={styles.subtitle}>Add a written review</Text>
         <Textarea
-          style={{
+          containerStyle={{
             height: 200,
             ...styles.inputContainer,
           }}

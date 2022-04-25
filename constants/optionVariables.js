@@ -1,21 +1,21 @@
-import {icons} from '.';
+import { icons } from ".";
 
 // CATEGORY
 export const categoryOptions = [
   {
-    name: 'Electronics',
+    name: "Electronics",
     icon: icons.electronics,
   },
   {
-    name: 'Furniture',
+    name: "Furniture",
     icon: icons.furniture,
   },
   {
-    name: 'Home, garden & DIY',
+    name: "Home, garden & DIY",
     icon: icons.garden,
   },
   {
-    name: 'Baby & kids',
+    name: "Baby & kids",
     icon: icons.baby,
   },
   {
@@ -27,39 +27,39 @@ export const categoryOptions = [
     icon: icons.menFashion,
   },
   {
-    name: 'Health & beauty',
+    name: "Health & beauty",
     icon: icons.beauty,
   },
   {
-    name: 'Sports & leisure',
+    name: "Sports & leisure",
     icon: icons.sports,
   },
   {
-    name: 'Games, hobbies & crafts',
+    name: "Games, hobbies & crafts",
     icon: icons.games,
   },
   {
-    name: 'Books, music & tickets',
+    name: "Books, music & tickets",
     icon: icons.books,
   },
   {
-    name: 'Pets stuff',
+    name: "Pets stuff",
     icon: icons.pets,
   },
   {
-    name: 'Musical instruments',
+    name: "Musical instruments",
     icon: icons.musical,
   },
   {
-    name: 'Vehicles & parts',
+    name: "Vehicles & parts",
     icon: icons.vehicles,
   },
   {
-    name: 'Other',
+    name: "Other",
     icon: icons.other,
   },
   {
-    name: 'Wanted',
+    name: "Wanted",
     icon: icons.wanted,
   },
 ];
@@ -71,87 +71,76 @@ export const categoryDropDown = categoryOptions.map((category) => ({
 
 export const itemStatusOptions = [
   {
-    label: 'Active',
-    value: 'Active',
+    label: "Active",
+    value: "Active",
   },
   {
-    label: 'Reserved',
-    value: 'Reserved',
+    label: "Reserved",
+    value: "Reserved",
   },
   {
-    label: 'Sold',
-    value: 'Sold',
+    label: "Sold",
+    value: "Sold",
   },
 ];
 
 // MY ACCOUNT
 export const viewOptions = [
   {
-    name: 'Listings',
-    icon: 'list-circle-outline',
+    name: "Listings",
+    icon: "list-circle-outline",
   },
   {
-    name: 'Purchases',
-    icon: 'basket-outline',
+    name: "Purchases",
+    icon: "basket-outline",
   },
   {
-    name: 'Favourites',
-    icon: 'heart-outline',
+    name: "Favourites",
+    icon: "heart-outline",
   },
 ];
 export const locationOptions = [
   {
-    name: 'Neighbourhood setttings',
-    icon: 'location-outline',
+    name: "Neighbourhood setttings",
+    icon: "location-outline",
   },
   {
-    name: 'Verify neighbourhood',
-    icon: 'scan-circle-outline',
+    name: "Verify neighbourhood",
+    icon: "scan-circle-outline",
   },
   {
-    name: 'Search alerts',
-    icon: 'search-circle-outline',
+    name: "Search alerts",
+    icon: "search-circle-outline",
   },
 ];
 
 export const infoOptions = [
   {
-    name: 'Get help',
-    icon: 'information-circle-outline',
+    name: "Get help",
+    icon: "information-circle-outline",
   },
   {
-    name: 'Invite friends',
-    icon: 'mail-outline',
+    name: "Invite friends",
+    icon: "mail-outline",
   },
   {
-    name: 'My rewards',
-    icon: 'gift-outline',
+    name: "My rewards",
+    icon: "gift-outline",
   },
   {
-    name: 'Share ShopApp',
-    icon: 'share-social-outline',
+    name: "Share ShopApp",
+    icon: "share-social-outline",
   },
   {
     name: "What's new?",
-    icon: 'mic-outline',
+    icon: "mic-outline",
   },
   {
-    name: 'FAQs',
-    icon: 'help-circle-outline',
+    name: "FAQs",
+    icon: "help-circle-outline",
   },
   {
-    name: 'Settings',
-    icon: 'settings-outline',
+    name: "Settings",
+    icon: "settings-outline",
   },
 ];
-
-// SEARCH
-// [
-//   'armchair',
-//   'air fryer',
-//   'arm chair',
-//   'apple watch',
-//   'automatic cars',
-//   'airpods',
-//   'audi'
-// ]

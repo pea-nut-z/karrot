@@ -119,9 +119,10 @@ export default function Sell({ route, navigation }) {
       let imgPath;
       if (images.length === 0) {
         categoryOptions.find((obj) => {
-          if (obj.name === category) {
-            imgPath = [obj.icon];
-          }
+          // if (obj.name === category) {
+          //   imgPath = [obj.icon];
+          // }
+          imgPath = obj.name === category ? [obj.icon] : [];
         });
       } else {
         imgPath = images;
