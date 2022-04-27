@@ -14,7 +14,6 @@ export default function ForSale({
   userId,
   navigation,
   submittedSearchString,
-  hideSearchHistory,
   toggleFilterScreen,
   hideSoldItems,
   toggleHideSoldItemsBtn,
@@ -37,50 +36,36 @@ export default function ForSale({
     }
   });
 
-  const renderFilterBtn = () => {
+  const renderFilterBtns = () => {
     if (focused && submittedSearchString && items) {
       let isFilterUsed = Object.values(filters);
       isFilterUsed = isFilterUsed.some(
         (value) =>
           value !== undefined && value !== false && value !== true && value?.length !== 0 && value
       );
-
       return (
-        <TouchableOpacity
-          onPress={() => toggleFilterScreen()}
+        <View
           style={{
             flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            height: 35,
-            paddingHorizontal: SIZES.padding * 2,
           }}
         >
-          <Ionicons name={"funnel-outline"} size={20} color={isFilterUsed ? COLORS.primary : null} />
-          <Text>Filter</Text>
-        </TouchableOpacity>
-      );
-    }
-  };
-  const renderHideSoldItemsBtn = () => {
-    if (focused && submittedSearchString && items) {
-      return (
-        <TouchableOpacity
-          onPress={() => toggleHideSoldItemsBtn()}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            height: 35,
-            paddingHorizontal: SIZES.padding * 2,
-          }}
-        >
-          <Ionicons
-            name="checkmark-circle-outline"
-            size={25}
-            color={hideSoldItems ? COLORS.primary : COLORS.secondary}
-          />
-          <Text>Hide sold items</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => toggleFilterScreen()} style={styles.filterBtn}>
+            <Ionicons
+              name="funnel-outline"
+              size={20}
+              color={isFilterUsed ? COLORS.primary : COLORS.secondary}
+            />
+            <Text> Filter</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => toggleHideSoldItemsBtn()} style={styles.filterBtn}>
+            <Ionicons
+              name="checkmark-circle-outline"
+              size={25}
+              color={hideSoldItems ? COLORS.primary : COLORS.secondary}
+            />
+            <Text> Hide sold items</Text>
+          </TouchableOpacity>
+        </View>
       );
     }
   };
@@ -105,24 +90,13 @@ export default function ForSale({
 
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {renderFilterBtn()}
-        {renderHideSoldItemsBtn()}
-      </View>
+      {renderFilterBtns()}
       {renderNoResultsMsg()}
-      <TouchableWithoutFeedback onPress={() => hideSearchHistory()}>
-        <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
-          <View style={{ paddingBottom: 30 }}>
-            {items && <ItemCards userId={userId} items={items} navigation={navigation} />}
-          </View>
-        </KeyboardAwareScrollView>
-      </TouchableWithoutFeedback>
+      <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+        <View style={{ paddingBottom: 30 }}>
+          {items && <ItemCards userId={userId} items={items} navigation={navigation} />}
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 }
@@ -135,6 +109,13 @@ const styles = StyleSheet.create({
   regularText: {
     // ...FONTS.body4,
     paddingVertical: SIZES.padding,
+  },
+  filterBtn: {
+    flexDirection: "row",
+    width: SIZES.width / 2,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 35,
   },
   noResultContainer: {
     borderWidth: 1,

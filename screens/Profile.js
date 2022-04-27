@@ -107,9 +107,6 @@ export default function Profile({ route, navigation }) {
             onPress={() => {
               navigation.navigate("EditProfile", { userId });
             }}
-            style={{
-              ...styles.popupMenuOption,
-            }}
           >
             <Text>Edit</Text>
           </TouchableOpacity>
@@ -133,10 +130,7 @@ export default function Profile({ route, navigation }) {
                 }}
                 onPress={() => {
                   onClickOption(option);
-                  hidePopoutMenu(false);
-                }}
-                style={{
-                  ...styles.popupMenuOption,
+                  hidePopoutMenu();
                 }}
               >
                 <Text>{option}</Text>
@@ -159,7 +153,6 @@ export default function Profile({ route, navigation }) {
         navigation={navigation}
         title={"Profile"}
         showPopoutMenu={showPopoutMenu}
-        hidePopoutMenu={hidePopoutMenu}
         useBackBtn={true}
         useRightBtns={["ellipsis-vertical-circle-outline"]}
       />
@@ -218,7 +211,7 @@ export default function Profile({ route, navigation }) {
         {popupMenu && renderPopoutMenu()}
       </View>
 
-      <TouchableWithoutFeedback onPress={() => hidePopoutMenu()}>
+      <TouchableWithoutFeedback onPress={hidePopoutMenu}>
         <View style={{ flex: 1 }}>
           {/* MEMBER INFO */}
           <View

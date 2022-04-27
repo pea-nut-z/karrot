@@ -5173,6 +5173,11 @@ react-native-screens@~3.10.1:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-scroll-block-view@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-scroll-block-view/-/react-native-scroll-block-view-1.0.0.tgz#c049752d51cf44629c4e877f8b7c1f5d9ac061ac"
+  integrity sha1-wEl1LVHPRGKcTod/i3wfXZrAYaw=
+
 react-native-svg@12.1.1:
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.1.1.tgz#5f292410b8bcc07bbc52b2da7ceb22caf5bcaaee"

@@ -42,7 +42,6 @@ export default function Categories({ navigation }) {
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         <View>
           <Text style={styles.subheader}>For Sale</Text>
-
           <FlatButtons options={categoryOptions} navigateTo={navigateTo} navigation={navigation} />
         </View>
       </KeyboardAwareScrollView>

@@ -49,7 +49,7 @@ const listings = {
       views: 0,
       images: [
         "https://i.pcmag.com/imagery/roundups/018cwxjHcVMwiaDIpTnZJ8H-23.fit_lim.size_1050x.jpg",
-        "https://photographycourse.net/wp-content/uploads/2019/11/10-best-fashion-photography-cameras-2-696x462.jpg",
+        "https://www.bhphotovideo.com/images/images2500x2500/fujifilm_16619011_x_t30_mirrorless_camera_black_1459274.jpg",
       ],
       title: "Camera",
       price: 100,
