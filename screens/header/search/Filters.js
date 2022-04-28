@@ -6,23 +6,26 @@ import { Ionicons } from "@expo/vector-icons";
 import CurrencyInput from "react-native-currency-input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-export default function Filters({
-  categories,
-  addCategoryToFilter,
-  removeCategoryFromFilter,
-  sort,
-  addSortToFilter,
-  minPrice,
-  addMinPriceToFilter,
-  maxPrice,
-  addMaxPriceToFilter,
-  clearFilterFields,
-  toggleFilterScreen,
-}) {
-  return (
-    <View style={{ flex: 1 }}>
-      <Header useBackBtn={true} toggleFilterScreen={toggleFilterScreen} title={"Filter"} />
+export default function Filters({ toggleFilterScreen, createFilters, filters }) {
+  const [newFilters, setNewFilters] = useState(filters);
 
+  const clearNewFilters = () => {
+    setNewFilters({
+      ...newFilters,
+      categories: [],
+      sort: "",
+      minPrice: 0,
+      maxPrice: 0,
+    });
+  };
+
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <Header useBackBtn={true} toggleFilterScreen={toggleFilterScreen} title={"Filter"} />
       {/* CATEGORIES */}
       <KeyboardAwareScrollView>
         <Text style={styles.subheader}>Categories</Text>
@@ -32,17 +35,28 @@ export default function Filters({
             return (
               <TouchableOpacity
                 key={`option-${index}`}
-                onPress={() =>
-                  categories.includes(name)
-                    ? removeCategoryFromFilter(name)
-                    : addCategoryToFilter(name)
+                onPress={
+                  () =>
+                    newFilters.categories.includes(name)
+                      ? setNewFilters({
+                          ...newFilters,
+                          categories: [
+                            ...newFilters.categories.filter((category) => category !== name),
+                          ],
+                        })
+                      : setNewFilters({
+                          ...newFilters,
+                          categories: [...newFilters.categories, name],
+                        })
+                  // ? removeCategoryFromFilter(name)
+                  // : addCategoryToFilter(name)
                 }
                 style={styles.categories}
               >
                 <Ionicons
                   name="checkmark-circle-outline"
                   size={25}
-                  color={categories.includes(name) ? COLORS.primary : COLORS.secondary}
+                  color={newFilters.categories.includes(name) ? COLORS.primary : COLORS.secondary}
                 />
                 <Text style={styles.regularText}>
                   {name.includes("Games") ? "Games, hobbies..." : name}
@@ -68,7 +82,7 @@ export default function Filters({
             }}
           >
             <TouchableOpacity
-              onPress={() => addSortToFilter("Relevance")}
+              onPress={() => setNewFilters({ ...newFilters, sort: "Relevance" })}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -76,15 +90,15 @@ export default function Filters({
               }}
             >
               <Ionicons
-                name={sort === "Relevance" ? "ellipse" : "ellipse-outline"}
+                name={newFilters.sort === "Relevance" ? "ellipse" : "ellipse-outline"}
                 size={25}
-                color={sort === "Relevance" ? COLORS.primary : null}
+                color={newFilters.sort === "Relevance" ? COLORS.primary : null}
               />
               <Text style={styles.regularText}>Relevance</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => addSortToFilter("Most recent")}
+              onPress={() => setNewFilters({ ...newFilters, sort: "Most recent" })}
               style={{
                 width: "50%",
                 flexDirection: "row",
@@ -92,9 +106,9 @@ export default function Filters({
               }}
             >
               <Ionicons
-                name={sort === "Most recent" ? "ellipse" : "ellipse-outline"}
+                name={newFilters.sort === "Most recent" ? "ellipse" : "ellipse-outline"}
                 size={25}
-                color={sort === "Most recent" ? COLORS.primary : null}
+                color={newFilters.sort === "Most recent" ? COLORS.primary : null}
               />
               <Text style={styles.regularText}>Most recent</Text>
             </TouchableOpacity>
@@ -108,8 +122,8 @@ export default function Filters({
           <Text style={styles.subheader}>Price</Text>
           <View style={styles.priceContainer}>
             <CurrencyInput
-              value={minPrice}
-              onChangeValue={(value) => addMinPriceToFilter(value)}
+              value={newFilters.minPrice}
+              onChangeValue={(value) => setNewFilters({ ...newFilters, minPrice: value })}
               delimiter=""
               separator=""
               precision={0}
@@ -120,8 +134,8 @@ export default function Filters({
             />
             <Text>~</Text>
             <CurrencyInput
-              value={maxPrice}
-              onChangeValue={(value) => addMaxPriceToFilter(value)}
+              value={newFilters.maxPrice}
+              onChangeValue={(value) => setNewFilters({ ...newFilters, maxPrice: value })}
               delimiter=""
               separator=""
               precision={0}
@@ -134,16 +148,18 @@ export default function Filters({
         </View>
 
         <Border />
-
-        {/* SEARCH RANGE */}
       </KeyboardAwareScrollView>
+
+      {/* BUTTONS */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={() => clearFilterFields()} style={styles.clearBtn}>
+        <TouchableOpacity onPress={clearNewFilters} style={styles.clearBtn}>
           <Text>Clear fields</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             toggleFilterScreen();
+            createFilters(newFilters);
+            console.log({ newFilters });
           }}
           style={styles.applyBtn}
         >

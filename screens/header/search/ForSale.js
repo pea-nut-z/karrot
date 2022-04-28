@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, StyleSheet, Text, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { ItemCards } from "../../../components";
 import { furtherFilterListings } from "../../../store/selectors";
 import { useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-
 import { SIZES, COLORS, FONTS } from "../../../constants";
 import { useIsFocused } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,10 +14,10 @@ export default function ForSale({
   navigation,
   submittedSearchString,
   toggleFilterScreen,
-  hideSoldItems,
-  toggleHideSoldItemsBtn,
   filters,
 }) {
+  const [newFilters, setNewFilters] = useState(filters);
+  const [usedFilter, setUsedFilter] = useState();
   const focused = useIsFocused();
   const getItems = useMemo(furtherFilterListings, []);
   const items = useSelector((state) => {
@@ -31,41 +30,55 @@ export default function ForSale({
         state.feeds,
         "string",
         submittedSearchString,
-        filters
+        newFilters
       );
     }
   });
 
-  const renderFilterBtns = () => {
-    if (focused && submittedSearchString && items) {
-      let isFilterUsed = Object.values(filters);
-      isFilterUsed = isFilterUsed.some(
-        (value) =>
-          value !== undefined && value !== false && value !== true && value?.length !== 0 && value
-      );
+  // SET NEW FILTERS
+  useEffect(() => {
+    setNewFilters({ ...newFilters, ...filters });
+  }, [filters]);
+
+  // SET FILTER FLAG
+  useEffect(() => {
+    let isFilterUsed = Object.values(filters);
+    isFilterUsed = isFilterUsed.some(
+      (value) =>
+        value !== undefined && value !== false && value !== true && value?.length !== 0 && value
+    );
+    isFilterUsed ? setUsedFilter(true) : setUsedFilter(false);
+  }, [filters]);
+
+  const renderFilterBtn = () => {
+    if ((submittedSearchString && items) || !items & usedFilter) {
       return (
-        <View
-          style={{
-            flexDirection: "row",
-          }}
+        <TouchableOpacity onPress={() => toggleFilterScreen()} style={styles.filterBtn}>
+          <Ionicons
+            name="funnel-outline"
+            size={20}
+            color={usedFilter ? COLORS.primary : COLORS.secondary}
+          />
+          <Text> Filter</Text>
+        </TouchableOpacity>
+      );
+    }
+  };
+
+  const renderHideSoldBtn = () => {
+    if ((focused && submittedSearchString && items) || (!items && newFilters.hideSoldItems)) {
+      return (
+        <TouchableOpacity
+          onPress={() => setNewFilters({ ...newFilters, hideSoldItems: !newFilters.hideSoldItems })}
+          style={styles.filterBtn}
         >
-          <TouchableOpacity onPress={() => toggleFilterScreen()} style={styles.filterBtn}>
-            <Ionicons
-              name="funnel-outline"
-              size={20}
-              color={isFilterUsed ? COLORS.primary : COLORS.secondary}
-            />
-            <Text> Filter</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => toggleHideSoldItemsBtn()} style={styles.filterBtn}>
-            <Ionicons
-              name="checkmark-circle-outline"
-              size={25}
-              color={hideSoldItems ? COLORS.primary : COLORS.secondary}
-            />
-            <Text> Hide sold items</Text>
-          </TouchableOpacity>
-        </View>
+          <Ionicons
+            name="checkmark-circle-outline"
+            size={25}
+            color={newFilters.hideSoldItems ? COLORS.primary : COLORS.secondary}
+          />
+          <Text> Hide sold items</Text>
+        </TouchableOpacity>
       );
     }
   };
@@ -90,7 +103,17 @@ export default function ForSale({
 
   return (
     <View style={{ flex: 1 }}>
-      {renderFilterBtns()}
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        {/* FILTER BUTTON */}
+        {renderFilterBtn()}
+        {/* hideSoldItem BUTTON */}
+        {renderHideSoldBtn()}
+      </View>
       {renderNoResultsMsg()}
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         <View style={{ paddingBottom: 30 }}>

@@ -86,7 +86,8 @@ export const furtherFilterListings = (
     (_, __, ___, ____, _____, ______, _______, furtherFilters) => furtherFilters,
     (items, listings, members, restrictions, feeds, initialFilter, value, furtherFilters) => {
       if (items.length === 0) return;
-      const { hideSoldItems, categories, minPrice, maxPrice, sort } = furtherFilters;
+      const { categories, sort, minPrice, maxPrice, hideSoldItems } = furtherFilters;
+      console.log({ furtherFilters });
 
       // SOLD?
       if (hideSoldItems) {

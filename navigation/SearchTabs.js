@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Keyboard, TextInput, Text, ScrollView, StyleSheet } from "react-native";
 import { ForSale, User } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -8,67 +8,41 @@ import { COLORS, SIZES } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { ModalAlert } from "../components";
-import { Colors } from "react-native-paper";
-
 const MaterialTopTabs = createMaterialTopTabNavigator();
 
 export default function SearchTabs({ route, navigation }) {
   const { userId } = route.params;
   const [searchHistory, setSearchHistory] = useState(["baseball", "fashion"]);
-  const [categories, setCategories] = useState([]);
-  const [sort, setSort] = useState();
-  const [minPrice, setMinPrice] = useState();
-  const [maxPrice, setMaxPrice] = useState();
-  const [hideSoldItems, setHideSoldItems] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [submittedSearchString, setSubmittedSearchString] = useState("");
   const [showSearchHistory, setShowSearchHistory] = useState(true);
   const [searchFieldAlert, setSearchFieldAlert] = useState(false);
-  const [filterScreen, setFilterScreen] = useState(false);
-  const filters = {
-    categories,
-    sort,
-    minPrice,
-    maxPrice,
-    hideSoldItems,
-  };
-  // const closeModal = () => {
-  //   setSearchFieldAlert(false);
-  // };
-
-  const toggleHideSoldItemsBtn = () => {
-    setHideSoldItems(!hideSoldItems);
-  };
+  const [showFilterScreen, setShowFilterScreen] = useState(false);
+  const [filters, setFilters] = useState({
+    categories: [],
+    sort: "",
+    minPrice: 0,
+    maxPrice: 0,
+    hideSoldItems: false,
+  });
+  const searchBarRef = useRef();
 
   const toggleFilterScreen = () => {
-    setFilterScreen(!filterScreen);
+    setShowFilterScreen(!showFilterScreen);
   };
 
-  const clearFilterFields = () => {
-    setCategories([]);
-    setSort(null);
-    setMinPrice(null);
-    setMaxPrice(null);
+  const createFilters = (newFilters) => {
+    setFilters({ ...filters, ...newFilters });
   };
 
-  const addCategoryToFilter = (newCategory) => {
-    setCategories([...categories, newCategory]);
-  };
-
-  const removeCategoryFromFilter = (newCategory) => {
-    setCategories([...categories.filter((name) => name !== newCategory)]);
-  };
-
-  const addSortToFilter = (name) => {
-    setSort(name);
-  };
-
-  const addMinPriceToFilter = (value) => {
-    setMinPrice(value);
-  };
-
-  const addMaxPriceToFilter = (value) => {
-    setMaxPrice(value);
+  const clearFilters = () => {
+    setFilters({
+      ...filters,
+      categories: [],
+      sort: "",
+      minPrice: 0,
+      maxPrice: 0,
+    });
   };
 
   const renderSearchBar = () => {
@@ -88,6 +62,7 @@ export default function SearchTabs({ route, navigation }) {
       >
         <Ionicons name={"search-outline"} size={20} style={{ marginLeft: 4 }} />
         <TextInput
+          ref={searchBarRef}
           value={searchString}
           onFocus={() => {
             setShowSearchHistory(true);
@@ -104,7 +79,7 @@ export default function SearchTabs({ route, navigation }) {
             } else {
               setSearchFieldAlert(true);
             }
-            clearFilterFields();
+            clearFilters();
           }}
           underlineColorAndroid="transparent"
           clearButtonMode="always"
@@ -120,6 +95,7 @@ export default function SearchTabs({ route, navigation }) {
         <TouchableOpacity
           onPress={() => {
             setSearchString("");
+            searchBarRef.current.focus();
           }}
           style={styles.deleteSearchStringBtn}
         >
@@ -167,6 +143,7 @@ export default function SearchTabs({ route, navigation }) {
                     onPress={() => {
                       setSearchString(item);
                       setSubmittedSearchString(item);
+                      clearFilters();
                     }}
                     style={styles.recentSearchItem}
                   >
@@ -207,27 +184,15 @@ export default function SearchTabs({ route, navigation }) {
         flex: 1,
       }}
     >
-      {filterScreen && (
+      {showFilterScreen && (
         <Filters
-          categories={categories}
-          addCategoryToFilter={addCategoryToFilter}
-          removeCategoryFromFilter={removeCategoryFromFilter}
-          sort={sort}
-          addSortToFilter={addSortToFilter}
-          minPrice={minPrice}
-          addMinPriceToFilter={addMinPriceToFilter}
-          maxPrice={maxPrice}
-          addMaxPriceToFilter={addMaxPriceToFilter}
-          clearFilterFields={clearFilterFields}
           toggleFilterScreen={toggleFilterScreen}
+          createFilters={createFilters}
+          filters={filters}
         />
       )}
-      {!filterScreen && (
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
+      {!showFilterScreen && (
+        <View style={{ flex: 1 }}>
           <Header navigation={navigation} useBackBtn={true} />
 
           {/* SEARCH INPUT  */}
@@ -235,7 +200,6 @@ export default function SearchTabs({ route, navigation }) {
           <ModalAlert
             visibleVariable={searchFieldAlert}
             closeModal={() => setSearchFieldAlert(false)}
-            // onClickOption={onClickOption}
             message={"Search field is empty"}
           />
 
@@ -258,8 +222,6 @@ export default function SearchTabs({ route, navigation }) {
                   navigation={navigation}
                   submittedSearchString={submittedSearchString}
                   toggleFilterScreen={toggleFilterScreen}
-                  hideSoldItems={hideSoldItems}
-                  toggleHideSoldItemsBtn={toggleHideSoldItemsBtn}
                   filters={filters}
                 />
               )}
