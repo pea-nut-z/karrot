@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     position: "absolute",
     zIndex: 2,
-    top: 100,
+    top: 54,
     borderWidth: 1,
     borderColor: COLORS.secondary,
   },
