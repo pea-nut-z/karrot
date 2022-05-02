@@ -1,19 +1,25 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { SIZES } from "../constants";
 
-export default function FlatButtons({ options, navigateTo }) {
+export default function FlatButtons({ atCategories, options, navigateTo }) {
   return (
     <View style={{ paddingBottom: 25 }}>
       {options.map((option, index) => {
+        if (Platform.OS === "web") {
+          Image.resolveAssetSource = (source) => ({
+            uri: source,
+          });
+        }
+
         return (
           <TouchableOpacity key={`option-${index}`} onPress={() => navigateTo(option)}>
             <View style={styles.container}>
-              {typeof option["icon"] === "number" ? (
+              {atCategories ? (
                 <Image
-                  source={option.icon}
+                  source={{ uri: Image.resolveAssetSource(option.icon).uri }}
                   resizeMode={"contain"}
                   style={{
                     width: 35,

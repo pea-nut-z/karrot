@@ -89,7 +89,6 @@ export default function MyAccount({ navigation }) {
 
         {/* FLAT BUTTONS */}
         <FlatButtons options={flatBtnOptions} navigateTo={navigateTo} />
-        {/* <FlatButtons options={infoOptions} navigateTo={navigateTo} /> */}
       </KeyboardAwareScrollView>
     </View>
   );

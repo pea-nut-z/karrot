@@ -1,22 +1,7 @@
-import React, { useState, useLayoutEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
-import { icons, SIZES, FONTS, COLORS } from "../../constants";
-import {
-  Header,
-  Subheader,
-  HeaderButton,
-  CircleButton,
-  BarButton,
-  FlatButtons,
-} from "../../components";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { SIZES } from "../../constants";
+import { Header, FlatButtons } from "../../components";
 import { categoryOptions } from "../../constants";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -42,7 +27,12 @@ export default function Categories({ navigation }) {
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         <View>
           <Text style={styles.subheader}>For Sale</Text>
-          <FlatButtons options={categoryOptions} navigateTo={navigateTo} navigation={navigation} />
+          <FlatButtons
+            atCategories={true}
+            options={categoryOptions}
+            navigateTo={navigateTo}
+            navigation={navigation}
+          />
         </View>
       </KeyboardAwareScrollView>
     </View>

@@ -239,11 +239,11 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      // images: [
-      //   "https://tirecraft.com/wp-content/uploads/2018/01/Hankook-winter-tire.jpeg",
-      //   "https://www.familyhandyman.com/wp-content/uploads/2020/10/snow-tires-GettyImages-1227503607.jpg",
-      // ],
-      images: [10],
+      images: [
+        "https://tirecraft.com/wp-content/uploads/2018/01/Hankook-winter-tire.jpeg",
+        "https://www.familyhandyman.com/wp-content/uploads/2020/10/snow-tires-GettyImages-1227503607.jpg",
+      ],
+      // images: [10],
       // images: ["],
       title: "plant",
       price: 10,
