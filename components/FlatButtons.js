@@ -13,7 +13,6 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
             uri: source,
           });
         }
-
         return (
           <TouchableOpacity key={`option-${index}`} onPress={() => navigateTo(option)}>
             <View style={styles.container}>

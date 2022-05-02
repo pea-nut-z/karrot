@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import * as actions from "./actionTypes";
 import { dateWithoutTime } from "../helper";
+
 // sync id to database
 //actions (add, edit , delete)
 // userId -> sellerId -> itemId
@@ -239,12 +240,7 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      images: [
-        "https://tirecraft.com/wp-content/uploads/2018/01/Hankook-winter-tire.jpeg",
-        "https://www.familyhandyman.com/wp-content/uploads/2020/10/snow-tires-GettyImages-1227503607.jpg",
-      ],
-      // images: [10],
-      // images: ["],
+      images: ["/static/media/garden.cb05c16c.png"],
       title: "plant",
       price: 10,
       free: false,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
 import { SIZES, FONTS, COLORS } from "../constants";
 import { ModalAlert } from ".";
 import { Ionicons } from "@expo/vector-icons";
@@ -188,7 +188,11 @@ export default function ItemCards({
       {items.map((item, index) => {
         const { sellerId, location, itemId, date, status } = item;
         const img = item["images"][0];
-
+        if (Platform.OS === "web") {
+          Image.resolveAssetSource = (source) => ({
+            uri: source,
+          });
+        }
         return (
           <View key={`item-${index}`}>
             <TouchableOpacity
@@ -216,7 +220,7 @@ export default function ItemCards({
                 }}
               >
                 <Image
-                  source={typeof img === "number" ? img : { uri: img }}
+                  source={{ uri: Image.resolveAssetSource(img).uri }}
                   resizeMode={"contain"}
                   style={{
                     width: 105,

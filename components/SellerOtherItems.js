@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from "react-native";
 import { filterMemberItems } from "../store/selectors";
 import { useSelector } from "react-redux";
 import { FONTS, SIZES, COLORS } from "../constants";
@@ -23,6 +23,11 @@ export default function SellerOtherItems({ userId, sellerId, itemId, navigation 
         const sellerId = item.sellerId;
         const itemId = item.itemId;
         const img = item["images"][0];
+        if (Platform.OS === "web") {
+          Image.resolveAssetSource = (source) => ({
+            uri: source,
+          });
+        }
         return (
           <TouchableOpacity
             key={itemId}
@@ -43,7 +48,7 @@ export default function SellerOtherItems({ userId, sellerId, itemId, navigation 
             >
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={typeof img === "number" ? img : { uri: img }}
+                  source={{ uri: Image.resolveAssetSource(img).uri }}
                   resizeMode={"contain"}
                   style={{
                     width: SIZES.width / 2 - SIZES.padding * 6,
