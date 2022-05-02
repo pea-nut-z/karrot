@@ -87,8 +87,6 @@ export const furtherFilterListings = (
     (items, listings, members, restrictions, feeds, initialFilter, value, furtherFilters) => {
       if (items.length === 0) return;
       const { categories, sort, minPrice, maxPrice, hideSoldItems } = furtherFilters;
-      console.log({ furtherFilters });
-
       // SOLD?
       if (hideSoldItems) {
         items = items.filter((item) => item.status !== "Sold");

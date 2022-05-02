@@ -31,6 +31,8 @@ export default function ItemDetails({ route, navigation }) {
   });
 
   const images = item.images;
+  console.log({ images });
+
   const useImgStyle = typeof item.images[0] === "number" ? false : true;
 
   // USER'S FAVOURITES

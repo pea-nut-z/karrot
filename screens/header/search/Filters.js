@@ -159,7 +159,6 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
           onPress={() => {
             toggleFilterScreen();
             createFilters(newFilters);
-            console.log({ newFilters });
           }}
           style={styles.applyBtn}
         >

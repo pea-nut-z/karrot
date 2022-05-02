@@ -118,12 +118,8 @@ export default function Sell({ route, navigation }) {
     } else {
       let imgPath;
       if (images.length === 0) {
-        categoryOptions.find((obj) => {
-          // if (obj.name === category) {
-          //   imgPath = [obj.icon];
-          // }
-          imgPath = obj.name === category ? [obj.icon] : [];
-        });
+        const obj = categoryOptions.find((obj) => obj.name === category);
+        imgPath = [obj.icon];
       } else {
         imgPath = images;
       }
@@ -187,9 +183,8 @@ export default function Sell({ route, navigation }) {
     if (postIsNotBlank) {
       let imgPath;
       if (images.length === 0 && category) {
-        categoryOptions.find((obj) => {
-          if (obj.name === category) imgPath = [obj.icon];
-        });
+        const obj = categoryOptions.find((obj) => obj.name === category);
+        imgPath = [obj.icon];
       } else {
         imgPath = images;
       }

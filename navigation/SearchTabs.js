@@ -121,7 +121,6 @@ export default function SearchTabs({ route, navigation }) {
             <TouchableOpacity
               style={styles.deleteAllBtn}
               onPress={() => {
-                console.log("Delete all pink");
                 setSearchHistory([]);
               }}
             >
