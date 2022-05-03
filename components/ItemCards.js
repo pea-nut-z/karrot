@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
-import { SIZES, FONTS, COLORS } from "../constants";
+import { SIZES, COLORS } from "../constants";
 import { ModalAlert } from ".";
 import { Ionicons } from "@expo/vector-icons";
 import { timeSince } from "../helper";
