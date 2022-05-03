@@ -120,6 +120,7 @@ export default function Sell({ route, navigation }) {
       if (images.length === 0) {
         const obj = categoryOptions.find((obj) => obj.name === category);
         imgPath = [obj.icon];
+        console.log({ imgPath });
       } else {
         imgPath = images;
       }

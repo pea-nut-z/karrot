@@ -240,7 +240,10 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      images: ["/static/media/garden.cb05c16c.png"],
+      // images: [
+      //   "https://ca-times.brightspotcdn.com/dims4/default/8011e40/2147483647/strip/true/crop/3001x2251+0+0/resize/840x630!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F84%2Ff8%2F6deea85943f7b5f721d039683060%2Fhoe-family-jb.jpg",
+      // ],
+      images: [10],
       title: "plant",
       price: 10,
       free: false,

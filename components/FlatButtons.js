@@ -8,7 +8,7 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
   return (
     <View style={{ paddingBottom: 25 }}>
       {options.map((option, index) => {
-        if (Platform.OS === "web") {
+        if (Platform.OS === "web" && typeof img === "number") {
           Image.resolveAssetSource = (source) => ({
             uri: source,
           });
@@ -17,6 +17,7 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
           <TouchableOpacity key={`option-${index}`} onPress={() => navigateTo(option)}>
             <View style={styles.container}>
               {atCategories ? (
+                // CATEGORIES
                 <Image
                   source={{ uri: Image.resolveAssetSource(option.icon).uri }}
                   resizeMode={"contain"}
@@ -26,6 +27,7 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
                   }}
                 />
               ) : (
+                // MY ACCOUNT
                 <Ionicons name={option["icon"]} size={30} />
               )}
               <Text style={styles.text}>{option.name}</Text>

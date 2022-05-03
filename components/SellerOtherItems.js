@@ -22,8 +22,8 @@ export default function SellerOtherItems({ userId, sellerId, itemId, navigation 
       {otherItems.map((item) => {
         const sellerId = item.sellerId;
         const itemId = item.itemId;
-        const img = item["images"][0];
-        if (Platform.OS === "web") {
+        let img = item["images"][0];
+        if (Platform.OS === "web" && typeof img === "number") {
           Image.resolveAssetSource = (source) => ({
             uri: source,
           });
@@ -48,7 +48,13 @@ export default function SellerOtherItems({ userId, sellerId, itemId, navigation 
             >
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={{ uri: Image.resolveAssetSource(img).uri }}
+                  source={
+                    Platform.OS === "web" && typeof img === "number"
+                      ? { uri: Image.resolveAssetSource(img).uri }
+                      : typeof img !== "number"
+                      ? { uri: img }
+                      : img
+                  }
                   resizeMode={"contain"}
                   style={{
                     width: SIZES.width / 2 - SIZES.padding * 6,

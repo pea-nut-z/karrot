@@ -12,6 +12,7 @@ export default function AllItems({ userId, sellerId, atUserItemsTabs, navigation
   // LISTINGS
   const getMemberAllItems = useMemo(selectMemberAllItems, []);
   const memberAllItems = useSelector((state) => getMemberAllItems(state, memberId));
+  console.log({ memberAllItems });
 
   return (
     <View style={{ flex: 1 }}>

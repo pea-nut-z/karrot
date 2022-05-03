@@ -7,6 +7,7 @@ import { timeSince } from "../helper";
 import { useDispatch } from "react-redux";
 import * as actions from "../store/actionTypes";
 import Modal from "react-native-modal";
+import { categoryOptions } from "../constants";
 
 export default function ItemCards({
   userId,
@@ -187,7 +188,7 @@ export default function ItemCards({
     <View>
       {items.map((item, index) => {
         const { sellerId, location, itemId, date, status } = item;
-        const img = item["images"][0];
+        let img = item["images"][0];
         if (Platform.OS === "web") {
           Image.resolveAssetSource = (source) => ({
             uri: source,
@@ -220,7 +221,13 @@ export default function ItemCards({
                 }}
               >
                 <Image
-                  source={{ uri: Image.resolveAssetSource(img).uri }}
+                  source={
+                    Platform.OS === "web" && typeof img === "number"
+                      ? { uri: Image.resolveAssetSource(img).uri }
+                      : typeof img !== "number"
+                      ? { uri: img }
+                      : img
+                  }
                   resizeMode={"contain"}
                   style={{
                     width: 105,
