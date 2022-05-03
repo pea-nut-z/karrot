@@ -52,5 +52,9 @@
     "@expo/webpack-config": "^0.16.23",
     "expo-cli": "^5.4.3"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">= 16.13.1",
+    "npm": ">= 8.5.3"
+  }
 }
