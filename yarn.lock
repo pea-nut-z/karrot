@@ -1536,7 +1536,7 @@
     lodash.pick "^4.4.0"
     lodash.template "^4.5.0"
 
-"@expo/webpack-config@0.16.23":
+"@expo/webpack-config@0.16.23", "@expo/webpack-config@^0.16.23":
   version "0.16.23"
   resolved "https://registry.yarnpkg.com/@expo/webpack-config/-/webpack-config-0.16.23.tgz#0b399ae0bb9c9b4b1a684d158aacd5684e341fc3"
   integrity sha512-HwFvBMtikal8s2mwf3veE8TReVOhkuMXX7HOBhRq8BSbq7RPnVzh6r8tVJVrIaWfqRn3s85GFvzU0YjqcvvHLA==
