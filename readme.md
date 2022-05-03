@@ -1,7 +1,11 @@
 ## A marketplace mobile app
 
-\*\*\*This app is created using Expo. Please follow the link below to download Expo first and then use Expo to open the app on your mobile device.
-<https://expo.dev/@peanutz/karrot>
+The Marketplace is in development. More features are getting added.
+
+The Marketplace is created using Expo. For an optimal experience, please download Expo first on your mobile device and then use Expo to open the app.
+\*\*\*Once you are on a mobile device please click [here](https://expo.dev/@peanutz/karrot)
+
+Alternatively, you may view The Marketplace in your browser by clicking [here](https://peanutz-marketplace.herokuapp.com). However, some features and stylings are not web-compatible at the moment.
 
 ### Context
 
@@ -33,6 +37,14 @@ Your username is Tony once you are on the app. The app includes:
 - Change your profile picture and name by tapping the camera icon
 - Tap view profile for a list of your active, sold, hidden items and toggle their statuses
 
+### To Be Added
+
+- [ ] Store data externallly
+
+- [ ] Authentication - login
+
+- [ ] Chat
+
 ### Road blocks
 
-I will be working on enabling viewers to view the app on desktops besides their mobile devices. Doing so will add accessibility and convenience for viewers.
+- [x] Enable viewers to view the app on desktops besides their mobile devices. Doing so will add accessibility and convenience for viewers.
