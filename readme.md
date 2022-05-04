@@ -4,7 +4,7 @@ This app is in development. More features are getting added.
 
 #### View On A Mobile **(Recommended)**
 
-\*\*\* The optimal experience for the time being due to updating and compatibility issues.
+\*\*\* It is a better experience to view on a mobile instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
 The Marketplace is created using Expo. Please download Expo on your mobile device and then use Expo to open the app.
 Once you are on a mobile device, please click [here](https://expo.dev/@peanutz/karrot) to do the above.
