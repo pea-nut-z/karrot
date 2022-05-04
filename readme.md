@@ -3,6 +3,7 @@
 The Marketplace is in development. More features are getting added.
 
 The Marketplace is created using Expo. For an optimal experience, please download Expo first on your mobile device and then use Expo to open the app.
+
 \*\*\*Once you are on a mobile device please click [here](https://expo.dev/@peanutz/karrot)
 
 Alternatively, you may view The Marketplace in your browser by clicking [here](https://peanutz-marketplace.herokuapp.com). However, some features and stylings are not web-compatible at the moment.
@@ -39,12 +40,14 @@ Your username is Tony once you are on the app. The app includes:
 
 ### To Be Added
 
-- [ ] Store data externallly
+- [ ] External Data storage
 
 - [ ] Authentication - login
 
 - [ ] Chat
 
 ### Road blocks
+
+Resolved
 
 - [x] Enable viewers to view the app on desktops besides their mobile devices. Doing so will add accessibility and convenience for viewers.
