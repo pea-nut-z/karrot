@@ -9,7 +9,7 @@ The Marketplace is created using Expo. For an optimal experience, please downloa
 Alternatively, you may view The Marketplace in your browser by clicking [here](https://peanutz-marketplace.herokuapp.com). However, some features and stylings are not web-compatible at the moment.
 
 <!-- ![alt text](assets/readme-instruction.jpg?raw=true) -->
-<img src="assets/readme-instruction.jpg" width="100" height="100">
+<img src="assets/readme-instruction.jpg" width="500" height="500">
 
 ### Context
 
