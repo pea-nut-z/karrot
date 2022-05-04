@@ -2,18 +2,17 @@
 
 This app is in development. More features are getting added.
 
-#### View On A Mobile **(Recommended)**
+### View On A Mobile (Recommended)
 
 \*\*\* It is a better experience to view on a mobile instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
 The Marketplace is created using Expo. Please download Expo on your mobile device and then use Expo to open the app.
 Once you are on a mobile device, please click [here](https://expo.dev/@peanutz/karrot) to do the above.
 
-#### View In The Browser
+### View In The Browser
 
 \*\*\*Some features and stylings are not web-compatible yet, and I am fixing it.
 Please click [here](https://peanutz-marketplace.herokuapp.com), open Developer tools and do the next two steps below.
-
 <img src="assets/readme-instruction.jpg" width="500" height="500">
 
 ### Context
