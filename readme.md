@@ -1,14 +1,17 @@
 ## A marketplace mobile app
 
-The Marketplace is in development. More features are getting added.
+This app is in development. More features are getting added.
 
-The Marketplace is created using Expo. For an optimal experience, please download Expo first on your mobile device and then use Expo to open the app.
+######View On A Mobile **(Recommended)**
+\*\*\* The optimal experience for the time being due to updating and compatibility issues.
 
-\*\*\*Once you are on a mobile device please click [here](https://expo.dev/@peanutz/karrot) to do the above.
+The Marketplace is created using Expo. Please download Expo on your mobile device and then use Expo to open the app.
+Once you are on a mobile device, please click [here](https://expo.dev/@peanutz/karrot) to do the above.
 
-Alternatively, you may view The Marketplace in your browser by clicking [here](https://peanutz-marketplace.herokuapp.com). However, some features and stylings are not web-compatible at the moment.
+######View In The Browser
+\*\*\*Some features and stylings are not web-compatible yet, and I am fixing it.
+Please click [here](https://peanutz-marketplace.herokuapp.com), open Developer tools and do the next two steps below.
 
-<!-- ![alt text](assets/readme-instruction.jpg?raw=true) -->
 <img src="assets/readme-instruction.jpg" width="500" height="500">
 
 ### Context
