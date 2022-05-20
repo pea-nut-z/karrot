@@ -7,7 +7,6 @@ import { timeSince } from "../helper";
 import { useDispatch } from "react-redux";
 import * as actions from "../store/actionTypes";
 import Modal from "react-native-modal";
-import { categoryOptions } from "../constants";
 
 export default function ItemCards({
   userId,

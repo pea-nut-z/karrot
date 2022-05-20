@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, LogBox } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES, FONTS } from "../../constants";
-import { Header, ItemCards, ModalAlert } from "../../components/index";
+import { Header, ItemCards, ModalAlert } from "../../components";
 import * as actions from "../../store/actionTypes";
 import { filterListings } from "../../store/selectors";
 // import { useAuth } from "../../AuthContext";
+
+LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   // MOCK USER
