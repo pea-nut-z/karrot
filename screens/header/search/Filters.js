@@ -35,21 +35,18 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
             return (
               <TouchableOpacity
                 key={`option-${index}`}
-                onPress={
-                  () =>
-                    newFilters.categories.includes(name)
-                      ? setNewFilters({
-                          ...newFilters,
-                          categories: [
-                            ...newFilters.categories.filter((category) => category !== name),
-                          ],
-                        })
-                      : setNewFilters({
-                          ...newFilters,
-                          categories: [...newFilters.categories, name],
-                        })
-                  // ? removeCategoryFromFilter(name)
-                  // : addCategoryToFilter(name)
+                onPress={() =>
+                  newFilters.categories.includes(name)
+                    ? setNewFilters({
+                        ...newFilters,
+                        categories: [
+                          ...newFilters.categories.filter((category) => category !== name),
+                        ],
+                      })
+                    : setNewFilters({
+                        ...newFilters,
+                        categories: [...newFilters.categories, name],
+                      })
                 }
                 style={styles.categories}
               >

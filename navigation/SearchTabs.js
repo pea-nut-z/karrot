@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Keyboard, TextInput, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Keyboard, TextInput, Text, ScrollView, StyleSheet, Platform } from "react-native";
 import { ForSale, User } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -47,19 +47,7 @@ export default function SearchTabs({ route, navigation }) {
 
   const renderSearchBar = () => {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: COLORS.lightGray,
-          position: "absolute",
-          width: SIZES.width - 35 - SIZES.padding * 4,
-          left: 35,
-          marginVertical: SIZES.padding,
-          marginHorizontal: SIZES.padding * 2,
-          borderRadius: 10,
-        }}
-      >
+      <View style={styles.searchBar}>
         <Ionicons name={"search-outline"} size={20} style={{ marginLeft: 4 }} />
         <TextInput
           ref={searchBarRef}
@@ -82,7 +70,7 @@ export default function SearchTabs({ route, navigation }) {
             clearFilters();
           }}
           underlineColorAndroid="transparent"
-          clearButtonMode="always"
+          clearButtonMode="never"
           autoFocus={true}
           style={{
             flex: 1,
@@ -92,6 +80,7 @@ export default function SearchTabs({ route, navigation }) {
             height: 40,
           }}
         />
+
         <TouchableOpacity
           onPress={() => {
             setSearchString("");
@@ -243,38 +232,17 @@ export default function SearchTabs({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  headerWithoutImg: {
-    paddingVertical: SIZES.padding,
-    paddingHorizontal: SIZES.padding * 2,
-    borderWidth: 1,
-    borderColor: COLORS.transparent,
-    borderBottomColor: COLORS.secondary,
-    alignItems: "center",
+  searchBar: {
     flexDirection: "row",
-    width: SIZES.width,
-    height: 55,
-    backgroundColor: COLORS.white,
-    justifyContent: "space-between",
-  },
-  headerWithImg: {
-    paddingVertical: SIZES.padding,
-    paddingHorizontal: SIZES.padding * 2,
     alignItems: "center",
-    flexDirection: "row",
-    width: SIZES.width,
-    backgroundColor: COLORS.transparent,
-    justifyContent: "space-between",
-  },
-  backBtn: {
-    width: 35,
-    height: 35,
-    justifyContent: "center",
-  },
-  backBtnWithImg: {
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: COLORS.darkgray,
-    shadowOpacity: 2.0,
-    color: COLORS.black,
+    backgroundColor: COLORS.lightGray,
+    position: "absolute",
+    width: SIZES.width - 35 - SIZES.padding * 4,
+    left: 35,
+    top: Platform.OS === "ios" ? 44 : 0,
+    marginVertical: SIZES.padding,
+    marginHorizontal: SIZES.padding * 2,
+    borderRadius: 10,
   },
   recentSearchContainer: {
     width: SIZES.width,
@@ -283,7 +251,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     position: "absolute",
     zIndex: 2,
-    top: 54,
+    // top: 54,
+    top: Platform.OS === "ios" ? 101 : 54,
     borderWidth: 1,
     borderColor: COLORS.secondary,
   },
