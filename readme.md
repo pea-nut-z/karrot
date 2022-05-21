@@ -8,7 +8,7 @@ Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/v
 
 It is a better experience to view on a mobile device instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
-eMarketplace is created using Expo and requires Expo Go to open the app. So, on your mobile device, please click [here](https://expo.dev/@peanutz/karrot) to find the link to download Expo Go and then on the same page, you can click to open the app using Expo Go.
+eMarketplace requires an app called Expo Go to run. So, on your mobile device, please download Expo Go. After that click [here](https://expo.dev/@peanutz/karrot) to get a QR code of eMarketplace, scan the code using Expo Go, and the app should open.
 
 ### View In The Browser
 
