@@ -8,13 +8,13 @@ Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/v
 
 It is a better experience to view on a mobile device instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
-eMarketplace requires an app called Expo Go to run. So, on your mobile device in App/Play Store, please download Expo Go. After that click [here](https://expo.dev/@peanutz/karrot) to get a QR code of eMarketplace, scan the code using Expo Go, and the app should open.
+eMarketplace requires an app called Expo Go to run. So, on your mobile device in App/Play Store, please download Expo Go. After that click [here](https://expo.dev/@peanutz/karrot) to get the QR code of eMarketplace, scan the code using Expo Go, and the app should open.
 
 ### View In The Browser
 
 Some features and stylings are not web-compatible yet, and I am fixing it.
 
-- right click [here](https://peanutz-marketplace.herokuapp.com") and select "Open Link in New Tab"
+- right click [here](https://peanutz-marketplace.herokuapp.com) and select "Open Link in New Tab"
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
