@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Keyboard, TextInput, Text, ScrollView, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  Keyboard,
+  TextInput,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Platform,
+  Dimensions,
+} from "react-native";
 import { ForSale, User } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -233,7 +242,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: SIZES.width - 35 - SIZES.padding * 4,
     left: 35,
-    top: Platform.OS === "ios" ? 44 : 0,
+    // top: Platform.OS === "ios" ? "5%" : 0,
+    top: Platform.OS === "ios" ? (Dimensions.get("window").height / 100) * 5 : 0,
     marginVertical: SIZES.padding,
     marginHorizontal: SIZES.padding * 2,
     borderRadius: 10,
