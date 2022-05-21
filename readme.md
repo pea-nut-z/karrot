@@ -17,7 +17,7 @@ Once you are on a mobile device, please click [here](https://expo.dev/@peanutz/k
 
 Some features and stylings are not web-compatible yet, and I am fixing it.
 
-- click <a href="https://peanutz-marketplace.herokuapp.com" target="_blank">here</a> to start
+- right click [here](https://peanutz-marketplace.herokuapp.com") and select "Open Link in New Tab"
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
