@@ -1,16 +1,14 @@
-## A marketplace mobile app
+## eMarketplace
 
-This app is in development. More features are getting added.
+eMarketplace is a mobile app, and it is in development. More features are getting added.
 
-Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing) to watch me demonstrate the app.
+Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing) to watch me demonstrate how eMarketplace works.
 
 ### View On A Mobile Device (Recommended)
 
-It is a better experience to view on a mobile instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
+It is a better experience to view on a mobile device instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
-The Marketplace is created using Expo. Please download Expo on your mobile device and then use Expo to open the app.
-
-Once you are on a mobile device, please click [here](https://expo.dev/@peanutz/karrot) to do the above.
+eMarketplace is created using Expo and requires Expo Go to open the app. So, on your mobile device, please click [here](https://expo.dev/@peanutz/karrot) to find the link to download Expo Go and then on the same page, you can click to open the app using Expo Go.
 
 ### View In The Browser
 
@@ -21,7 +19,7 @@ Some features and stylings are not web-compatible yet, and I am fixing it.
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
 - open Developer tools
-- do the following two steps below and refresh the page after the steps are completed
+- do the two steps below and refresh the page after the steps are completed
 
 <img src="assets/readme-instruction.jpg" width="500" height="500">
 
