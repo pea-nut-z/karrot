@@ -72,13 +72,7 @@ export default function SearchTabs({ route, navigation }) {
           underlineColorAndroid="transparent"
           clearButtonMode="never"
           autoFocus={true}
-          style={{
-            flex: 1,
-            width: "90%",
-            padding: 9,
-            fontSize: 18,
-            height: 40,
-          }}
+          style={styles.inputField}
         />
 
         <TouchableOpacity
@@ -244,6 +238,13 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.padding * 2,
     borderRadius: 10,
   },
+  inputField: {
+    flex: 1,
+    width: "90%",
+    padding: 9,
+    fontSize: 18,
+    height: 40,
+  },
   recentSearchContainer: {
     width: SIZES.width,
     paddingHorizontal: SIZES.padding * 2,
@@ -251,7 +252,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     position: "absolute",
     zIndex: 2,
-    // top: 54,
     top: Platform.OS === "ios" ? 101 : 54,
     borderWidth: 1,
     borderColor: COLORS.secondary,
