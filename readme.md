@@ -2,10 +2,9 @@
 
 This app is in development. More features are getting added.
 
-Below is a link to a video I made to demonstrate the app.
-https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing
+Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing) to watch me demonstrate the app.
 
-### View On A Mobile (Recommended)
+### View On A Mobile Device (Recommended)
 
 It is a better experience to view on a mobile instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
 
@@ -22,11 +21,9 @@ Some features and stylings are not web-compatible yet, and I am fixing it.
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
 - open Developer tools
-- do the next two steps below
+- do the following two steps below and refresh the page after the steps are completed
 
 <img src="assets/readme-instruction.jpg" width="500" height="500">
-
-- refresh page
 
 ### Context
 
