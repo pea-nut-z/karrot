@@ -7,7 +7,7 @@ export default function Purchases({ route, navigation }) {
   const { userId } = route.params;
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Purchases"} useBackBtn={true} navigation={navigation} />
 
       {/* {items.length === 0 && <Text>No sold items</Text>} */}
@@ -27,6 +27,6 @@ export default function Purchases({ route, navigation }) {
           Try chatting on a neighbour's listings.
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

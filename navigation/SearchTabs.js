@@ -1,14 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Keyboard,
-  TextInput,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Platform,
-  Dimensions,
-} from "react-native";
+import React, { useRef, useState } from "react";
+import { View, TextInput, Text, ScrollView, StyleSheet, Platform, SafeAreaView } from "react-native";
 import { ForSale, User } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -170,7 +161,7 @@ export default function SearchTabs({ route, navigation }) {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}
@@ -230,7 +221,7 @@ export default function SearchTabs({ route, navigation }) {
           </MaterialTopTabs.Navigator>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -242,8 +233,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: SIZES.width - 35 - SIZES.padding * 4,
     left: 35,
-    // top: Platform.OS === "ios" ? "5%" : 0,
-    top: Platform.OS === "ios" ? (Dimensions.get("window").height / 100) * 5 : 0,
+    top: -3,
     marginVertical: SIZES.padding,
     marginHorizontal: SIZES.padding * 2,
     borderRadius: 10,

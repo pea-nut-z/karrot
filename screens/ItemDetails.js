@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState, ScrollView } from "react";
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,12 +59,13 @@ export default function ItemDetails({ route, navigation }) {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {/* HEADER */}
       <View
         style={{
           zIndex: 1,
           position: "absolute",
+          top: Platform.OS === "ios" ? 23 : 0,
         }}
       >
         <Header
@@ -345,7 +346,7 @@ export default function ItemDetails({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      <SafeAreaView />
-    </View>
+      {/* <SafeAreaView /> */}
+    </SafeAreaView>
   );
 }

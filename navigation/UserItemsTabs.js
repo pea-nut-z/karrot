@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { SafeAreaView } from "react-native";
 import { Active, Sold, Hidden } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -11,7 +12,11 @@ export default function UserItemsTabs({ route, navigation }) {
   const { userId } = route.params;
 
   return (
-    <>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <Header navigation={navigation} title={"Listings"} useBackBtn={true} />
       <MaterialTopTabs.Navigator
         screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
@@ -29,6 +34,6 @@ export default function UserItemsTabs({ route, navigation }) {
           children={() => <Hidden userId={userId} navigation={navigation} atUserItemsTabs={true} />}
         />
       </MaterialTopTabs.Navigator>
-    </>
+    </SafeAreaView>
   );
 }

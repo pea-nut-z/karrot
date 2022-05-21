@@ -8,6 +8,7 @@ import {
   Alert,
   FlatList,
   ImageBackground,
+  SafeAreaView,
 } from "react-native";
 
 import { COLORS, SIZES, categoryOptions, categoryDropDown } from "../../constants";
@@ -214,7 +215,7 @@ export default function Sell({ route, navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         navigation={navigation}
         title={continueDraft ? "Post For Sale" : existingItem ? "Edit Post" : "Post For Sale"}
@@ -373,7 +374,7 @@ export default function Sell({ route, navigation }) {
         </View>
       </KeyboardAwareScrollView>
       <ModalAlert visibleVariable={alert} closeModal={closeModal} message={alertMsg} />
-    </View>
+    </SafeAreaView>
   );
 }
 

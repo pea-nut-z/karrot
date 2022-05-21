@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, TouchableWithoutFeedback, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Header, MemberInfo, MemberRating, ModalAlert } from "../components";
 import { SIZES, COLORS } from "../constants";
@@ -143,7 +150,7 @@ export default function Profile({ route, navigation }) {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}
@@ -290,7 +297,7 @@ export default function Profile({ route, navigation }) {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </View>
+    </SafeAreaView>
   );
 }
 

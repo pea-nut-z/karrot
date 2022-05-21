@@ -1,8 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, SafeAreaView } from "react-native";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-
 import { Header, MemberInfo } from "../../components";
 import { selectReviews } from "../../store/selectors";
 import { timeSince } from "../../helper";
@@ -20,7 +19,7 @@ export default function AllReviews({ route, navigation }) {
   const numOfStars = [1, 2, 3, 4, 5];
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Reviews"} useBackBtn={true} navigation={navigation} />
       <Text
         style={{
@@ -86,6 +85,6 @@ export default function AllReviews({ route, navigation }) {
           );
         })}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

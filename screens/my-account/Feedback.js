@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TouchableWithoutFeedback,
-  Image,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import { Header, MemberRating } from "../../components";
 export default function Feedback({ route, navigation }) {
   const { userId } = route.params;
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Feedback"} navigation={navigation} useBackBtn={true} />
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row" }}>
@@ -27,6 +20,6 @@ export default function Feedback({ route, navigation }) {
         </View>
         <Text>Yay! You haven't receieved any disapprovals.</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

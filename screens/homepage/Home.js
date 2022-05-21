@@ -1,5 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, LogBox } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  LogBox,
+  SafeAreaView,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES, FONTS } from "../../constants";
@@ -78,7 +86,7 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <Header
         userId={userId}
@@ -142,7 +150,7 @@ export default function Home({ navigation }) {
           actions={["yes", "no"]}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -20,7 +20,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}
@@ -163,7 +163,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
         </TouchableOpacity>
       </View>
       <SafeAreaView />
-    </View>
+    </SafeAreaView>
   );
 }
 

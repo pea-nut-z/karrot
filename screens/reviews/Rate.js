@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
+import { View, TouchableOpacity, Text, TextInput, SafeAreaView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Textarea from "react-native-textarea";
 import { useDispatch } from "react-redux";
@@ -42,7 +34,7 @@ export default function Rate({ route, navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         title={"Rate"}
         useRightBtns={["checkmark-done"]}
@@ -94,7 +86,7 @@ export default function Rate({ route, navigation }) {
           underlineColorAndroid={"transparent"}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

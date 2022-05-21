@@ -1,22 +1,11 @@
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TouchableWithoutFeedback,
-  Image,
-  SafeAreaView,
-} from 'react-native';
-import {Header} from '../../components';
+import React from "react";
+import { SafeAreaView } from "react-native";
+import { Header } from "../../components";
 
-export default function Report({navigation}) {
+export default function Report({ navigation }) {
   return (
-    <View style={{flex: 1}}>
-      <Header
-        title={'Report seller'}
-        useBackBtn={true}
-        navigation={navigation}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Header title={"Report seller"} useBackBtn={true} navigation={navigation} />
+    </SafeAreaView>
   );
 }

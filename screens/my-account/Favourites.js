@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { useSelector } from "react-redux";
 import { Header, ItemCards } from "../../components";
 import { selectSellersAndListingsByFav } from "../../store/selectors";
@@ -13,7 +13,7 @@ export default function Favourites({ route, navigation }) {
   );
 
   return (
-    <View>
+    <SafeAreaView>
       <Header title={"Favourites"} useBackBtn={true} navigation={navigation} />
       <ItemCards
         userId={userId}
@@ -21,6 +21,6 @@ export default function Favourites({ route, navigation }) {
         navigation={navigation}
         atUserFavouritesScreen={true}
       />
-    </View>
+    </SafeAreaView>
   );
 }

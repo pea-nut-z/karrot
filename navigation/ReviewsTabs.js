@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, SafeAreaView } from "react-native";
 import { AllReviews, Buyers, Sellers } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -10,10 +10,12 @@ export default function ReviewsTabs({ route, navigation }) {
   const { memberId } = route.params;
 
   return (
-    <>
-      <View>
-        <Header title={"Reviews"} navigation={navigation} useBackBtn={true} />
-      </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      <Header title={"Reviews"} navigation={navigation} useBackBtn={true} />
       <MaterialTopTabs.Navigator
         screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
       >
@@ -30,6 +32,6 @@ export default function ReviewsTabs({ route, navigation }) {
           children={() => <Sellers memberId={memberId} navigation={navigation} />}
         />
       </MaterialTopTabs.Navigator>
-    </>
+    </SafeAreaView>
   );
 }

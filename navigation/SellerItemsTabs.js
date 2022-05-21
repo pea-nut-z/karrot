@@ -1,4 +1,5 @@
 import React from "react";
+import { SafeAreaView } from "react-native";
 import { AllItems, Active, Sold } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "../components";
@@ -8,7 +9,11 @@ const MaterialTopTabs = createMaterialTopTabNavigator();
 export default function SellerItemsTabs({ route, navigation }) {
   const { userId, sellerId } = route.params;
   return (
-    <>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <Header navigation={navigation} title={"Items"} useBackBtn={true} />
       <MaterialTopTabs.Navigator
         screenOptions={{
@@ -52,6 +57,6 @@ export default function SellerItemsTabs({ route, navigation }) {
           )}
         />
       </MaterialTopTabs.Navigator>
-    </>
+    </SafeAreaView>
   );
 }

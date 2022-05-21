@@ -87,37 +87,31 @@ export default function Header({
     );
   };
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: useImgStyle ? "transparent" : "white",
-      }}
-    >
-      <View style={useImgStyle ? styles.headerWithImg : styles.headerWithoutImg}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          {/* BACK BUTTON */}
-          {useBackBtn && renderBackBtn()}
-          <ModalAlert
-            visibleVariable={backBtnAlert}
-            closeModal={closeModal}
-            onClickOption={onClickOption}
-            message={"Quit editing post?"}
-            options={["No", "Yes"]}
-            actions={["no", "yes"]}
-          />
+    <View style={useImgStyle ? styles.headerWithImg : styles.headerWithoutImg}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {/* BACK BUTTON */}
+        {useBackBtn && renderBackBtn()}
+        <ModalAlert
+          visibleVariable={backBtnAlert}
+          closeModal={closeModal}
+          onClickOption={onClickOption}
+          message={"Quit editing post?"}
+          options={["No", "Yes"]}
+          actions={["no", "yes"]}
+        />
 
-          {/* TITLE */}
-          {title && <Text style={styles.boldText}>{title}</Text>}
-        </View>
-        {/* RIGHT BUTTONS */}
-        {useRightBtns && renderRightBtn()}
+        {/* TITLE */}
+        {title && <Text style={styles.boldText}>{title}</Text>}
       </View>
-    </SafeAreaView>
+      {/* RIGHT BUTTONS */}
+      {useRightBtns && renderRightBtn()}
+    </View>
   );
 }
 

@@ -155,7 +155,7 @@ export default function EditProfile({ route, navigation }) {
     );
   };
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Edit Profile"} useBackBtn={true} navigation={navigation} />
 
       <View
@@ -193,6 +193,6 @@ export default function EditProfile({ route, navigation }) {
         {renderDoneBtn()}
       </KeyboardAvoidingView>
       <SafeAreaView />
-    </View>
+    </SafeAreaView>
   );
 }

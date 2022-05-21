@@ -15,9 +15,13 @@ import { icons, SIZES, FONTS, COLORS } from "../constants";
 export default function Chats() {
   const userId = 111;
   return (
-    <View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <Header title={"Chats"} />
-    </View>
+    </SafeAreaView>
   );
 }
 

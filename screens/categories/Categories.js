@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { SIZES } from "../../constants";
 import { Header, FlatButtons } from "../../components";
 import { categoryOptions } from "../../constants";
@@ -17,7 +17,7 @@ export default function Categories({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         userId={userId}
         navigation={navigation}
@@ -35,7 +35,7 @@ export default function Categories({ navigation }) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

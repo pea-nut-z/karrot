@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { FONTS, COLORS } from "../../constants";
 import { filterListings } from "../../store/selectors";
 import { Header, ItemCards } from "../../components";
@@ -22,7 +22,7 @@ export default function Category({ route, navigation }) {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         navigation={navigation}
         title={selectedCategory}
@@ -47,7 +47,7 @@ export default function Category({ route, navigation }) {
           <ItemCards userId={userId} items={itemsByCategory} navigation={navigation} />
         )}
       </KeyboardAwareScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

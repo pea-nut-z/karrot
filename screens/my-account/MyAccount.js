@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { SIZES, COLORS, viewOptions, locationOptions, infoOptions } from "../../constants";
 import { Header, CircleButton, FlatButtons, MemberInfo } from "../../components";
 import { useSelector } from "react-redux";
@@ -58,7 +58,7 @@ export default function MyAccount({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"My Account"} useRightBtns={["settings-outline"]} />
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         {/* PROFILE DISPLAY */}
@@ -90,7 +90,7 @@ export default function MyAccount({ navigation }) {
         {/* FLAT BUTTONS */}
         <FlatButtons options={flatBtnOptions} navigateTo={navigateTo} />
       </KeyboardAwareScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

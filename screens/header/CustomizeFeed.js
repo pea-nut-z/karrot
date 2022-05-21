@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import { categoryOptions, COLORS, FONTS, SIZES } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,7 +19,7 @@ export default function CustomizeFeed({ route, navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header navigation={navigation} useBackBtn={true} title={"Customize feed"} />
       <View
         style={{
@@ -98,6 +98,6 @@ export default function CustomizeFeed({ route, navigation }) {
         // onClickOption={onClickOption}
         message={"You must select at least one category"}
       />
-    </View>
+    </SafeAreaView>
   );
 }
