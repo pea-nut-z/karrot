@@ -65,7 +65,7 @@ export default function ItemDetails({ route, navigation }) {
         style={{
           zIndex: 1,
           position: "absolute",
-          top: Platform.OS === "ios" ? 23 : 0,
+          top: Platform.OS === "ios" ? 35 : 0,
         }}
       >
         <Header

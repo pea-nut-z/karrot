@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TouchableWithoutFeedback,
-  Image,
-  SafeAreaView,
-} from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 export default function Sellers() {
   return (
     <View>

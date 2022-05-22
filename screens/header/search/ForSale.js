@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ItemCards } from "../../../components";
 import { furtherFilterListings } from "../../../store/selectors";
 import { useSelector } from "react-redux";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { SIZES, COLORS, FONTS } from "../../../constants";
 import { useIsFocused } from "@react-navigation/native";
@@ -107,6 +106,8 @@ export default function ForSale({
         style={{
           display: "flex",
           flexDirection: "row",
+          alignItems: "center",
+          height: 40,
         }}
       >
         {/* FILTER BUTTON */}
@@ -115,7 +116,13 @@ export default function ForSale({
         {renderHideSoldBtn()}
       </View>
       {renderNoResultsMsg()}
-      <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        showsVerticalScrollIndicator={false}
+        style={{
+          flex: 1,
+        }}
+      >
         <View style={{ paddingBottom: 30 }}>
           {items && <ItemCards userId={userId} items={items} navigation={navigation} />}
         </View>

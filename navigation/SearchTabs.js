@@ -27,6 +27,10 @@ export default function SearchTabs({ route, navigation }) {
   });
   const searchBarRef = useRef();
 
+  const toggleSearchHistoryBox = () => {
+    setShowSearchHistory(!showSearchHistory);
+  };
+
   const toggleFilterScreen = () => {
     setShowFilterScreen(!showFilterScreen);
   };
@@ -53,11 +57,20 @@ export default function SearchTabs({ route, navigation }) {
           ref={searchBarRef}
           value={searchString}
           onFocus={() => {
+            console.log("onFocus");
+
             setShowSearchHistory(true);
             setSearchFieldAlert(false);
           }}
           onBlur={() => {
-            setShowSearchHistory(false);
+            console.log("onBlur");
+            if (searchString) {
+              setShowSearchHistory(false);
+            } else {
+              setTimeout(() => {
+                setShowSearchHistory(false);
+              }, 100);
+            }
           }}
           onChangeText={(text) => setSearchString(text)}
           onSubmitEditing={() => {
@@ -123,6 +136,7 @@ export default function SearchTabs({ route, navigation }) {
                 <View key={`item-${index}`} style={styles.recentSearchItemContainer}>
                   <TouchableOpacity
                     onPress={() => {
+                      console.log({ item });
                       setSearchString(item);
                       setSubmittedSearchString(item);
                       clearFilters();
@@ -205,6 +219,7 @@ export default function SearchTabs({ route, navigation }) {
                   submittedSearchString={submittedSearchString}
                   toggleFilterScreen={toggleFilterScreen}
                   filters={filters}
+                  toggleSearchHistoryBox={toggleSearchHistoryBox}
                 />
               )}
             />
@@ -215,6 +230,7 @@ export default function SearchTabs({ route, navigation }) {
                   userId={userId}
                   navigation={navigation}
                   submittedSearchString={submittedSearchString}
+                  toggleSearchHistoryBox={toggleSearchHistoryBox}
                 />
               )}
             />

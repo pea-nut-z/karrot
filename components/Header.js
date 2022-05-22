@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Header({
   userId,

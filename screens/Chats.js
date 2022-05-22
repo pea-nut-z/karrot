@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Header } from "../components";
 import { icons, SIZES, FONTS, COLORS } from "../constants";
 // import AsyncStorage from "@react-native-community/async-storage";
