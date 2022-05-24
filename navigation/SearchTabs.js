@@ -57,13 +57,12 @@ export default function SearchTabs({ route, navigation }) {
           ref={searchBarRef}
           value={searchString}
           onFocus={() => {
-            console.log("onFocus");
-
+            // console.log("onFocus");
             setShowSearchHistory(true);
             setSearchFieldAlert(false);
           }}
           onBlur={() => {
-            console.log("onBlur");
+            // console.log("onBlur");
             if (searchString) {
               setShowSearchHistory(false);
             } else {
@@ -136,7 +135,6 @@ export default function SearchTabs({ route, navigation }) {
                 <View key={`item-${index}`} style={styles.recentSearchItemContainer}>
                   <TouchableOpacity
                     onPress={() => {
-                      console.log({ item });
                       setSearchString(item);
                       setSubmittedSearchString(item);
                       clearFilters();
