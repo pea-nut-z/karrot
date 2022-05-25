@@ -34,7 +34,7 @@ export default function Header({
           } else if (newItem) {
             navigation.navigate("Home");
           } else {
-            navigation.goBack();
+            navigation.goBack(null);
           }
         }}
       >

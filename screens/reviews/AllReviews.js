@@ -36,9 +36,7 @@ export default function AllReviews({ route, navigation }) {
           return (
             <TouchableOpacity
               key={index}
-              onPress={() =>
-                navigation.navigate("Profile", { userId, sellerId: reviewer.reviewerId })
-              }
+              onPress={() => navigation.push("Profile", { userId, sellerId: reviewer.reviewerId })}
               style={{
                 flexDirection: "row",
                 alignItems: "center",

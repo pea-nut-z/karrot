@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View, TextInput, Text, ScrollView, StyleSheet, Platform, SafeAreaView } from "react-native";
 import { ForSale, User } from "../screens";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -57,12 +57,10 @@ export default function SearchTabs({ route, navigation }) {
           ref={searchBarRef}
           value={searchString}
           onFocus={() => {
-            // console.log("onFocus");
             setShowSearchHistory(true);
             setSearchFieldAlert(false);
           }}
           onBlur={() => {
-            // console.log("onBlur");
             if (searchString) {
               setShowSearchHistory(false);
             } else {

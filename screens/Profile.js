@@ -15,7 +15,6 @@ import * as actions from "../store/actionTypes";
 
 export default function Profile({ route, navigation }) {
   const { sellerId, userId } = route.params;
-
   // SELECTORS
   const seller = useSelector((state) => state.members[sellerId]);
   const items = useSelector((state) => state.listings[sellerId]);
