@@ -45,7 +45,6 @@ export default function Header({
 
   const closeModal = () => {
     setBackBtnAlert(false);
-    setSearchFieldAlert(false);
   };
 
   const onClickOption = (actions) => {

@@ -10,7 +10,6 @@ import {
   ImageBackground,
   SafeAreaView,
 } from "react-native";
-
 import { COLORS, SIZES, categoryOptions, categoryDropDown } from "../../constants";
 import { Header, ModalAlert } from "../../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
