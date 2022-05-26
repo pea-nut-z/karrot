@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: SIZES.width,
+    height: 60,
   },
   headerWithoutImg: {
     borderWidth: 1,
