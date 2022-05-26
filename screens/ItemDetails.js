@@ -1,25 +1,16 @@
-import React, { useMemo, useEffect, useState, useRef } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import React, { useMemo, useEffect, useState } from "react";
+import { SafeAreaView, View, Text, TouchableOpacity, Platform } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-
 import {
+  Border,
   Header,
   ImageScrollView,
   MemberInfo,
   MemberRating,
   SellerOtherItems,
-  Border,
 } from "../components";
 import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
 import { timeSince } from "../helper";
@@ -38,7 +29,7 @@ export default function ItemDetails({ route, navigation }) {
   });
 
   const images = item.images;
-  const imgAvailable = typeof images[0] === "number" ? false : true;
+  const imgAvailable = typeof images[0] === "number" || images[0].includes(".png") ? false : true;
 
   // USER'S FAVOURITES
   const favs = useSelector((state) => state["favourites"][userId]);

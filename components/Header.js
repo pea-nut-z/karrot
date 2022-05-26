@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Header({
-  userId,
+  imgAvailable,
   newItem,
   navigation,
-  title,
   saveDraft,
   showPopoutMenu,
-  toggleFilterScreen,
   submitFunc,
-  imgAvailable,
+  title,
+  toggleFilterScreen,
+  userId,
   useBackBtn,
   useHomeBtn,
   useRightBtns,
