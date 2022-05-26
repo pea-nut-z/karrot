@@ -86,7 +86,10 @@ const listings = {
       chats: 0,
       favourites: 1,
       views: 0,
-      images: ["https://cdn.britannica.com/77/170477-050-1C747EE3/Laptop-computer.jpg"],
+      images: [
+        "https://media.wired.com/photos/5fb2cc575c9914713ead03de/master/w_1920,c_limit/Gear-Apple-MacBook-Air-top-down-SOURCE-Apple.jpg",
+        "https://media.wired.com/photos/5faed077f9e76246dde3355d/master/pass/Gear-Surface-Laptop-Go-SOURCE-Microsoft.jpg",
+      ],
       title: "Computer",
       price: 150,
       free: false,
@@ -102,7 +105,8 @@ const listings = {
       favourites: 0,
       views: 0,
       images: [
-        "https://cdn.shopify.com/s/files/1/2660/5106/products/zitwtf8ugnk2s36hmqih_1bea5b64-70ab-4cba-81ce-287847488ef2_1400x.jpg?v=1610048659",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTNXy9VvobQfqsWF5JxFtzfXKdepmDIza5GUAtO8LNwuLQCRKe__Hlcd7mqpbd5JbPB8&usqp=CAU",
+        "https://d6qwfb5pdou4u.cloudfront.net/product-images/920001-930000/921404/1493830079901676dedf705c0ae03c1b6ee656b089/1500-1500-frame-0.jpg",
       ],
       title: "Sofa",
       price: 100,
@@ -118,7 +122,10 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      images: ["https://images-na.ssl-images-amazon.com/images/I/71Y62DmZg3L._AC_SL1500_.jpg"],
+      images: [
+        "https://images3.pricecheck.co.za/images/objects/hash/product/4d1/958/6fd/image_big_151824666.jpg?1547868465",
+        "https://i.pinimg.com/originals/e9/fd/48/e9fd485325df5ebf2fbb45ad29f503d9.jpg",
+      ],
       title: "baby stroller",
       price: 200,
       free: false,
@@ -134,7 +141,8 @@ const listings = {
       favourites: 0,
       views: 0,
       images: [
-        "https://thefibreco.com/wp-content/uploads/2020/01/Navigate-Pullover-by-Annie-Lupton.jpg",
+        "https://i.pinimg.com/736x/a2/75/25/a275259364ad4513c155e59d986591cd.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzbbZyMo4mqEZrckpsq6dDVPo8vPcmsdCeHbPbFx2ZOgpbiqn8_nhJTeZSBT2KIQ8OPpc&usqp=CAU",
       ],
       title: "Sweater",
       price: 50,
@@ -187,7 +195,8 @@ const listings = {
       favourites: 0,
       views: 0,
       images: [
-        "https://images-na.ssl-images-amazon.com/images/I/91DOyffm3cL._AC_SL1500_.jpg,https://www.musikalessons.com/blog/wp-content/uploads/2013/10/Fotolia_46742837_M.jpg",
+        "https://images.squarespace-cdn.com/content/v1/5d82948649d2036eaca6a98f/1591892584484-VC7DTH9H3P58X1VCGWOT/Vito+alto+sax+A4108202.jpg",
+        "https://m.media-amazon.com/images/I/51QBmSmKSQL._AC_SX355_.jpg",
       ],
       title: "Saxophone",
       price: 1000,
@@ -206,7 +215,7 @@ const listings = {
       favourites: 0,
       views: 0,
       images: [
-        "https://imagescdn.simons.ca/images/6772/200964/45/A1_2.jpg?__=19,https://imagescdn.simons.ca/images/6772/200964/1/A1_1.jpg?__=19",
+        "https://media1.popsugar-assets.com/files/thumbor/wLtfx2uRUtIwQx4jCeyf6r2LUzw/fit-in/728xorig/filters:format_auto-!!-:strip_icc-!!-/2018/08/08/815/n/1922564/58b56cd75b6b37aabe0b59.92812343_/i/Denim-Dresses-From-Amazon.jpg",
       ],
       title: "Dress",
       price: 70,
@@ -223,8 +232,8 @@ const listings = {
       favourites: 0,
       views: 0,
       images: [
-        "https://tirecraft.com/wp-content/uploads/2018/01/Hankook-winter-tire.jpeg",
-        "https://www.familyhandyman.com/wp-content/uploads/2020/10/snow-tires-GettyImages-1227503607.jpg",
+        "https://www.gannett-cdn.com/presto/2018/11/01/PDTF/20b37ad5-bd74-4fd7-a460-55171beb3b2a-Standard_and_Snow_Tires.jpg",
+        "https://www.toyotires.ca/sites/default/files/obgs5-sidewall_1_0.jpg",
       ],
       title: "Winter Tires",
       price: 100,
@@ -240,9 +249,6 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      // images: [
-      //   "https://ca-times.brightspotcdn.com/dims4/default/8011e40/2147483647/strip/true/crop/3001x2251+0+0/resize/840x630!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F84%2Ff8%2F6deea85943f7b5f721d039683060%2Fhoe-family-jb.jpg",
-      // ],
       images: [10],
       title: "plant",
       price: 10,
