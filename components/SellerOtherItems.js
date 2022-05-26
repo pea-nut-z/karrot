@@ -32,7 +32,7 @@ export default function SellerOtherItems({ userId, sellerId, itemId, navigation 
           <TouchableOpacity
             key={itemId}
             onPress={() => {
-              navigation.navigate("ItemDetails", {
+              navigation.push("ItemDetails", {
                 userId,
                 sellerId,
                 itemId,
