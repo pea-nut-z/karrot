@@ -9,26 +9,23 @@ import {
 } from "../constants";
 
 export default function MemberInfo({ picture, name, location, id, atItemDetails }) {
-  const styleVariables = atItemDetails ? styles.ItemDetails : styles.profile;
-  const textVariables = atItemDetails ? styles.itemDetailsText : styles.profileText;
-
   return (
-    <View
-      style={{
-        alignItems: "center",
-      }}
-    >
+    <View style={{ alignItems: "center" }}>
       {picture !== "N/A" ? (
-        <Image source={{ uri: picture }} resizeMode={"contain"} style={styleVariables} />
+        <Image
+          source={{ uri: picture }}
+          resizeMode={"contain"}
+          style={atItemDetails ? styles.ItemDetails : styles.profile}
+        />
       ) : (
         <Ionicons
           name={"person-circle-outline"}
-          size={styleVariables.height}
+          size={atItemDetails ? styles.ItemDetails.height : styles.profile.height}
           color={COLORS.secondary}
         />
       )}
 
-      <Text style={textVariables}>
+      <Text>
         {name} {location && `• ${location}`}
         {id && ` • #${id}`}
       </Text>
@@ -37,24 +34,14 @@ export default function MemberInfo({ picture, name, location, id, atItemDetails 
 }
 
 const styles = StyleSheet.create({
-  profileText: {
-    // ...FONTS.h4,
-    marginTop: SIZES.padding,
-    textAlign: "center",
-  },
   profile: {
     width: 110,
     height: 110,
     borderRadius: 100,
   },
-  itemDetailsText: {
-    // ...FONTS.body4,
-    marginTop: SIZES.padding,
-    textAlign: "center",
-  },
   ItemDetails: {
     width: 60,
     height: 60,
-    borderRadius: 50,
+    borderRadius: 100,
   },
 });
