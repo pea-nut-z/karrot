@@ -34,8 +34,7 @@ const members = {
   333: {
     username: "Jennifer",
     location: "Ottawa",
-    displayPic:
-      "https://media-exp1.licdn.com/dms/image/C4D03AQFqL3K7Xm2ySg/profile-displayphoto-shrink_200_200/0/1604292859762?e=1620864000&v=beta&t=x1edHswOrFkSJMX8P1NyCZgGG-1Jqa1ADdOkHeAxeqs",
+    displayPic: "https://viterbischool.usc.edu/wp-content/uploads/2020/05/Lily-Profile-Square.jpeg",
     joined: "January 02, 2020",
   },
 };
