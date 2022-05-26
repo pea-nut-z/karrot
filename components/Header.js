@@ -82,7 +82,7 @@ export default function Header({
     );
   };
   return (
-    <View style={[imgAvailable ? styles.headerWithImg : styles.headerWithoutImg, styles.header]}>
+    <View style={styles.header}>
       <View
         style={{
           display: "flex",
@@ -132,15 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: SIZES.width,
     height: 60,
-  },
-  headerWithoutImg: {
-    borderWidth: 1,
-    borderColor: COLORS.transparent,
-    borderBottomColor: COLORS.secondary,
-    height: 55,
-    backgroundColor: COLORS.white,
-  },
-  headerWithImg: {
     backgroundColor: COLORS.transparent,
   },
 });

@@ -1,10 +1,17 @@
 import React, { useMemo, useEffect, useState, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { useScrollToTop } from "@react-navigation/native";
 
 import {
   Header,
@@ -31,8 +38,7 @@ export default function ItemDetails({ route, navigation }) {
   });
 
   const images = item.images;
-  const imgAvailable = typeof item.images[0] === "number" ? false : true;
-  console.log({ imgAvailable });
+  const imgAvailable = typeof images[0] === "number" ? false : true;
 
   // USER'S FAVOURITES
   const favs = useSelector((state) => state["favourites"][userId]);
@@ -82,9 +88,7 @@ export default function ItemDetails({ route, navigation }) {
         />
       </View>
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
-        {/* HEADER ADJESTMENT */}
-        {imgAvailable && <ImageScrollView images={images} />}
-        {!imgAvailable && <View style={{ height: 105 }} />}
+        <ImageScrollView images={images} />
 
         {/* SELLER INFO */}
         <TouchableOpacity

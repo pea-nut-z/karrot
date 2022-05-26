@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Animated, Image } from "react-native";
+import { View, Animated, Image, Platform } from "react-native";
 import { SIZES, COLORS } from "../constants";
 
 export default function ImageScrollView({ images }) {
@@ -19,13 +19,23 @@ export default function ImageScrollView({ images }) {
           useNativeDriver: false,
         })}
       >
-        {images.map((item, index) => {
+        {images.map((img, index) => {
+          if (Platform.OS === "web") {
+            Image.resolveAssetSource = (source) => ({
+              uri: source,
+            });
+          }
           return (
             <View key={`image-${index}`} style={{ alignItems: "center" }}>
               <View style={{ height: SIZES.height * 0.5 }}>
-                {/* image */}
                 <Image
-                  source={{ uri: item }}
+                  source={
+                    Platform.OS === "web" && typeof img === "number"
+                      ? { uri: Image.resolveAssetSource(img).uri }
+                      : typeof img !== "number"
+                      ? { uri: img }
+                      : img
+                  }
                   resizeMode="cover"
                   style={{
                     width: SIZES.width,
