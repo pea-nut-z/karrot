@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.8.1",
     "expo": "~44.0.0",
     "expo-image-picker": "^12.0.2",
+    "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "^1.2.0",
     "metro-config": "^0.70.2",
     "react": "17.0.1",
@@ -44,8 +45,7 @@
     "react-redux": "^8.0.1",
     "redux": "^4.2.0",
     "rn-tooltip": "^3.0.1",
-    "sharp-cli": "^1.15.0",
-    "expo-splash-screen": "~0.14.1"
+    "sharp-cli": "^1.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

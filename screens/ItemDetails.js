@@ -31,7 +31,8 @@ export default function ItemDetails({ route, navigation }) {
   });
 
   const images = item.images;
-  const useImgStyle = typeof item.images[0] === "number" ? false : true;
+  const imgAvailable = typeof item.images[0] === "number" ? false : true;
+  console.log({ imgAvailable });
 
   // USER'S FAVOURITES
   const favs = useSelector((state) => state["favourites"][userId]);
@@ -71,15 +72,16 @@ export default function ItemDetails({ route, navigation }) {
         <Header
           navigation={navigation}
           newItem={newItem}
-          useImgStyle={useImgStyle}
+          imgAvailable={imgAvailable}
           useBackBtn={true}
+          useHomeBtn={true}
           useRightBtns={["share-social-outline"]}
         />
       </View>
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         {/* HEADER ADJESTMENT */}
-        {useImgStyle && <ImageScrollView images={images} />}
-        {!useImgStyle && <View style={{ height: 105 }} />}
+        {imgAvailable && <ImageScrollView images={images} />}
+        {!imgAvailable && <View style={{ height: 105 }} />}
 
         {/* SELLER INFO */}
         <TouchableOpacity

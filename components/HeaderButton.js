@@ -3,7 +3,14 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 
-export default function HeaderButton({ userId, name, showPopoutMenu, submitFunc, navigation }) {
+export default function HeaderButton({
+  userId,
+  name,
+  showPopoutMenu,
+  imgAvailable,
+  submitFunc,
+  navigation,
+}) {
   const navigateTo = (keyword) => {
     switch (keyword) {
       case "checkmark":
@@ -20,6 +27,8 @@ export default function HeaderButton({ userId, name, showPopoutMenu, submitFunc,
         return navigation.navigate("NotificationsTabs", {
           userId,
         });
+      case "home":
+        return navigation.navigate("Home");
       default:
         return;
     }
@@ -31,25 +40,13 @@ export default function HeaderButton({ userId, name, showPopoutMenu, submitFunc,
           const keyword = name.split("-")[0];
           keyword === "ellipsis" ? showPopoutMenu() : navigateTo(keyword);
         }}
-        style={styles.btn}
+        style={{
+          padding: 5,
+          marginLeft: 5,
+        }}
       >
-        <Ionicons name={name} size={25} style={name.includes("social") ? styles.shareBtn : null} />
+        <Ionicons name={name} size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    paddingLeft: 25,
-    paddingVertical: 3,
-  },
-  shareBtn: {
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: COLORS.darkgray,
-    shadowOpacity: 2.0,
-    color: COLORS.black,
-    paddingLeft: 25,
-    paddingVertical: 3,
-  },
-});

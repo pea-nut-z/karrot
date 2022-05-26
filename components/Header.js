@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
@@ -14,8 +14,9 @@ export default function Header({
   showPopoutMenu,
   toggleFilterScreen,
   submitFunc,
-  useImgStyle,
+  imgAvailable,
   useBackBtn,
+  useHomeBtn,
   useRightBtns,
 }) {
   const [backBtnAlert, setBackBtnAlert] = useState(false);
@@ -23,7 +24,6 @@ export default function Header({
   const renderBackBtn = () => {
     return (
       <TouchableOpacity
-        style={styles.backBtn}
         onPress={() => {
           if (title === "Filter") {
             toggleFilterScreen();
@@ -34,15 +34,11 @@ export default function Header({
           } else if (newItem) {
             navigation.navigate("Home");
           } else {
-            navigation.goBack(null);
+            navigation.goBack();
           }
         }}
       >
-        <Ionicons
-          name="arrow-back-outline"
-          size={25}
-          style={useImgStyle ? styles.backBtnWithImg : null}
-        />
+        <Ionicons name="arrow-back-outline" size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
       </TouchableOpacity>
     );
   };
@@ -66,36 +62,41 @@ export default function Header({
     return (
       <View
         style={{
+          display: "flex",
           flexDirection: "row",
         }}
       >
-        {useRightBtns &&
-          useRightBtns.map((buttonName, index) => {
-            return (
-              <HeaderButton
-                key={`button-${index}`}
-                userId={userId}
-                name={buttonName}
-                navigation={navigation}
-                showPopoutMenu={showPopoutMenu}
-                submitFunc={submitFunc}
-              />
-            );
-          })}
+        {useRightBtns.map((buttonName, index) => {
+          return (
+            <HeaderButton
+              key={`button-${index}`}
+              userId={userId}
+              name={buttonName}
+              navigation={navigation}
+              imgAvailable={imgAvailable}
+              showPopoutMenu={showPopoutMenu}
+              submitFunc={submitFunc}
+            />
+          );
+        })}
       </View>
     );
   };
   return (
-    <View style={useImgStyle ? styles.headerWithImg : styles.headerWithoutImg}>
+    <View style={[imgAvailable ? styles.headerWithImg : styles.headerWithoutImg, styles.header]}>
       <View
         style={{
+          display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {/* BACK BUTTON */}
         {useBackBtn && renderBackBtn()}
+        {useHomeBtn && (
+          <HeaderButton name={"home-outline"} imgAvailable={imgAvailable} navigation={navigation} />
+        )}
         <ModalAlert
           visibleVariable={backBtnAlert}
           closeModal={closeModal}
@@ -123,37 +124,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     // ...FONTS.h4,
   },
-  headerWithoutImg: {
+  header: {
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: SIZES.width,
+  },
+  headerWithoutImg: {
     borderWidth: 1,
     borderColor: COLORS.transparent,
     borderBottomColor: COLORS.secondary,
-    alignItems: "center",
-    flexDirection: "row",
-    width: SIZES.width,
     height: 55,
     backgroundColor: COLORS.white,
-    justifyContent: "space-between",
   },
   headerWithImg: {
-    paddingVertical: SIZES.padding,
-    paddingHorizontal: SIZES.padding * 2,
-    alignItems: "center",
-    flexDirection: "row",
-    width: SIZES.width,
     backgroundColor: COLORS.transparent,
-    justifyContent: "space-between",
-  },
-  backBtn: {
-    width: 35,
-    height: 35,
-    justifyContent: "center",
-  },
-  backBtnWithImg: {
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: COLORS.darkgray,
-    shadowOpacity: 2.0,
-    color: COLORS.black,
   },
 });
