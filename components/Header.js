@@ -82,7 +82,7 @@ export default function Header({
     );
   };
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, imgAvailable ? null : styles.headerBorder]}>
       <View
         style={{
           display: "flex",
@@ -133,5 +133,10 @@ const styles = StyleSheet.create({
     width: SIZES.width,
     height: 60,
     backgroundColor: COLORS.transparent,
+  },
+  headerBorder: {
+    borderWidth: 1,
+    borderColor: COLORS.transparent,
+    borderBottomColor: COLORS.secondary,
   },
 });
