@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState, ScrollView } from "react";
+import React, { useMemo, useEffect, useState, useRef } from "react";
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -56,6 +56,9 @@ export default function ItemDetails({ route, navigation }) {
         sellerId,
         itemId,
       });
+    }
+    if (window === undefined) {
+      window.scrollTo(0, 0);
     }
   }, []);
 
