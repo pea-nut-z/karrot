@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  KeyboardAvoidingView,
   Platform,
   Keyboard,
   SafeAreaView,
@@ -23,6 +22,7 @@ export default function EditProfile({ route, navigation }) {
   const currentPic = useSelector((state) => state.members[userId]["displayPic"]);
   const currentName = useSelector((state) => state.members[userId]["username"]);
   const userInfo = useSelector((state) => state.members[userId]);
+
   const [displayPic, setDisplayPic] = useState(currentPic);
   const [username, setUsername] = useState(currentName);
   const [popupMenu, setPopupMenu] = useState(false);
@@ -174,13 +174,6 @@ export default function EditProfile({ route, navigation }) {
           }}
         />
       </View>
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-        }}
-      ></KeyboardAvoidingView> */}
       <SafeAreaView />
     </SafeAreaView>
   );
