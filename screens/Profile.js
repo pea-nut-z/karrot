@@ -304,7 +304,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.secondary,
     borderRadius: 5,
-    backgroundColor: "green",
   },
   bottomSubContainer: {
     flexDirection: "row",

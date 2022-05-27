@@ -230,12 +230,7 @@ export default function Sell({ route, navigation }) {
         enableOnAndroid
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={{
-            ...styles.container,
-            ...styles.uploadImgContainer,
-          }}
-        >
+        <View style={[styles.container, styles.uploadImgContainer]}>
           <TouchableOpacity
             onPress={() => {
               numOfImg < maxNumOfImg
@@ -263,25 +258,23 @@ export default function Sell({ route, navigation }) {
           defaultValue={title}
           onChangeText={setTitle}
           placeholder="Title"
-          style={{ ...styles.container, ...styles.regularHeight }}
+          style={[styles.container, styles.regularHeight]}
         />
 
         <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            ...styles.container,
-          }}
+          style={[
+            {
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            },
+            styles.container,
+          ]}
         >
           {/* FREE LABEL */}
           {/* PRICE */}
           {free ? (
-            <View
-              style={{
-                ...styles.regularHeight,
-              }}
-            >
+            <View style={styles.regularHeight}>
               <TouchableOpacity
                 onPress={() => {
                   setFree(false);
@@ -303,10 +296,7 @@ export default function Sell({ route, navigation }) {
               ignoreNegative={true}
               placeholder="$ Enter price"
               placeholderTextColor={COLORS.secondary}
-              style={{
-                ...styles.regularHeight,
-                width: SIZES.width * 0.5,
-              }}
+              style={[styles.regularHeight, { width: SIZES.width * 0.5 }]}
             />
           )}
 
@@ -360,15 +350,13 @@ export default function Sell({ route, navigation }) {
         {/* DESCRIPTION */}
         <View style={{ height: 200 }}>
           <Textarea
-            containerStyle={{
-              ...styles.container,
-              ...styles.textareaContainer,
-            }}
+            containerStyle={[styles.container, styles.textareaContainer]}
             defaultValue={description}
             onChangeText={setDescription}
             maxLength={600}
             placeholder={"Describe your item in as much detail as you can."}
             underlineColorAndroid={"transparent"}
+            style={styles.textareaContainer}
           />
         </View>
       </KeyboardAwareScrollView>
