@@ -28,34 +28,20 @@ export default function EditProfile({ route, navigation }) {
   const [popupMenu, setPopupMenu] = useState(false);
   const dispatch = useDispatch();
 
-  const renderDoneBtn = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          displayPic !== currentPic &&
-            dispatch({
-              type: actions.USER_DISPLAYPIC_CHANGED,
-              userId,
-              image: displayPic,
-            });
-          username !== currentName &&
-            dispatch({
-              type: actions.USERNAME_CHANGED,
-              userId,
-              username,
-            });
-          navigation.goBack();
-        }}
-        style={{
-          height: 50,
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: COLORS.primary,
-        }}
-      >
-        <Text style={{ fontSize: 25, color: COLORS.white }}>Done</Text>
-      </TouchableOpacity>
-    );
+  const done = () => {
+    displayPic !== currentPic &&
+      dispatch({
+        type: actions.USER_DISPLAYPIC_CHANGED,
+        userId,
+        image: displayPic,
+      });
+    username !== currentName &&
+      dispatch({
+        type: actions.USERNAME_CHANGED,
+        userId,
+        username,
+      });
+    navigation.goBack();
   };
 
   const choosePhotoFromLibrary = async () => {
@@ -88,8 +74,7 @@ export default function EditProfile({ route, navigation }) {
           onPress={() => choosePhotoFromLibrary()}
           style={{
             height: 65,
-            backgroundColor: "pink",
-            //   backgroundColor: COLORS.white,
+            backgroundColor: COLORS.white,
             flexDirection: "row",
             alignItems: "center",
             paddingHorizontal: SIZES.padding * 2,
@@ -126,18 +111,18 @@ export default function EditProfile({ route, navigation }) {
             source={{ uri: displayPic }}
             resizeMode={"contain"}
             style={{
-              width: 150,
-              height: 150,
+              width: 110,
+              height: 110,
               borderRadius: 300,
             }}
           />
         ) : (
-          <Ionicons name={"person-circle-outline"} size={160} color={COLORS.secondary} />
+          <Ionicons name={"person-circle-outline"} size={120} color={COLORS.secondary} />
         )}
         <View
           style={{
-            height: 45,
-            width: 45,
+            height: 35,
+            width: 35,
             backgroundColor: COLORS.lightGray2,
             justifyContent: "center",
             alignItems: "center",
@@ -145,18 +130,24 @@ export default function EditProfile({ route, navigation }) {
             borderColor: COLORS.secondary,
             borderRadius: 50,
             position: "absolute",
-            top: 110,
-            left: 110,
+            top: 80,
+            left: 80,
           }}
         >
-          <Ionicons name={"camera"} size={30} color={COLORS.darkgray} />
+          <Ionicons name={"camera"} size={20} color={COLORS.darkgray} />
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header title={"Edit Profile"} useBackBtn={true} navigation={navigation} />
+      <Header
+        title={"Edit Profile"}
+        useBackBtn={true}
+        useRightBtns={["DONE"]}
+        submitFunc={done}
+        navigation={navigation}
+      />
 
       <View
         style={{
@@ -183,15 +174,13 @@ export default function EditProfile({ route, navigation }) {
           }}
         />
       </View>
-      <KeyboardAvoidingView
+      {/* <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
           flex: 1,
           justifyContent: "flex-end",
         }}
-      >
-        {renderDoneBtn()}
-      </KeyboardAvoidingView>
+      ></KeyboardAvoidingView> */}
       <SafeAreaView />
     </SafeAreaView>
   );

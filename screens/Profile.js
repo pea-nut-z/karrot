@@ -112,6 +112,7 @@ export default function Profile({ route, navigation }) {
           <TouchableOpacity
             style={styles.popupMenuOption}
             onPress={() => {
+              hidePopoutMenu();
               navigation.navigate("EditProfile", { userId });
             }}
           >

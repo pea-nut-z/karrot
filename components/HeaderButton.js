@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 
@@ -14,6 +14,7 @@ export default function HeaderButton({
   const navigateTo = (keyword) => {
     switch (keyword) {
       case "checkmark":
+      case "DONE":
         return submitFunc();
       case "search":
         return navigation.navigate("SearchTabs", {
@@ -45,7 +46,11 @@ export default function HeaderButton({
           marginLeft: 5,
         }}
       >
-        <Ionicons name={name} size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
+        {name === "DONE" ? (
+          <Text>{name}</Text>
+        ) : (
+          <Ionicons name={name} size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
+        )}
       </TouchableOpacity>
     </View>
   );
