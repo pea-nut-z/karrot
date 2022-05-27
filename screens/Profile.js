@@ -108,11 +108,9 @@ export default function Profile({ route, navigation }) {
   const renderPopoutMenu = () => {
     if (atCurrentUserProfile) {
       return (
-        <View style={{ ...styles.popupMenuContainer }}>
+        <View style={styles.popupMenuContainer}>
           <TouchableOpacity
-            style={{
-              ...styles.popupMenuOption,
-            }}
+            style={styles.popupMenuOption}
             onPress={() => {
               navigation.navigate("EditProfile", { userId });
             }}
@@ -127,14 +125,12 @@ export default function Profile({ route, navigation }) {
         : ["Report", "Block", sellerIsHidden ? "Unhide this seller's posts" : "Hide this seller"];
 
       return (
-        <View style={{ ...styles.popupMenuContainer }}>
+        <View style={styles.popupMenuContainer}>
           {options.map((option) => {
             return (
               <TouchableOpacity
                 key={option}
-                style={{
-                  ...styles.popupMenuOption,
-                }}
+                style={styles.popupMenuOption}
                 onPress={() => {
                   onClickOption(option);
                   hidePopoutMenu();
@@ -210,7 +206,7 @@ export default function Profile({ route, navigation }) {
       <View
         style={{
           position: "absolute",
-          top: 60,
+          top: 65,
           right: SIZES.padding * 2,
           zIndex: 1,
         }}
@@ -243,7 +239,7 @@ export default function Profile({ route, navigation }) {
                   navigation.navigate("Rate", { userId, sellerId });
                 }}
               >
-                <Text style={styles.boldText}>Rate</Text>
+                <Text>Rate</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -321,12 +317,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 3 },
     shadowColor: COLORS.darkgray,
     shadowOpacity: 0.6,
+    elevation: 5,
     borderWidth: 1,
     borderColor: COLORS.secondary,
     paddingVertical: SIZES.padding / 2,
   },
   popupMenuOption: {
-    height: 40,
     minWidth: 100,
     justifyContent: "center",
     paddingHorizontal: SIZES.padding * 2,
@@ -348,10 +344,6 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.padding,
   },
   confirmationText: {
-    // ...FONTS.body2,
     marginVertical: SIZES.padding,
-  },
-  boldText: {
-    // ...FONTS.h4,
   },
 });
