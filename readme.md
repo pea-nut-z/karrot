@@ -4,15 +4,11 @@ eMarketplace is a mobile app, and it is in development. More features are gettin
 
 Click [here](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing) to watch me demonstrate how eMarketplace works.
 
-### View On A Mobile Device (Recommended)
-
-It is a better experience to view on a mobile device instead of in the browser. Currently, viewing in the browser is not as responsive due to compatibility issues.
+### View On A Mobile Device
 
 eMarketplace requires an app called Expo Go to run. So, on your mobile device in App/Play Store, please download Expo Go. After that click [here](https://expo.dev/@peanutz/karrot) to get the QR code of eMarketplace, scan the code using Expo Go, and the app should open.
 
 ### View In The Browser
-
-Some features and stylings are not web-compatible yet, and I am fixing it.
 
 - right click [here](https://peanutz-marketplace.herokuapp.com) and select "Open Link in New Tab"
 
@@ -65,4 +61,5 @@ Your username is Tony once you are on the app. The app includes:
 
 Resolved
 
-- [x] Enable viewers to view the app on desktops besides their mobile devices. Doing so will add accessibility and convenience for viewers.
+- [x] Fix style and feature incompatibilities across web, ios and android platforms after Expo version upgrade
+- [x] Enable viewers to view the app on desktops besides their mobile devices. Doing so will add accessibility and convenience for viewers
