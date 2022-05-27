@@ -104,7 +104,6 @@ export default function ForSale({
     <View style={{ flex: 1 }}>
       <View
         style={{
-          display: "flex",
           flexDirection: "row",
           alignItems: "center",
           height: 40,

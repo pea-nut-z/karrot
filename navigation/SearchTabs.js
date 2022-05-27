@@ -277,7 +277,6 @@ const styles = StyleSheet.create({
   deleteAllBtn: {
     width: 80,
     height: 30,
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -311,7 +310,6 @@ const styles = StyleSheet.create({
   deleteRecentSearchItem: {
     width: SIZES.width * 0.11,
     height: "100%",
-    display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",

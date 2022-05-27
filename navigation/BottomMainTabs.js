@@ -81,12 +81,6 @@ export default function BottomMainTabs() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: [
-          {
-            display: "flex",
-          },
-          null,
-        ],
       }}
       tabBar={(props) => <CustomTabBar props={props} />}
     >

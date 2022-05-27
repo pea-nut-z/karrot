@@ -61,7 +61,6 @@ export default function Header({
     return (
       <View
         style={{
-          // display: "flex",
           flexDirection: "row",
         }}
       >
@@ -85,7 +84,6 @@ export default function Header({
     <View style={[styles.header, imgAvailable ? null : styles.headerBorder]}>
       <View
         style={{
-          display: "flex",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
   header: {
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
