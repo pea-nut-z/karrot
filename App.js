@@ -44,8 +44,8 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          // initialRouteName={"BottomMainTabs"}
-          initialRouteName={"MyAccount"}
+          initialRouteName={"BottomMainTabs"}
+          // initialRouteName={"MyAccount"}
         >
           {/* HOME */}
           {/* <Stack.Screen name="Login" component={Login} /> */}
