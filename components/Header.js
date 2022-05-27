@@ -61,7 +61,7 @@ export default function Header({
     return (
       <View
         style={{
-          display: "flex",
+          // display: "flex",
           flexDirection: "row",
         }}
       >

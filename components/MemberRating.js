@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
@@ -10,25 +10,23 @@ export default function MemberRating({ memberId, atItemDetails }) {
   //  MEMBER RATING INFO
   const totalRating = useSelector((state) => state["reviews"][memberId]["total"]);
   const numOfReviews = useSelector((state) => state["reviews"][memberId]["reviewers"].length);
-  const average = totalRating / numOfReviews;
-
-  const styleVariables = atItemDetails ? styles.ItemDetails : styles.profile;
-  const textVariables = atItemDetails ? styles.itemDetailsText : styles.profileText;
-
-  const emojiName = average <= 2 ? icons.unamused : average >= 4 ? icons.excited : icons.happy;
-
   const numerOfStars = [1, 2, 3, 4, 5];
+  const [average, setAverage] = useState();
+
+  useEffect(() => {
+    const ratingAverage = totalRating / numOfReviews;
+    setAverage(ratingAverage);
+  }, [totalRating, numOfReviews]);
 
   return (
     <View
       style={{
         alignItems: "flex-end",
-        justifyContent: "center",
       }}
     >
       {/* <NUM OF REVIEWS */}
-      <Text style={textVariables}>
-        {numOfReviews} Review{numOfReviews > 1 ? "s" : null}
+      <Text>
+        {numOfReviews} Review{numOfReviews > 1 && "s"}
       </Text>
 
       <View
@@ -44,25 +42,28 @@ export default function MemberRating({ memberId, atItemDetails }) {
           }}
         >
           {numerOfStars.map((num, index) => {
-            return average >= num ? (
+            return (
               <Ionicons
                 key={`star-${index}`}
-                name={"star"}
-                size={styleVariables.height}
-                color={COLORS.primary}
-              />
-            ) : (
-              <Ionicons
-                key={`star-${index}`}
-                name={"star-outline"}
-                size={styleVariables.height}
+                name={average >= num ? "star" : "star-outline"}
+                size={atItemDetails ? 25 : 35}
                 color={COLORS.primary}
               />
             );
           })}
         </View>
+
         {/*  EMOJI */}
-        <Image source={emojiName} resizeMode="contain" style={styleVariables} />
+        <Image
+          source={average <= 2 ? icons.unamused : average >= 4 ? icons.excited : icons.happy}
+          resizeMode="contain"
+          // style={atItemDetails ? styles.ItemDetails : styles.profile}
+          style={{
+            height: atItemDetails ? 25 : 35,
+            width: atItemDetails ? 25 : 35,
+            marginLeft: SIZES.padding / 2,
+          }}
+        />
       </View>
 
       {/* TOOLTIP */}
@@ -92,24 +93,3 @@ export default function MemberRating({ memberId, atItemDetails }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  profileText: {
-    // ...FONTS.h4,
-    textAlign: "center",
-  },
-  profile: {
-    width: 35,
-    height: 35,
-    marginLeft: SIZES.padding / 2,
-  },
-  itemDetailsText: {
-    // ...FONTS.body4,
-    textAlign: "center",
-  },
-  ItemDetails: {
-    width: 25,
-    height: 25,
-    marginLeft: SIZES.padding / 2,
-  },
-});

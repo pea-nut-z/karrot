@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -15,34 +15,37 @@ import * as actions from "../store/actionTypes";
 
 export default function Profile({ route, navigation }) {
   const { sellerId, userId } = route.params;
-  // SELECTORS
+
   const seller = useSelector((state) => state.members[sellerId]);
-  const items = useSelector((state) => state.listings[sellerId]);
-  const numOfItems = items && Object.keys(items).length;
+
+  const atCurrentUserProfile = sellerId === userId ? true : false;
+
+  const numOfItems = useSelector((state) => {
+    const items = state.listings[sellerId];
+    return Object.keys(items).length;
+  });
 
   const numOfReviews = useSelector((state) => state["reviews"][sellerId]["reviewers"].length);
 
-  const blockList = useSelector((state) => {
+  const sellerIsBlocked = useSelector((state) => {
     if (!atCurrentUserProfile) {
-      return state.restrictions[userId]["block"];
+      const list = state.restrictions[userId]["block"];
+      return list.includes(sellerId);
     }
   });
-  const hideList = useSelector((state) => {
+
+  const sellerIsHidden = useSelector((state) => {
     if (!atCurrentUserProfile) {
       return state.restrictions[userId]["hide"];
     }
   });
 
-  const atCurrentUserProfile = sellerId === userId ? true : false;
-  const itemTabs = atCurrentUserProfile ? "UserItemsTabs" : "SellerItemsTabs";
-  const sellerIsBlocked = blockList.includes(sellerId) ? true : false;
-
+  // Modal
   const [popupMenu, setPopupMenu] = useState(false);
   const [blockAlert, setBlockAlert] = useState(false);
   const [hideAlert, setHideAlert] = useState(false);
   const [unblockMsg, setUnblockMsg] = useState(false);
   const [unhideMsg, setUnhideMsg] = useState(false);
-
   const dispatch = useDispatch();
 
   const showPopoutMenu = () => {
@@ -119,11 +122,9 @@ export default function Profile({ route, navigation }) {
         </View>
       );
     } else {
-      const hideOption = hideList.includes(sellerId)
-        ? "Unhide this seller's posts"
-        : "Hide this seller";
-
-      const options = sellerIsBlocked ? ["Report", "Unblock"] : ["Report", "Block", hideOption];
+      const options = sellerIsBlocked
+        ? ["Report", "Unblock"]
+        : ["Report", "Block", sellerIsHidden ? "Unhide this seller's posts" : "Hide this seller"];
 
       return (
         <View style={{ ...styles.popupMenuContainer }}>
@@ -219,14 +220,9 @@ export default function Profile({ route, navigation }) {
 
       <TouchableWithoutFeedback onPress={hidePopoutMenu}>
         <View style={{ flex: 1 }}>
-          {/* MEMBER INFO */}
-          <View
-            style={{
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
-            <View style={styles.container}>
+          <View style={styles.topContainer}>
+            {/* MEMBER INFO */}
+            <View style={styles.margin}>
               <MemberInfo
                 picture={seller.displayPic}
                 name={seller.username}
@@ -234,44 +230,37 @@ export default function Profile({ route, navigation }) {
               />
             </View>
 
-            {/* RATE BUTTON  */}
-            {!atCurrentUserProfile && (
-              <View style={styles.container}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.border,
-                    height: 40,
-                    width: SIZES.width - SIZES.padding * 4,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onPress={() => {
-                    navigation.navigate("Rate", { userId, sellerId });
-                  }}
-                >
-                  <Text style={styles.boldText}>Rate</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            <View style={styles.container}>
+            {/* MEMBER RATING */}
+            <View style={styles.margin}>
               <MemberRating memberId={sellerId} />
             </View>
+
+            {/* RATE BUTTON  */}
+            {!atCurrentUserProfile && (
+              <TouchableOpacity
+                style={[styles.rateBtn, styles.margin]}
+                onPress={() => {
+                  navigation.navigate("Rate", { userId, sellerId });
+                }}
+              >
+                <Text style={styles.boldText}>Rate</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* ITEMS */}
-          <View style={{ flex: 1 }}>
+          <View style={styles.bottomContainer}>
+            {/* ITEMS */}
             <TouchableOpacity
-              onPress={() => navigation.navigate(itemTabs, { userId, sellerId })}
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                ...styles.container,
-              }}
+              onPress={() =>
+                navigation.navigate(atCurrentUserProfile ? "UserItemsTabs" : "SellerItemsTabs", {
+                  userId,
+                  sellerId,
+                })
+              }
+              style={[styles.bottomSubContainer, styles.margin]}
             >
               <Text style={{ fontSize: 16 }}>
-                {numOfItems ? numOfItems : 0} item{numOfItems > 1 ? "s" : null}
+                {numOfItems} item{numOfItems > 1 && "s"}
               </Text>
               <Ionicons name={"chevron-forward-outline"} size={25} />
             </TouchableOpacity>
@@ -279,16 +268,11 @@ export default function Profile({ route, navigation }) {
             {/* REVIEWS */}
             <TouchableOpacity
               onPress={() => navigation.navigate("AllReviews", { userId, memberId: sellerId })}
-              style={{
-                flex: 3,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                ...styles.container,
-              }}
+              style={[styles.bottomSubContainer, styles.margin]}
             >
               <View>
                 <Text style={{ fontSize: 16 }}>
-                  {numOfReviews ? numOfReviews : 0} review{numOfReviews > 1 ? "s" : null}
+                  {numOfReviews} review{numOfReviews > 1 && "s"}
                 </Text>
               </View>
               <Ionicons name={"chevron-forward-outline"} size={25} />
@@ -301,14 +285,36 @@ export default function Profile({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  margin: {
     paddingHorizontal: SIZES.padding * 2,
-    paddingVertical: SIZES.padding * 2,
+    paddingVertical: SIZES.padding,
   },
-  border: {
+  topContainer: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bottomContainer: {
+    flex: 1,
+    borderWidth: 1,
+    borderTopColor: COLORS.secondary,
+  },
+  rateBtn: {
+    height: 40,
+    width: SIZES.width - SIZES.padding * 4,
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.secondary,
     borderRadius: 5,
+    backgroundColor: "green",
+  },
+  bottomSubContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: COLORS.transparent,
+    borderBottomColor: COLORS.secondary,
   },
   popupMenuContainer: {
     backgroundColor: COLORS.white,
