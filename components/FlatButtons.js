@@ -42,12 +42,10 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "center",
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
   },
   text: {
-    // ....h5,
     paddingLeft: SIZES.padding * 2,
     paddingTop: 10,
   },

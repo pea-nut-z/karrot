@@ -57,7 +57,6 @@ export default function MemberRating({ memberId, atItemDetails }) {
         <Image
           source={average <= 2 ? icons.unamused : average >= 4 ? icons.excited : icons.happy}
           resizeMode="contain"
-          // style={atItemDetails ? styles.ItemDetails : styles.profile}
           style={{
             height: atItemDetails ? 25 : 35,
             width: atItemDetails ? 25 : 35,

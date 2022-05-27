@@ -21,35 +21,16 @@ export default function MyAccount({ navigation }) {
 
   const renderCamerabtn = () => {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: SIZES.padding * 2,
-        }}
-      >
+      <View style={styles.cameraBtnContainer}>
         <MemberInfo
           picture={userInfo.displayPic}
           name={userInfo.username}
           location={userInfo.location}
           id={userId}
         />
-
         <TouchableOpacity
           onPress={() => navigation.navigate("EditProfile", { userId })}
-          style={{
-            height: 35,
-            width: 35,
-            backgroundColor: COLORS.lightGray2,
-            justifyContent: "center",
-            alignItems: "center",
-            borderWidth: 1,
-            borderColor: COLORS.secondary,
-            borderRadius: 50,
-            top: 25,
-            left: -55,
-          }}
+          style={styles.cameraBtn}
         >
           <Ionicons name={"camera"} size={25} color={COLORS.darkgray} />
         </TouchableOpacity>
@@ -72,30 +53,51 @@ export default function MyAccount({ navigation }) {
               userId,
             })
           }
-          style={{
-            paddingVertical: SIZES.padding,
-            paddingHorizontal: SIZES.padding * 2,
-          }}
+          style={styles.margin}
         >
-          <View style={styles.button}>
-            <Text style={styles.btnText}>View profile</Text>
+          <View style={styles.viewProfileButton}>
+            <Text>View profile</Text>
           </View>
         </TouchableOpacity>
 
         {/* CIRCLE BUTTONS */}
-        <View style={styles.circleButtons}>
+        <View style={[styles.circleButtons, styles.margin]}>
           <CircleButton options={viewOptions} userId={userId} navigation={navigation} />
         </View>
 
         {/* FLAT BUTTONS */}
-        <FlatButtons options={flatBtnOptions} navigateTo={navigateTo} />
+        <View style={styles.margin}>
+          <FlatButtons options={flatBtnOptions} navigateTo={navigateTo} />
+        </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
+  margin: {
+    marginVertical: SIZES.padding,
+    marginHorizontal: SIZES.padding * 2,
+  },
+  cameraBtnContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: SIZES.padding * 2,
+  },
+  cameraBtn: {
+    height: 35,
+    width: 35,
+    backgroundColor: COLORS.lightGray2,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.secondary,
+    borderRadius: 50,
+    top: 25,
+    left: -55,
+  },
+  viewProfileButton: {
     alignItems: "center",
     justifyContent: "center",
     marginTop: SIZES.padding,
@@ -105,14 +107,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: COLORS.darkgray,
   },
-  btnText: {
-    // ....h5
-  },
-
   circleButtons: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingVertical: SIZES.padding,
     height: SIZES.height * 0.12,
   },
 });

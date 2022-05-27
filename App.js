@@ -44,7 +44,8 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={"BottomMainTabs"}
+          // initialRouteName={"BottomMainTabs"}
+          initialRouteName={"MyAccount"}
           // initialRouteName={"Login"}
         >
           {/* HOME */}
