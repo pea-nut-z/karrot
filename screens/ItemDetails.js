@@ -29,7 +29,7 @@ export default function ItemDetails({ route, navigation }) {
   });
 
   const images = item.images;
-  const imgAvailable = typeof images[0] === "number" || images[0].includes(".png") ? false : true;
+  const useWhiteBtns = typeof images[0] === "number" || images[0].includes(".png") ? false : true;
 
   // USER'S FAVOURITES
   const favs = useSelector((state) => state["favourites"][userId]);
@@ -72,7 +72,7 @@ export default function ItemDetails({ route, navigation }) {
         <Header
           navigation={navigation}
           newItem={newItem}
-          imgAvailable={imgAvailable}
+          useWhiteBtns={useWhiteBtns}
           useBackBtn={true}
           useHomeBtn={true}
           useRightBtns={["share-social-outline"]}

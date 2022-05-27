@@ -6,7 +6,7 @@ import { HeaderButton } from "./index";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Header({
-  imgAvailable,
+  useWhiteBtns,
   newItem,
   navigation,
   saveDraft,
@@ -38,7 +38,7 @@ export default function Header({
           }
         }}
       >
-        <Ionicons name="arrow-back-outline" size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
+        <Ionicons name="arrow-back-outline" size={25} color={useWhiteBtns ? "#f5f5f5" : "black"} />
       </TouchableOpacity>
     );
   };
@@ -71,7 +71,7 @@ export default function Header({
               userId={userId}
               name={buttonName}
               navigation={navigation}
-              imgAvailable={imgAvailable}
+              useWhiteBtns={useWhiteBtns}
               showPopoutMenu={showPopoutMenu}
               submitFunc={submitFunc}
             />
@@ -81,7 +81,7 @@ export default function Header({
     );
   };
   return (
-    <View style={[styles.header, imgAvailable ? null : styles.headerBorder]}>
+    <View style={[styles.header, useHomeBtn ? null : styles.headerBorder]}>
       <View
         style={{
           flexDirection: "row",
@@ -92,7 +92,7 @@ export default function Header({
         {/* BACK BUTTON */}
         {useBackBtn && renderBackBtn()}
         {useHomeBtn && (
-          <HeaderButton name={"home-outline"} imgAvailable={imgAvailable} navigation={navigation} />
+          <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
         )}
         <ModalAlert
           visibleVariable={backBtnAlert}

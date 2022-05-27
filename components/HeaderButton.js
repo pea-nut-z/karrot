@@ -7,7 +7,7 @@ export default function HeaderButton({
   userId,
   name,
   showPopoutMenu,
-  imgAvailable,
+  useWhiteBtns,
   submitFunc,
   navigation,
 }) {
@@ -49,7 +49,7 @@ export default function HeaderButton({
         {name === "DONE" ? (
           <Text>{name}</Text>
         ) : (
-          <Ionicons name={name} size={25} color={imgAvailable ? "#f5f5f5" : "black"} />
+          <Ionicons name={name} size={25} color={useWhiteBtns ? "#f5f5f5" : "black"} />
         )}
       </TouchableOpacity>
     </View>
