@@ -10,7 +10,7 @@ eMarketplace requires an app called Expo Go to run. So, on your mobile device in
 
 ### View In The Browser
 
-- right click [here](https://peanutz-marketplace.herokuapp.com) and select "Open Link in New Tab"
+- right click [here](https://peanutz-emarketplace.herokuapp.com/) and select "Open Link in New Tab"
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
