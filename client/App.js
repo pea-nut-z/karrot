@@ -2,32 +2,8 @@ import * as React from "react";
 import { Provider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import {
-  Sell,
-  ItemDetails,
-  Categories,
-  Category,
-  Chats,
-  MyAccount,
-  Purchases,
-  Favourites,
-  Filters,
-  CustomizeFeed,
-  Profile,
-  EditProfile,
-  Rate,
-  Feedback,
-  Report,
-  AllReviews,
-} from "./src/screens/";
-import {
-  BottomMainTabs,
-  SellerItemsTabs,
-  UserItemsTabs,
-  SearchTabs,
-  NotificationsTabs,
-  // ReviewsTabs,
-} from "./src/tabs";
+import * as screens from "./src/screens";
+import * as tabs from "./src/tabs";
 import store from "./src/store/store";
 
 const Stack = createStackNavigator();
@@ -36,7 +12,6 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        {/* <AuthProvider> */}
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
@@ -44,32 +19,32 @@ export default function App() {
           initialRouteName={"BottomMainTabs"}
         >
           {/* HOME */}
-          <Stack.Screen name="BottomMainTabs" component={BottomMainTabs} />
-          <Stack.Screen name="Sell" component={Sell} />
-          <Stack.Screen name="SellerItemsTabs" component={SellerItemsTabs} />
+          <Stack.Screen name="BottomMainTabs" component={tabs.BottomMainTabs} />
+          <Stack.Screen name="Sell" component={screens.Sell} />
+          <Stack.Screen name="SellerItemsTabs" component={tabs.SellerItemsTabs} />
           {/* CATEGORIES */}
-          <Stack.Screen name="Categories" component={Categories} />
-          <Stack.Screen name="Category" component={Category} />
+          <Stack.Screen name="Categories" component={screens.Categories} />
+          <Stack.Screen name="Category" component={screens.Category} />
           {/* CHATS */}
-          <Stack.Screen name="Chats" component={Chats} />
+          <Stack.Screen name="Chats" component={screens.Chats} />
           {/* MY ACCOUNT */}
-          <Stack.Screen name="MyAccount" component={MyAccount} />
-          <Stack.Screen name="UserItemsTabs" component={UserItemsTabs} />
-          <Stack.Screen name="Purchases" component={Purchases} />
-          <Stack.Screen name="Favourites" component={Favourites} />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen name="MyAccount" component={screens.MyAccount} />
+          <Stack.Screen name="UserItemsTabs" component={tabs.UserItemsTabs} />
+          <Stack.Screen name="Purchases" component={screens.Purchases} />
+          <Stack.Screen name="Favourites" component={screens.Favourites} />
+          <Stack.Screen name="EditProfile" component={screens.EditProfile} />
           {/* SHARED */}
-          <Stack.Screen name="Feedback" component={Feedback} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="ItemDetails" component={ItemDetails} />
-          <Stack.Screen name="Rate" component={Rate} />
-          <Stack.Screen name="AllReviews" component={AllReviews} />
+          <Stack.Screen name="Feedback" component={screens.Feedback} />
+          <Stack.Screen name="Profile" component={screens.Profile} />
+          <Stack.Screen name="ItemDetails" component={screens.ItemDetails} />
+          <Stack.Screen name="Rate" component={screens.Rate} />
+          <Stack.Screen name="AllReviews" component={screens.AllReviews} />
           {/* HEARDER NAVIGATE */}
-          <Stack.Screen name="SearchTabs" component={SearchTabs} />
-          <Stack.Screen name="Filters" component={Filters} />
-          <Stack.Screen name="CustomizeFeed" component={CustomizeFeed} />
-          <Stack.Screen name="NotificationsTabs" component={NotificationsTabs} />
-          <Stack.Screen name="Report" component={Report} />
+          <Stack.Screen name="SearchTabs" component={tabs.SearchTabs} />
+          <Stack.Screen name="Filters" component={screens.Filters} />
+          <Stack.Screen name="CustomizeFeed" component={screens.CustomizeFeed} />
+          <Stack.Screen name="NotificationsTabs" component={tabs.NotificationsTabs} />
+          <Stack.Screen name="Report" component={screens.Report} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
