@@ -15,7 +15,7 @@ The app should open up in a new tab. Once loaded, do the following in the new ta
 - open Developer tools
 - do the two steps below and refresh the page after the steps are completed
 
-<img src="assets/readme-instruction.jpg" width="500" height="500">
+<img src="client/assets/readme-instruction.jpg" width="500" height="500">
 
 ### To navigate
 
