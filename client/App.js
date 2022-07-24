@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
-  // Login,
-  // Signup,
   Sell,
   ItemDetails,
   Categories,
@@ -21,7 +19,7 @@ import {
   Feedback,
   Report,
   AllReviews,
-} from "./screens/";
+} from "./src/screens/";
 import {
   BottomMainTabs,
   SellerItemsTabs,
@@ -29,9 +27,8 @@ import {
   SearchTabs,
   NotificationsTabs,
   // ReviewsTabs,
-} from "./navigation";
-import store from "./store/store";
-// import { AuthProvider } from "./AuthContext";
+} from "./src/tabs";
+import store from "./src/store/store";
 
 const Stack = createStackNavigator();
 
@@ -45,11 +42,8 @@ export default function App() {
             headerShown: false,
           }}
           initialRouteName={"BottomMainTabs"}
-          // initialRouteName={"MyAccount"}
         >
           {/* HOME */}
-          {/* <Stack.Screen name="Login" component={Login} /> */}
-          {/* <Stack.Screen name="Signup" component={Signup} /> */}
           <Stack.Screen name="BottomMainTabs" component={BottomMainTabs} />
           <Stack.Screen name="Sell" component={Sell} />
           <Stack.Screen name="SellerItemsTabs" component={SellerItemsTabs} />
@@ -77,7 +71,6 @@ export default function App() {
           <Stack.Screen name="NotificationsTabs" component={NotificationsTabs} />
           <Stack.Screen name="Report" component={Report} />
         </Stack.Navigator>
-        {/* </AuthProvider> */}
       </NavigationContainer>
     </Provider>
   );

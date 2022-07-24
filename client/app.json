@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "karrot",
-    "slug": "karrot",
+    "name": "marketplace",
+    "slug": "marketplace",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,8 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.peanutz.karrot"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -28,8 +28,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "description": "",
-    "githubUrl": "https://github.com/pea-nut-z/karrot"
+    }
   }
 }
