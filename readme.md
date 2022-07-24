@@ -43,7 +43,7 @@ Your username is Tony once you are on the app. The app includes:
 - Change your profile picture and name by tapping the camera icon
 - Tap view profile for a list of your active, sold, hidden items and toggle their statuses
 
-### Technologies used
+### Tech-Stack
 
 - JavaScript
 - React Native
