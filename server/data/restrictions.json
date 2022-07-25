@@ -1,0 +1,17 @@
+ {
+    "111": {
+      "block": [],
+      "blockedBy": [],
+      "hide": []
+    },
+    "333": {
+      "block": [111],
+      "blockedBy": [],
+      "hide": []
+    },
+    "222": {
+      "block": [],
+      "blockedBy": [111],
+      "hide": []
+    }
+  }

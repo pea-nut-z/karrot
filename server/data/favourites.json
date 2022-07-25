@@ -1,0 +1,19 @@
+{
+    "111": [
+      {
+        "sellerId": 222,
+        "itemId": 3
+      },
+      {
+        "sellerId": 222,
+        "itemId": 4
+      }
+    ],
+  
+    "222": [
+      {
+        "sellerId": 111,
+        "itemId": 1
+      }
+    ]
+  }

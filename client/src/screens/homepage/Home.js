@@ -23,8 +23,6 @@ export default function Home({ navigation }) {
 
   const userId = 111;
 
-  // const accounts = useSelector((state) => state.accounts);
-
   // GET LISTINGS FOR SALE
   const getActiveListings = useMemo(filterListings, []);
   const activeListings = useSelector((state) =>
