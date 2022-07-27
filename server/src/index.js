@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
-import Listing from "./model/Listing";
-import { testname } from "./tester";
+import Listing from "./model/Listing.js";
+import { testname } from "./tester.js";
 
 console.log({ testname });
 
