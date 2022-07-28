@@ -1,40 +1,21 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
-import Listing from "./model/Listing.js";
-import { testname } from "./tester.js";
+import { Listing, Member } from "./model/index.js";
 
-console.log({ testname });
-
-mongoose.connect(
-  process.env.DATABASE_URL,
-  () => {
-    console.log("db connected");
-  },
-  (err) => {
-    console.error(`db error: ${err}`);
-  }
-);
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("DB Connected"))
+  .catch((err) => console.error(err));
 
 const app = express();
 
-app.get("/getRequest/:name", (req, res) => {
-  res.send(`Testing name: ${req.params.name}`);
+app.get("/:userId", async (req, res) => {
+  const id = req.params.userId;
+  const result = await Member.findOne({ userId: id });
+  console.log({ result });
+  res.send("found");
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
-
-const saveListing = async () => {
-  const listing = new Listing({
-    userId: 111,
-    itemId: 123,
-    Status: "Active",
-    Date: "Date",
-  });
-
-  await listing.save();
-  console.log("saved listing");
-};
-
-saveListing();
