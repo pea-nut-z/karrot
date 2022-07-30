@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
+import { reqStr, defaultDate } from "./values.js";
+
 const { Schema, model } = mongoose;
+
 const schema = new Schema({
-  username: { type: String, require: true },
-  location: { type: String, require: true },
-  displayPic: { type: String, require: true },
-  joined: { type: String, default: Date.now() },
+  userId: { type: mongoose.ObjectId },
+  username: reqStr,
+  location: reqStr,
+  displayPic: reqStr,
+  joined: defaultDate,
 });
 
 const Member = model("members", schema);
