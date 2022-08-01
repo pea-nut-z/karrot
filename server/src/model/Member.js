@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { reqStr, defaultDate } from "./values.js";
 
-const { Schema, model } = mongoose;
+const { Schema, model, ObjectId } = mongoose;
 
 const schema = new Schema({
-  userId: { type: mongoose.ObjectId },
+  userId: { type: ObjectId },
   username: reqStr,
   location: reqStr,
   displayPic: reqStr,

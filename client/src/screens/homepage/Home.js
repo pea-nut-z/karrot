@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 import { Header, ItemCards, ModalAlert } from "../../UI";
 import * as actions from "../../store/actionTypes";
 import { filterListings } from "../../store/selectors";
+import axios from "axios";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
@@ -22,19 +23,33 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
 
   const userId = 111;
+  const testId = "62e4b72af286a7fedecfd092";
+  // TESTING
+  useEffect(() => {
+    axios
+      .get(`/${testId}`)
+      .then((res) => {
+        dispatch({
+          type: actions.USER_ADDED,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log("test fetch error: ", err));
+  }, []);
 
   // GET LISTINGS FOR SALE
   const getActiveListings = useMemo(filterListings, []);
-  const activeListings = useSelector((state) =>
-    getActiveListings(
+  const activeListings = useSelector((state) => {
+    console.log("RAN SELECTOR: ", state["accounts"]);
+    return getActiveListings(
       userId,
       state["listings"],
       state["members"],
       state["restrictions"],
       state["feeds"],
       "feed"
-    )
-  );
+    );
+  });
 
   // GET POST DRAFTS IF ANY
   const draftItemId = useSelector((state) => state["drafts"][userId]);
