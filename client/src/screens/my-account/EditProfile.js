@@ -15,32 +15,20 @@ import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { SIZES, COLORS } from "../../constants";
 import { Header } from "../../UI";
-import * as actions from "../../store/actionTypes";
+import * as actions from "../../store/actions";
 
-export default function EditProfile({ route, navigation }) {
-  const { userId } = route.params;
-  const currentPic = useSelector((state) => state.members[userId]["displayPic"]);
-  const currentName = useSelector((state) => state.members[userId]["username"]);
-  const userInfo = useSelector((state) => state.members[userId]);
+export default function EditProfile({ navigation }) {
+  const profile = useSelector((state) => state.myProfile);
 
-  const [displayPic, setDisplayPic] = useState(currentPic);
-  const [username, setUsername] = useState(currentName);
+  const [image, setImage] = useState(profile.image);
+  const [name, setName] = useState(profile.name);
   const [popupMenu, setPopupMenu] = useState(false);
   const dispatch = useDispatch();
 
   const done = () => {
-    displayPic !== currentPic &&
-      dispatch({
-        type: actions.USER_DISPLAYPIC_CHANGED,
-        userId,
-        image: displayPic,
-      });
-    username !== currentName &&
-      dispatch({
-        type: actions.USERNAME_CHANGED,
-        userId,
-        username,
-      });
+    if (name !== profile.name || image !== profile.image) {
+      dispatch(actions.updateMyProfile(name, image));
+    }
     navigation.goBack();
   };
 
@@ -62,7 +50,7 @@ export default function EditProfile({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      setDisplayPic(result.uri);
+      setImage(result.uri);
       setPopupMenu(false);
     }
   };
@@ -86,7 +74,7 @@ export default function EditProfile({ route, navigation }) {
 
         <TouchableOpacity
           onPress={() => {
-            setDisplayPic("N/A");
+            setImage("N/A");
             setPopupMenu(false);
           }}
           style={{
@@ -106,9 +94,9 @@ export default function EditProfile({ route, navigation }) {
   const renderPicBtn = () => {
     return (
       <TouchableOpacity onPress={() => setPopupMenu(!popupMenu)}>
-        {displayPic !== "N/A" ? (
+        {image !== "N/A" ? (
           <Image
-            source={{ uri: displayPic }}
+            source={{ uri: image }}
             resizeMode={"contain"}
             style={{
               width: 110,
@@ -160,8 +148,8 @@ export default function EditProfile({ route, navigation }) {
       <View>{renderPopUpMenu()}</View>
       <View>
         <TextInput
-          value={username}
-          onChangeText={(text) => setUsername(text)}
+          value={name}
+          onChangeText={(text) => setName(text)}
           underlineColorAndroid="transparent"
           onSubmitEditing={() => Keyboard.dismiss}
           style={{

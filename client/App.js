@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Provider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -16,9 +16,10 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={"BottomMainTabs"}
+          initialRouteName={"Login"}
         >
           {/* HOME */}
+          <Stack.Screen name="Login" component={screens.Login} />
           <Stack.Screen name="BottomMainTabs" component={tabs.BottomMainTabs} />
           <Stack.Screen name="Sell" component={screens.Sell} />
           <Stack.Screen name="SellerItemsTabs" component={tabs.SellerItemsTabs} />

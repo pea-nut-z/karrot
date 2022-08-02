@@ -1,4 +1,6 @@
-export const USER_ADDED = "user-added";
+export const GET_MY_PROFILE = "get-my-profile";
+export const UPDATE_PROFILE_IMG = "update-profile-img";
+
 export const USERNAME_CHANGED = "username-changed";
 export const USER_DISPLAYPIC_CHANGED = "displayPic-changed";
 

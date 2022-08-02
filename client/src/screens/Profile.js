@@ -16,16 +16,16 @@ import * as actions from "../store/actionTypes";
 export default function Profile({ route, navigation }) {
   const { sellerId, userId } = route.params;
 
-  const seller = useSelector((state) => state.members[sellerId]);
+  const seller = useSelector((state) => state.pro[sellerId]);
 
   const atCurrentUserProfile = sellerId === userId ? true : false;
 
-  const numOfItems = useSelector((state) => {
-    const items = state.listings[sellerId];
-    return Object.keys(items).length;
-  });
+  // const numOfItems = useSelector((state) => {
+  //   const items = state.listings[sellerId];
+  //   return Object.keys(items).length;
+  // });
 
-  const numOfReviews = useSelector((state) => state["reviews"][sellerId]["reviewers"].length);
+  // const numOfReviews = useSelector((state) => state["reviews"][sellerId]["reviewers"].length);
 
   const sellerIsBlocked = useSelector((state) => {
     if (!atCurrentUserProfile) {
@@ -113,7 +113,7 @@ export default function Profile({ route, navigation }) {
             style={styles.popupMenuOption}
             onPress={() => {
               hidePopoutMenu();
-              navigation.navigate("EditProfile", { userId });
+              navigation.navigate("EditProfile");
             }}
           >
             <Text>Edit</Text>
@@ -256,9 +256,7 @@ export default function Profile({ route, navigation }) {
               }
               style={[styles.bottomSubContainer, styles.margin]}
             >
-              <Text style={{ fontSize: 16 }}>
-                {numOfItems} item{numOfItems > 1 && "s"}
-              </Text>
+              <Text style={{ fontSize: 16 }}>{/* {numOfItems} item{numOfItems > 1 && "s"} */}</Text>
               <Ionicons name={"chevron-forward-outline"} size={25} />
             </TouchableOpacity>
 
@@ -269,7 +267,7 @@ export default function Profile({ route, navigation }) {
             >
               <View>
                 <Text style={{ fontSize: 16 }}>
-                  {numOfReviews} review{numOfReviews > 1 && "s"}
+                  {/* {numOfReviews} review{numOfReviews > 1 && "s"} */}
                 </Text>
               </View>
               <Ionicons name={"chevron-forward-outline"} size={25} />

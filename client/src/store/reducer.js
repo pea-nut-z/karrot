@@ -367,13 +367,12 @@ const reviews = {
 
 // REDUCERS
 
-const accounts = {};
+const myProfile = {};
 
-const accountsReducer = (state = accounts, action) => {
+const myProfileReducer = (state = myProfile, action) => {
   switch (action.type) {
-    case actions.USER_ADDED:
+    case actions.GET_MY_PROFILE:
       return {
-        ...state,
         ...action.payload,
       };
     default:
@@ -671,7 +670,7 @@ const rootReducer = combineReducers({
   restrictions: restrictionsReducer,
   drafts: draftsReducer,
   reviews: reviewsReducer,
-  accounts: accountsReducer,
+  myProfile: myProfileReducer,
 });
 
 export default rootReducer;

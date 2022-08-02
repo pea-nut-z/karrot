@@ -14,7 +14,6 @@ import { COLORS, SIZES, FONTS } from "../../constants";
 import { Header, ItemCards, ModalAlert } from "../../UI";
 import * as actions from "../../store/actionTypes";
 import { filterListings } from "../../store/selectors";
-import axios from "axios";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
@@ -23,24 +22,11 @@ export default function Home({ navigation }) {
   const dispatch = useDispatch();
 
   const userId = 111;
-  const testId = "62e4b72af286a7fedecfd092";
-  // TESTING
-  useEffect(() => {
-    axios
-      .get(`/${testId}`)
-      .then((res) => {
-        dispatch({
-          type: actions.USER_ADDED,
-          payload: res.data,
-        });
-      })
-      .catch((err) => console.log("test fetch error: ", err));
-  }, []);
 
   // GET LISTINGS FOR SALE
   const getActiveListings = useMemo(filterListings, []);
   const activeListings = useSelector((state) => {
-    console.log("RAN SELECTOR: ", state["accounts"]);
+    console.log("HOME SELECTOR PROFILE: ", state.myProfile);
     return getActiveListings(
       userId,
       state["listings"],

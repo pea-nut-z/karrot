@@ -1,7 +1,9 @@
 import "dotenv/config";
+// import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import { Listing, Member, Favourite } from "./model/index.js";
+import ShortUniqueId from "short-unique-id";
+import { Listing, Account, Favourite } from "./model/index.js";
 
 mongoose
   .connect(process.env.DATABASE_URL)
@@ -9,18 +11,56 @@ mongoose
   .catch((err) => console.error(err));
 
 const app = express();
+// app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// current user: 8b9
+// kept private on server
+let accountId = "62e87ec387aecd786da8d937";
+
 // sign up -> create profile
 app.post("/signup", async (req, res) => {
-  const userId = new mongoose.Types.ObjectId().toString();
-  const userProfile = await Member.create({
-    userId,
+  const uid = new ShortUniqueId({ length: 4 });
+  const id = uid();
+  const profile = await Account.create({
+    id,
     ...req.body,
   });
-  res.json(userProfile);
+  accountId = profile._id;
+  delete profile._id;
+  res.json(profile);
+});
+
+// home -> get profile, user's account, sellers' listings(filter out restrictions), favourites
+app.get("/", (req, res) => {
+  const promise1 = Account.findOne({ accountId }, { _id: 0 });
+  const promise2 = Listing.find();
+  const promise3 = Favourite.findOne({ accountId });
+
+  Promise.all([promise1, promise2, promise3])
+    .then((docs) => {
+      const myProfile = docs[0];
+      // const userListings = docs[1].find((doc) => doc.myId === myId);
+      // const sellerListings = docs[1].filter((doc) => doc.myId !== myId);
+      // const favourites = docs[2];
+      // console.log({ favourites });
+      // console.log({ userListings });
+      res.status(200).json(myProfile);
+    })
+    .catch((err) => console.log("GET INITIAL DATA ERROR: ", err));
+});
+
+// my account -> edit profile image and/or name
+app.patch("/update", async (req, res) => {
+  const changes = req.body;
+
+  console.log({ changes });
+
+  Account.findOneAndUpdate(accountId, changes, (err, doc) => {
+    console.log({ doc });
+    if (err) return res.send(500, { error: err });
+    res.status(200).json({ msg: "done" });
+  });
 });
 
 // sell -> list item
@@ -55,33 +95,6 @@ app.post("/:userId/create", async (req, res) => {
 
   res.send("done");
 });
-
-// home -> get profile, user's listings, sellers' listings(filter out restrictions), favourites
-app.get("/:userId", (req, res) => {
-  const { userId } = req.params;
-  const promise1 = Member.findOne({ userId });
-  const promise2 = Listing.find();
-  const promise3 = Favourite.findOne({ userId });
-
-  Promise.all([promise1, promise2, promise3])
-    .then((docs) => {
-      const profile = docs[0];
-      const userListings = docs[1].find((doc) => doc.userId === userId);
-      const sellerListings = docs[1].filter((doc) => doc.userId !== userId);
-      const favourites = docs[2];
-      // console.log({ favourites });
-      // console.log({ userListings });
-      // console.log({ sellerListings });
-      res.status(200).json(profile);
-    })
-    .catch((err) => console.log("ERROR: ", err));
-});
-
-// app.get("/:userId", async (req, res) => {
-//   const { userId } = req.params;
-//   const userProfile = await Member.findOne({ userId });
-//   res.json(userProfile);
-// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
