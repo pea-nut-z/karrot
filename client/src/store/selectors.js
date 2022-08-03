@@ -1,8 +1,6 @@
 import { createSelector } from "reselect";
 
-// ALL MEMBERS'LISTINGS
-// excluding current user's items
-// by user's customized feed and block/hide restructions
+// filter others' listings by my feeds, block and hide restrictions
 export const selectListings = () =>
   createSelector(
     (userId) => userId,

@@ -24,9 +24,11 @@ export default function Home({ navigation }) {
   const userId = 111;
 
   // GET LISTINGS FOR SALE
+  // on client filter listings by block and hide
+
   const getActiveListings = useMemo(filterListings, []);
   const activeListings = useSelector((state) => {
-    console.log("HOME SELECTOR FAVOURITES: ", state.sellerProfiles);
+    console.log("HOME SELECTOR myListings: ", state.restriction);
     return getActiveListings(
       userId,
       state["listings"],

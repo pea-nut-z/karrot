@@ -27,7 +27,7 @@ export default function EditProfile({ navigation }) {
 
   const done = () => {
     if (name !== profile.name || image !== profile.image) {
-      dispatch(actions.patchMyProfile(name, image));
+      dispatch(actions.patchMyProfile({ name, image }));
     }
     navigation.goBack();
   };

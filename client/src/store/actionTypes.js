@@ -1,6 +1,5 @@
 export const SET_INITIAL_STATES = "set-initial-states";
-export const SET_MY_PROFILE = "set-my-profile";
-export const SET_SELLER_LISTINGS = "set-seller-listings";
+export const UPDATE_MY_PROFILE = "update-my-profile";
 
 export const ITEM_ADDED = "item-added";
 export const ITEM_EDITED = "item-edited";

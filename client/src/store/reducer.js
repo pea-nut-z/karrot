@@ -367,29 +367,48 @@ const reviews = {
 
 // STATES
 const myProfile = {};
+const myListings = [];
 const myFavourites = [];
-const sellerListings = {};
-const sellerProfiles = [];
+const myReviews = {};
+const othersProfiles = [];
+const othersListings = [];
+const restriction = {}; // change name to restrictions
 
 // NEW REDUCERS
 const myProfileReducer = (state = myProfile, action) => {
-  const { myProfile, myListings } = action;
+  const { myProfile, changes } = action;
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
       return {
         ...myProfile,
-        ...myListings,
+      };
+    case actions.UPDATE_MY_PROFILE:
+      return {
+        ...state,
+        ...changes,
       };
     default:
       return state;
   }
 };
 
-const sellerListingsReducer = (state = sellerListings, action) => {
-  const { sellerListings } = action;
+const myListingsReducer = (state = myListings, action) => {
+  const { myListings, changes } = action;
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
-      return [...sellerListings];
+      return [...myListings];
+    default:
+      return state;
+  }
+};
+
+const myReviewsReducer = (state = myReviews, action) => {
+  const { myReviews, changes } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return {
+        ...myReviews,
+      };
     default:
       return state;
   }
@@ -401,7 +420,6 @@ const myFavouritesReducer = (state = myFavourites, action) => {
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
       return [...myFavourites];
-
     case actions.FAVOURITE_REMOVED:
       return {
         ...state,
@@ -412,11 +430,31 @@ const myFavouritesReducer = (state = myFavourites, action) => {
   }
 };
 
-const sellerProfilesReducer = (state = sellerProfiles, action) => {
-  const { sellerProfiles } = action;
+const othersProfilesReducer = (state = othersProfiles, action) => {
+  const { othersProfiles } = action;
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
-      return [...sellerProfiles];
+      return [...othersProfiles];
+    default:
+      return state;
+  }
+};
+
+const othersListingsReducer = (state = othersListings, action) => {
+  const { othersListings } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return [...othersListings];
+    default:
+      return state;
+  }
+};
+
+const restrictionReducer = (state = restriction, action) => {
+  const { restrictions } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return { ...restrictions };
     default:
       return state;
   }
@@ -715,9 +753,12 @@ const rootReducer = combineReducers({
   reviews: reviewsReducer,
 
   myProfile: myProfileReducer,
+  myListings: myListingsReducer,
+  myReviews: myReviewsReducer,
   myFavourites: myFavouritesReducer,
-  sellerListings: sellerListingsReducer,
-  sellerProfiles: sellerProfilesReducer,
+  othersListings: othersListingsReducer,
+  othersProfiles: othersProfilesReducer,
+  restriction: restrictionReducer,
 });
 
 export default rootReducer;

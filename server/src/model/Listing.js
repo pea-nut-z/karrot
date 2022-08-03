@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { reqStr, reqNum, reqBoolean, reqId, defaultDate, defaultNum } from "./values.js";
+import { reqStr, reqNum, reqBoolean, defaultDate, defaultNum } from "./values.js";
 
 const { Schema, model } = mongoose;
 
