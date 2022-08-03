@@ -7,7 +7,7 @@ export default function Login({ navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(actions.getMyProfile());
+    dispatch(actions.getInitialStates());
     navigation.navigate("BottomMainTabs");
   }, []);
 

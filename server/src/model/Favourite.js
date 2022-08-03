@@ -3,15 +3,10 @@ import { reqStr } from "./values.js";
 
 const { Schema, model } = mongoose;
 
-const item = new Schema({
-  sellerId: reqStr,
-  itemId: reqStr,
+const schema = new Schema({
+  id: reqStr,
+  items: [reqStr],
 });
 
-const favourite = new Schema({
-  userId: reqStr,
-  favourites: [item],
-});
-
-const Favourite = model("favourites", favourite);
+const Favourite = model("favourites", schema);
 export default Favourite;

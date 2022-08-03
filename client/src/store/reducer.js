@@ -24,6 +24,26 @@ const members = {
   },
 };
 
+const favourites = {
+  111: [
+    {
+      sellerId: 222,
+      itemId: 3,
+    },
+    {
+      sellerId: 222,
+      itemId: 4,
+    },
+  ],
+
+  222: [
+    {
+      sellerId: 111,
+      itemId: 1,
+    },
+  ],
+};
+
 const listings = {
   111: {
     1: {
@@ -269,26 +289,6 @@ const listings = {
   },
 };
 
-const favourites = {
-  111: [
-    {
-      sellerId: 222,
-      itemId: 3,
-    },
-    {
-      sellerId: 222,
-      itemId: 4,
-    },
-  ],
-
-  222: [
-    {
-      sellerId: 111,
-      itemId: 1,
-    },
-  ],
-};
-
 const feeds = {
   111: [
     "Electronics",
@@ -365,15 +365,78 @@ const reviews = {
   },
 };
 
-// REDUCERS
-
+// STATES
 const myProfile = {};
+const myFavourites = [];
+const sellerListings = {};
+const sellerProfiles = [];
 
+// NEW REDUCERS
 const myProfileReducer = (state = myProfile, action) => {
+  const { myProfile, myListings } = action;
   switch (action.type) {
-    case actions.GET_MY_PROFILE:
+    case actions.SET_INITIAL_STATES:
       return {
-        ...action.payload,
+        ...myProfile,
+        ...myListings,
+      };
+    default:
+      return state;
+  }
+};
+
+const sellerListingsReducer = (state = sellerListings, action) => {
+  const { sellerListings } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return [...sellerListings];
+    default:
+      return state;
+  }
+};
+
+const myFavouritesReducer = (state = myFavourites, action) => {
+  const { myFavourites } = action;
+
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return [...myFavourites];
+
+    case actions.FAVOURITE_REMOVED:
+      return {
+        ...state,
+        [userId]: state[userId].filter((item) => item.itemId !== itemId),
+      };
+    default:
+      return state;
+  }
+};
+
+const sellerProfilesReducer = (state = sellerProfiles, action) => {
+  const { sellerProfiles } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return [...sellerProfiles];
+    default:
+      return state;
+  }
+};
+
+// OLD REDUCERS
+const favouritesReducer = (state = favourites, action) => {
+  const { userId, sellerId, itemId } = action;
+
+  switch (action.type) {
+    case actions.FAVOURITE_ADDED:
+      return {
+        ...state,
+        [userId]: [...state[userId], { sellerId, itemId }],
+      };
+
+    case actions.FAVOURITE_REMOVED:
+      return {
+        ...state,
+        [userId]: state[userId].filter((item) => item.itemId !== itemId),
       };
     default:
       return state;
@@ -505,26 +568,6 @@ const listingsReducer = (state = listings, action) => {
             views: state[sellerId][itemId]["views"] + 1,
           },
         },
-      };
-    default:
-      return state;
-  }
-};
-
-const favouritesReducer = (state = favourites, action) => {
-  const { userId, sellerId, itemId } = action;
-
-  switch (action.type) {
-    case actions.FAVOURITE_ADDED:
-      return {
-        ...state,
-        [userId]: [...state[userId], { sellerId, itemId }],
-      };
-
-    case actions.FAVOURITE_REMOVED:
-      return {
-        ...state,
-        [userId]: state[userId].filter((item) => item.itemId !== itemId),
       };
     default:
       return state;
@@ -670,7 +713,11 @@ const rootReducer = combineReducers({
   restrictions: restrictionsReducer,
   drafts: draftsReducer,
   reviews: reviewsReducer,
+
   myProfile: myProfileReducer,
+  myFavourites: myFavouritesReducer,
+  sellerListings: sellerListingsReducer,
+  sellerProfiles: sellerProfilesReducer,
 });
 
 export default rootReducer;

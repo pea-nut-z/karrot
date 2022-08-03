@@ -1,8 +1,6 @@
-export const GET_MY_PROFILE = "get-my-profile";
-export const UPDATE_PROFILE_IMG = "update-profile-img";
-
-export const USERNAME_CHANGED = "username-changed";
-export const USER_DISPLAYPIC_CHANGED = "displayPic-changed";
+export const SET_INITIAL_STATES = "set-initial-states";
+export const SET_MY_PROFILE = "set-my-profile";
+export const SET_SELLER_LISTINGS = "set-seller-listings";
 
 export const ITEM_ADDED = "item-added";
 export const ITEM_EDITED = "item-edited";

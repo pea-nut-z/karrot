@@ -26,7 +26,7 @@ export default function Home({ navigation }) {
   // GET LISTINGS FOR SALE
   const getActiveListings = useMemo(filterListings, []);
   const activeListings = useSelector((state) => {
-    console.log("HOME SELECTOR PROFILE: ", state.myProfile);
+    console.log("HOME SELECTOR FAVOURITES: ", state.sellerProfiles);
     return getActiveListings(
       userId,
       state["listings"],

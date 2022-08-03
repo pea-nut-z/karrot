@@ -9,6 +9,7 @@ const schema = new Schema({
   location: reqStr,
   image: reqStr,
   joined: defaultDate,
+  draft: { type: String, default: null }, // item id for listing draft
 });
 
 const Account = model("accounts", schema);

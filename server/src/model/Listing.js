@@ -4,7 +4,7 @@ import { reqStr, reqNum, reqBoolean, reqId, defaultDate, defaultNum } from "./va
 const { Schema, model } = mongoose;
 
 const item = new Schema({
-  itemId: reqId,
+  itemId: reqStr,
   status: reqStr,
   date: defaultDate,
   chats: defaultNum,
@@ -21,7 +21,7 @@ const item = new Schema({
 });
 
 const listing = new Schema({
-  userId: reqStr,
+  id: reqStr,
   items: [item],
 });
 

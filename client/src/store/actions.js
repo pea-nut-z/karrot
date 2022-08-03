@@ -4,31 +4,48 @@ import * as types from "./actionTypes";
 
 const PROXY = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
 
-export const getMyProfile = () => {
+export const getInitialStates = () => {
   return (dispatch) => {
     axios
       .get(`${PROXY}/`)
       .then((res) => {
+        const { myProfile, sellerProfiles, myListings, sellerListings, myFavourites } = res.data;
+
         dispatch({
-          type: types.GET_MY_PROFILE,
-          payload: res.data,
+          type: types.SET_INITIAL_STATES,
+          myProfile,
+          sellerProfiles,
+          myListings,
+          sellerListings,
+          myFavourites,
         });
       })
       .catch((err) => {
-        console.log("getMyProfile ERROR: ", err);
+        console.log("getInitialStates ERROR: ", err);
       });
   };
 };
 
-export const updateMyProfile = (name, image) => {
+export const patchMyProfile = (name, image) => {
   return (dispatch) => {
     axios
       .patch(`${PROXY}/update`, { name, image })
       .then(() => {
-        dispatch(getMyProfile());
+        dispatch(getInitialStates());
       })
       .catch((err) => {
-        console.log("updateMyProfile ERROR: ", err);
+        console.log("patchMyProfile ERROR: ", err);
       });
   };
 };
+
+// export const getistings = () => {
+//   return (dispath) => {
+//     axios.get(`${PROXY}/`).then((res) => {
+//       dispatch({
+//         type: types.SET_SELLER_LISTINGS,
+//         pay,
+//       });
+//     });
+//   };
+// };
