@@ -1,6 +1,9 @@
 export const SET_INITIAL_STATES = "set-initial-states";
 export const UPDATE_MY_PROFILE = "update-my-profile";
 
+export const REMOVE_DRAFT = "remove-draft";
+
+// OLD
 export const ITEM_ADDED = "item-added";
 export const ITEM_EDITED = "item-edited";
 export const ITEM_DELETED = "item-deleted";

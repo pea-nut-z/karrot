@@ -1,5 +1,41 @@
 import { createSelector } from "reselect";
 
+// block listings - do not show up on feeds and search results
+// hide listings - do not show up on feeds only
+
+const filterByCategory = (categories, listings) =>
+  listings.filter((listing) => categories.includes(listing.item.category));
+
+const filterByHide = (hideList, listings) =>
+  listings.filter((listing) => hideList.includes(listing.id));
+
+// new selectors
+export const filterByHideAndCategory = createSelector(
+  [
+    (catergories) => catergories,
+    (catergories, listings) => listings,
+    (catergories, listings, hideList) => hideList,
+  ],
+  (catergories, listings, hideList) => {
+    console.log({ listings });
+
+    const newListings = listings.filter(
+      (listing) => !hideList.includes(listing.id) && catergories.includes(listing.item.category)
+    );
+    // "8Aqb"
+    return newListings;
+  }
+);
+
+// const selectFeeds = state => state.feeds
+// const selectRestrictions = state => state
+// export const getListings = () => {
+//   createSelector((selectFeeds, restriction, othersProfiles, othersListings) => {
+//     console.log(feeds);
+//     return feeds;
+//   });
+// };
+
 // filter others' listings by my feeds, block and hide restrictions
 export const selectListings = () =>
   createSelector(
@@ -31,38 +67,38 @@ export const selectListings = () =>
     }
   );
 
-export const filterListings = (userId, listings, members, restrictions) =>
-  createSelector(
-    selectListings(userId, listings, members, restrictions),
-    (_, listings) => listings,
-    (_, __, members) => members,
-    (_, __, ____, restrictions) => restrictions,
-    (userId, __, ___, ____, feeds) => feeds[userId],
-    (_, __, ___, ____, _____, filter) => filter,
-    (_, __, ___, ____, _____, ______, value) => value,
-    (items, __, ___, ____, feed, filter, value) => {
-      switch (filter) {
-        case "feed":
-          return items.filter((item) => feed.includes(item.category) && item.status === "Active");
-        case "category":
-          return items.filter((item) => item.category === value && item.status === "Active");
-        case "string":
-          const words = value.split(" ");
-          let exp = words.map((word) => {
-            return "\\b" + word + "\\b";
-          });
-          exp = exp.join("|");
-          const regex = new RegExp(exp, "i");
-          return items.filter((item) => {
-            return (
-              item.title.match(regex) || item.description.match(regex) || item.category.match(regex)
-            );
-          });
-        default:
-          new Error(`Unknown filter: ${filter}`);
-      }
-    }
-  );
+// export const filterListings = (userId, listings, members, restrictions) =>
+//   createSelector(
+//     selectListings(userId, listings, members, restrictions),
+//     (_, listings) => listings,
+//     (_, __, members) => members,
+//     (_, __, ____, restrictions) => restrictions,
+//     (userId, __, ___, ____, feeds) => feeds[userId],
+//     (_, __, ___, ____, _____, filter) => filter,
+//     (_, __, ___, ____, _____, ______, value) => value,
+//     (items, __, ___, ____, feed, filter, value) => {
+//       switch (filter) {
+//         case "feed":
+//           return items.filter((item) => feed.includes(item.category) && item.status === "Active");
+//         case "category":
+//           return items.filter((item) => item.category === value && item.status === "Active");
+//         case "string":
+//           const words = value.split(" ");
+//           let exp = words.map((word) => {
+//             return "\\b" + word + "\\b";
+//           });
+//           exp = exp.join("|");
+//           const regex = new RegExp(exp, "i");
+//           return items.filter((item) => {
+//             return (
+//               item.title.match(regex) || item.description.match(regex) || item.category.match(regex)
+//             );
+//           });
+//         default:
+//           new Error(`Unknown filter: ${filter}`);
+//       }
+//     }
+//   );
 
 export const furtherFilterListings = (
   userId,

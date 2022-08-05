@@ -370,9 +370,10 @@ const myProfile = {};
 const myListings = [];
 const myFavourites = [];
 const myReviews = {};
-const othersProfiles = [];
-const othersListings = [];
+const membersProfile = [];
+const membersListings = [];
 const restriction = {}; // change name to restrictions
+const membersProfileAndListings = [];
 
 // NEW REDUCERS
 const myProfileReducer = (state = myProfile, action) => {
@@ -386,6 +387,11 @@ const myProfileReducer = (state = myProfile, action) => {
       return {
         ...state,
         ...changes,
+      };
+    case actions.REMOVE_DRAFT:
+      return {
+        ...state,
+        draft: null,
       };
     default:
       return state;
@@ -430,21 +436,21 @@ const myFavouritesReducer = (state = myFavourites, action) => {
   }
 };
 
-const othersProfilesReducer = (state = othersProfiles, action) => {
-  const { othersProfiles } = action;
+const membersProfileReducer = (state = membersProfile, action) => {
+  const { membersProfile, restriction } = action;
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
-      return [...othersProfiles];
+      return [...membersProfile];
     default:
       return state;
   }
 };
 
-const othersListingsReducer = (state = othersListings, action) => {
-  const { othersListings } = action;
+const membersListingsReducer = (state = membersListings, action) => {
+  const { membersListings } = action;
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
-      return [...othersListings];
+      return [...membersListings];
     default:
       return state;
   }
@@ -455,6 +461,16 @@ const restrictionReducer = (state = restriction, action) => {
   switch (action.type) {
     case actions.SET_INITIAL_STATES:
       return { ...restrictions };
+    default:
+      return state;
+  }
+};
+
+const membersProfileAndListingsReducer = (state = membersProfileAndListings, action) => {
+  const { membersProfileAndListings } = action;
+  switch (action.type) {
+    case actions.SET_INITIAL_STATES:
+      return [...membersProfileAndListings];
     default:
       return state;
   }
@@ -750,15 +766,16 @@ const rootReducer = combineReducers({
   feeds: feedsReducer,
   restrictions: restrictionsReducer,
   drafts: draftsReducer,
-  reviews: reviewsReducer,
+  reviews: reviewsReducer, //
 
   myProfile: myProfileReducer,
   myListings: myListingsReducer,
   myReviews: myReviewsReducer,
   myFavourites: myFavouritesReducer,
-  othersListings: othersListingsReducer,
-  othersProfiles: othersProfilesReducer,
+  membersListings: membersListingsReducer,
+  membersProfile: membersProfileReducer,
   restriction: restrictionReducer,
+  membersProfileAndListings: membersProfileAndListingsReducer,
 });
 
 export default rootReducer;

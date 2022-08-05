@@ -37,46 +37,59 @@ app.post("/signup", async (req, res) => {
 
 // home -> get all initial states
 app.get("/", (req, res) => {
-  const myProfile = Account.findOne({ privateId }, { _id: 0 });
-  const othersProfiles = Account.find({ _id: { $nin: privateId } }, { _id: 0, draft: 0 });
-  const myListings = Listing.findOne({ id: publicId }, { _id: 0 });
-  const othersListings = Listing.find({ id: { $nin: publicId } }, { _id: 0 });
-  const myReviews = Review.find({ privateId }, { id: 0, _id: 0 });
-  const myFavourites = Favourite.findOne({ privateId }, { id: 0, _id: 0 });
-  const restrictions = Restriction.findOne({ privateId }, { id: 0, _id: 0 });
+  const myProfile = Account.findOne({ privateId }, { _id: 0, __v: 0 });
+  const membersProfile = Account.find({ _id: { $nin: privateId } }, { _id: 0, draft: 0, __v: 0 });
+  const myListings = Listing.findOne({ id: publicId }, { _id: 0, __v: 0 });
+  const membersListings = Listing.find({ id: { $nin: publicId } }, { _id: 0, __v: 0 });
+  const myReviews = Review.find({ privateId }, { id: 0, _id: 0, __v: 0 });
+  const myFavourites = Favourite.findOne({ privateId }, { id: 0, _id: 0, __v: 0 });
+  const restrictions = Restriction.findOne({ privateId }, { id: 0, _id: 0, __v: 0 });
 
   Promise.all([
     myProfile,
-    othersProfiles,
+    membersProfile,
     myListings,
-    othersListings,
+    membersListings,
     myReviews,
     myFavourites,
     restrictions,
   ])
     .then((docs) => {
-      const othersProfilesData = docs[1];
-      const othersListingsData = docs[3];
+      const membersProfileData = docs[1];
+      const membersListingsData = docs[3];
       const restrictions = { ...docs[6]._doc };
 
-      // filter profiles and listings by "block by"
-      const profilesDidNotBlockMe = othersProfilesData.filter(
+      // get profiles that did not block me
+      const profilesDidNotBlockMe = membersProfileData.filter(
         (profile) => !restrictions.blockBy.includes(profile.id)
       );
-      const listingsDidNotBlockMe = othersListingsData.filter(
+      const listingsDidNotBlockMe = membersListingsData.filter(
         (listing) => !restrictions.blockBy.includes(listing.id)
       );
-      // hide who has blocked user
+      // hide who has blocked me
       delete restrictions.blockBy;
+
+      // combine members profile and listings; skip members that are blocked by me
+      const membersProfileAndListings = [];
+
+      listingsDidNotBlockMe.forEach((listing) => {
+        if (restrictions.block.includes(listing.id)) return;
+        const profile = profilesDidNotBlockMe.find((profile) => profile.id === listing.id);
+
+        listing.items.forEach((item) => {
+          membersProfileAndListings.push({ ...profile._doc, item });
+        });
+      });
 
       res.status(200).json({
         myProfile: docs[0],
-        othersProfiles: profilesDidNotBlockMe,
+        membersProfile: profilesDidNotBlockMe,
         myListings: docs[2].items,
-        othersListings: listingsDidNotBlockMe,
+        membersListings: listingsDidNotBlockMe,
         myReviews: docs[4],
         myFavourites: docs[5].items,
         restrictions,
+        membersProfileAndListings,
       });
     })
     .catch((err) => console.log("SERVER/GET INITIAL DATA ERROR: ", err));

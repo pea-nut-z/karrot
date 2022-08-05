@@ -12,22 +12,25 @@ export const getInitialStates = () => {
       .then((res) => {
         const {
           myProfile,
-          othersProfiles,
+          membersProfile,
           myListings,
-          othersListings,
+          membersListings,
           myReviews,
           myFavourites,
           restrictions,
+          membersProfileAndListings,
         } = res.data;
+        console.log("@ actions myProfile");
         dispatch({
           type: types.SET_INITIAL_STATES,
           myProfile,
-          othersProfiles,
+          membersProfile,
           myListings,
-          othersListings,
+          membersListings,
           myReviews,
           myFavourites,
           restrictions,
+          membersProfileAndListings,
         });
       })
       .catch((err) => {

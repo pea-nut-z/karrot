@@ -5,7 +5,7 @@ import HeaderButton from "./HeaderButton";
 import ImageScrollView from "./ImageScrollView";
 import MemberRating from "./MemberRating";
 import SellerOtherItems from "./SellerOtherItems";
-import ItemCards from "./ItemCards";
+import ItemCard from "./ItemCard";
 import MemberInfo from "./MemberInfo";
 import ModalMenu from "./ModalMenu";
 import ModalAlert from "./ModalAlert";
@@ -19,7 +19,7 @@ export {
   ImageScrollView,
   MemberRating,
   SellerOtherItems,
-  ItemCards,
+  ItemCard,
   MemberInfo,
   ModalMenu,
   ModalAlert,

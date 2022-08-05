@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { COLORS, SIZES, FONTS } from "../../constants";
-import { Header, ItemCards, ModalAlert } from "../../UI";
+import { COLORS, SIZES } from "../../constants";
+import { Header, ItemCard, ModalAlert } from "../../UI";
 import * as actions from "../../store/actionTypes";
-import { filterListings } from "../../store/selectors";
+import { filterByHideAndCategory } from "../../store/selectors";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
@@ -21,61 +21,41 @@ export default function Home({ navigation }) {
   const [draftAlert, setDraftAlert] = useState(false);
   const dispatch = useDispatch();
 
-  const userId = 111;
-
-  // GET LISTINGS FOR SALE
-  // on client filter listings by block and hide
-
-  const getActiveListings = useMemo(filterListings, []);
-  const activeListings = useSelector((state) => {
-    console.log("HOME SELECTOR myListings: ", state.restriction);
-    return getActiveListings(
-      userId,
-      state["listings"],
-      state["members"],
-      state["restrictions"],
-      state["feeds"],
-      "feed"
+  //   const getListingsMemo = useMemo(filterByHideAndCategory, []);
+  const listings = useSelector((state) => {
+    return filterByHideAndCategory(
+      state.myProfile.feeds,
+      state.membersProfileAndListings,
+      state.restriction.hide
     );
   });
+  //   const listings = [];
+  const draft = useSelector((state) => state.myProfile.draft);
 
-  // GET POST DRAFTS IF ANY
-  const draftItemId = useSelector((state) => state["drafts"][userId]);
-
-  const closeModal = () => {
+  const closeDraftModal = () => {
     setDraftAlert(false);
   };
 
-  const onClickOption = (option) => {
+  const handleDraftOption = (option) => {
     if (option === "yes") {
       navigation.navigate("Sell", {
-        userId,
-        existingItemId: draftItemId,
-        continueDraft: true,
+        draft,
       });
     }
     if (option === "no") {
       dispatch({
-        type: actions.DRAFT_DELETED,
-        userId,
+        type: actions.REMOVE_DRAFT,
       });
-      dispatch({
-        type: actions.ITEM_DELETED,
-        sellerId: userId,
-        itemId: draftItemId,
-      });
-      navigation.navigate("Sell", {
-        userId,
-      });
+      navigation.navigate("Sell");
     }
-    closeModal();
+    closeDraftModal();
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <Header
-        userId={userId}
+        // userId={userId}
         navigation={navigation}
         title={"Location"}
         useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
@@ -85,52 +65,36 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
-            if (draftItemId) {
+            if (draft) {
               setDraftAlert(true);
             } else {
-              navigation.navigate("Sell", {
-                userId,
-              });
+              navigation.navigate("Sell");
             }
           }}
         >
           <Text style={styles.btnText}>+ Sell</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          {activeListings.length !== 0 ? (
+          {listings.length !== 0 ? (
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
-              <View
-                style={{
-                  flex: 1,
-                  paddingBottom: 10,
-                }}
-              >
-                <ItemCards userId={userId} items={activeListings} navigation={navigation} />
-              </View>
+              {listings.map((listing) => {
+                return (
+                  <View key={listing.item.itemId} style={styles.itemCard}>
+                    <ItemCard listing={listing} navigation={navigation} />
+                  </View>
+                );
+              })}
             </KeyboardAwareScrollView>
           ) : (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  // ...FONTS.h4,
-                  color: COLORS.secondary,
-                }}
-              >
-                No items
-              </Text>
+            <View style={styles.noItemsMsgContainer}>
+              <Text style={styles.noItemsText}>No items</Text>
             </View>
           )}
         </View>
         <ModalAlert
           visibleVariable={draftAlert}
-          closeModal={closeModal}
-          onClickOption={onClickOption}
+          closeModal={closeDraftModal}
+          onClickOption={handleDraftOption}
           message={"You have a saved draft. Continue writing?"}
           options={["YES", "NO"]}
           actions={["yes", "no"]}
@@ -148,6 +112,10 @@ const styles = StyleSheet.create({
       height: 3,
     },
   },
+  itemCard: {
+    flex: 1,
+    paddingBottom: 10,
+  },
   sellBtn: {
     position: "absolute",
     zIndex: 1,
@@ -163,6 +131,13 @@ const styles = StyleSheet.create({
   btnText: {
     color: COLORS.white,
     fontSize: 19,
-    // ...FONTS.body2
+  },
+  noItemsMsgContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noItemsText: {
+    color: COLORS.secondary,
   },
 });
