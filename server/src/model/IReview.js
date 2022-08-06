@@ -5,8 +5,8 @@ const { Schema, model } = mongoose;
 
 const schema = new Schema({
   privateId: reqStr,
-  items: [reqStr],
+  iReview: [String],
 });
 
-const Favourite = model("favourites", schema);
-export default Favourite;
+const IReview = model("myreviewtos", schema);
+export default IReview;

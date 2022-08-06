@@ -9,8 +9,8 @@ import * as actions from "../store/actionTypes";
 import Modal from "react-native-modal";
 
 export default function ItemCard({ listing, navigation }) {
-  const { item, location } = listing;
-  let image = item.images[0];
+  const { items, location } = listing;
+  let image = items.images[0];
   if (Platform.OS === "web") {
     Image.resolveAssetSource = (source) => ({
       uri: source,
@@ -29,7 +29,7 @@ export default function ItemCard({ listing, navigation }) {
         }}
         onPress={() =>
           navigation.navigate("ItemDetails", {
-            itemId: item.itemId,
+            listing,
           })
         }
       >
@@ -65,14 +65,14 @@ export default function ItemCard({ listing, navigation }) {
                 paddingVertical: SIZES.padding,
               }}
             >
-              {item.title}
+              {items.title}
             </Text>
             <Text
               style={{
                 color: COLORS.darkgray,
               }}
             >
-              {location} • {timeSince(item.date)}
+              {location} • {timeSince(items.date)}
             </Text>
             <View
               style={{
@@ -81,7 +81,7 @@ export default function ItemCard({ listing, navigation }) {
                 alignItems: "center",
               }}
             >
-              {item.status === "Reserved" && (
+              {items.status === "Reserved" && (
                 <View
                   style={{
                     height: 25,
@@ -95,7 +95,7 @@ export default function ItemCard({ listing, navigation }) {
                   <Text style={{ color: "white" }}>Reserved</Text>
                 </View>
               )}
-              <Text>$ {item.price}</Text>
+              <Text>$ {items.price}</Text>
             </View>
           </View>
         </View>
@@ -103,7 +103,7 @@ export default function ItemCard({ listing, navigation }) {
         {/* IF ON USER LISTINGS - ITEM OPTION BUTTON */}
         <View>
           {/* {renderOptionBtn()}
-          {renderOptionModal(item.itemId)} */}
+          {renderOptionModal(items.itemId)} */}
 
           {/* IF ON USER FAVOURITES SCREEN */}
           {/* {atUserFavouritesScreen && (
@@ -131,7 +131,7 @@ export default function ItemCard({ listing, navigation }) {
                 }}
               >
                 <Ionicons name={"heart-outline"} size={15} color={COLORS.darkgray} />
-                <Text> {item.favourites}</Text>
+                <Text> {items.favourites}</Text>
               </View>
             </View>
           )} */}

@@ -1,7 +1,24 @@
 import mongoose from "mongoose";
-import { reqStr, defaultDate } from "./values.js";
+import { reqStr, defaultDate, defaultNum, reqNum, reqBoolean } from "./values.js";
 
 const { Schema, model } = mongoose;
+
+const item = new Schema({
+  itemId: reqStr,
+  status: reqStr,
+  date: defaultDate,
+  chats: defaultNum,
+  favourites: defaultNum,
+  views: defaultNum,
+  images: [String],
+  // an array of img strings, but could be a RN img obj [10]; check later
+  title: reqStr,
+  price: reqNum,
+  free: reqBoolean,
+  negotiable: reqBoolean,
+  category: reqStr,
+  description: reqStr,
+});
 
 const schema = new Schema({
   id: reqStr,
@@ -9,27 +26,8 @@ const schema = new Schema({
   location: reqStr,
   image: reqStr,
   joined: defaultDate,
-  draft: { type: String, default: null }, // item id for listing draft
-  feeds: {
-    type: [String],
-    default: [
-      "Electronics",
-      "Furniture",
-      "Home, garden & DIY",
-      "Baby & kids",
-      "Women's fashion",
-      "Men's fashion",
-      "Health & beauty",
-      "Sports & leisure",
-      "Games, hobbies & crafts",
-      "Books, music & tickets",
-      "Pets stuff",
-      "Musical instruments",
-      "Vehicles & parts",
-      "Other",
-      "Wanted",
-    ],
-  },
+  draft: { type: Schema.Types.Mixed, default: null }, // item id for listing draft
+  items: [item],
 });
 
 const Account = model("accounts", schema);

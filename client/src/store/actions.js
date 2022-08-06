@@ -2,41 +2,46 @@ import { Platform } from "react-native";
 import axios from "axios";
 import * as types from "./actionTypes";
 
-const PROXY = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
-
 // REQUESTS
-export const getInitialStates = () => {
+// get my data
+export const getMyData = () => {
   return (dispatch) => {
     axios
       .get(`${PROXY}/`)
       .then((res) => {
-        const {
-          myProfile,
-          membersProfile,
-          myListings,
-          membersListings,
-          myReviews,
-          myFavourites,
-          restrictions,
-          membersProfileAndListings,
-        } = res.data;
-        console.log("@ actions myProfile");
+        const { profile, listings, favourites, restrictions, iReview } = res.data;
         dispatch({
-          type: types.SET_INITIAL_STATES,
-          myProfile,
-          membersProfile,
-          myListings,
-          membersListings,
-          myReviews,
-          myFavourites,
+          type: types.SET_MY_DATA,
+          profile,
+          listings,
+          favourites,
           restrictions,
-          membersProfileAndListings,
+          iReview,
         });
       })
       .catch((err) => {
         console.log("getInitialStates ERROR: ", err);
       });
   };
+};
+
+// get members listings filtered by restrictions and feed settings
+export const getHomeListings = () => {
+  axios
+    .get(`${PROXY}/getHomeListings`)
+    .then((res) => {
+      const { profile, favourites, restrictions, iReview } = res.data;
+      dispatch({
+        type: types.SET_MY_DATA,
+        profile,
+        favourites,
+        restrictions,
+        iReview,
+      });
+    })
+    .catch((err) => {
+      console.log("getHomeListings ERROR: ", err);
+    });
 };
 
 export const patchMyProfile = (changes) => {

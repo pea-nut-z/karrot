@@ -17,12 +17,9 @@ export const filterByHideAndCategory = createSelector(
     (catergories, listings, hideList) => hideList,
   ],
   (catergories, listings, hideList) => {
-    console.log({ listings });
-
     const newListings = listings.filter(
       (listing) => !hideList.includes(listing.id) && catergories.includes(listing.item.category)
     );
-    // "8Aqb"
     return newListings;
   }
 );

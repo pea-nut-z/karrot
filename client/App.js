@@ -16,10 +16,10 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={"Login"}
+          initialRouteName={"BottomMainTabs"}
         >
           {/* HOME */}
-          <Stack.Screen name="Login" component={screens.Login} />
+          {/* <Stack.Screen name="Login" component={screens.Login} /> */}
           <Stack.Screen name="BottomMainTabs" component={tabs.BottomMainTabs} />
           <Stack.Screen name="Sell" component={screens.Sell} />
           <Stack.Screen name="SellerItemsTabs" component={tabs.SellerItemsTabs} />

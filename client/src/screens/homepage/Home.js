@@ -8,46 +8,47 @@ import {
   LogBox,
   SafeAreaView,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES } from "../../constants";
 import { Header, ItemCard, ModalAlert } from "../../UI";
-import * as actions from "../../store/actionTypes";
-import { filterByHideAndCategory } from "../../store/selectors";
+import * as types from "../../store/actionTypes";
+import axios from "axios";
+import * as helper from "../../helper";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
+  const [listings, setListings] = useState([]);
+  const [draft, setDraft] = useState([]);
   const [draftAlert, setDraftAlert] = useState(false);
-  const dispatch = useDispatch();
 
-  //   const getListingsMemo = useMemo(filterByHideAndCategory, []);
-  const listings = useSelector((state) => {
-    return filterByHideAndCategory(
-      state.myProfile.feeds,
-      state.membersProfileAndListings,
-      state.restriction.hide
-    );
-  });
-  //   const listings = [];
-  const draft = useSelector((state) => state.myProfile.draft);
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/homeListings`)
+      .then((res) => {
+        setListings(res.data.listings);
+      })
+      .catch((err) => console.error("Homepage listing error: ", err));
+
+    axios
+      .get(`${helper.proxy}/draft`)
+      .then((res) => {
+        setDraft(res.data.draft);
+      })
+      .catch((err) => console.error("Homepage draft error: ", err));
+  }, []);
 
   const closeDraftModal = () => {
     setDraftAlert(false);
   };
 
   const handleDraftOption = (option) => {
-    if (option === "yes") {
-      navigation.navigate("Sell", {
-        draft,
-      });
-    }
     if (option === "no") {
-      dispatch({
-        type: actions.REMOVE_DRAFT,
+      axios.patch(`${PROXY}/draft`).catch((err) => {
+        console.log("Homepage delete draft error: ", err);
       });
-      navigation.navigate("Sell");
     }
+    navigation.navigate("Sell", { draft });
     closeDraftModal();
   };
 
@@ -65,6 +66,8 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
+            console.log({ draft });
+
             if (draft) {
               setDraftAlert(true);
             } else {
@@ -79,7 +82,7 @@ export default function Home({ navigation }) {
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
               {listings.map((listing) => {
                 return (
-                  <View key={listing.item.itemId} style={styles.itemCard}>
+                  <View key={listing.items.itemId} style={styles.itemCard}>
                     <ItemCard listing={listing} navigation={navigation} />
                   </View>
                 );

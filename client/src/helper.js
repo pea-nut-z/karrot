@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export const timeSince = (date) => {
   //   var aDay = 24*60*60*1000;
   if (typeof date !== "object") {
@@ -62,3 +64,5 @@ export const dateWithoutTime = () => {
 
   return `${monthLetters} ${date}, ${year}`;
 };
+
+export const proxy = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
