@@ -2,6 +2,7 @@ import "dotenv/config";
 // import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
+import draftRouter from "./routes/draft.js";
 import * as actions from "./actions.js";
 
 mongoose
@@ -14,10 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/draft", async (req, res) => {
-  const draft = await actions.getDraft();
-  res.json({ draft });
-});
+app.use("/draft", draftRouter);
 
 app.get("/homeListings", async (req, res) => {
   const listings = await actions.getHomeListings();

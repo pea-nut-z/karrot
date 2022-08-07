@@ -15,7 +15,7 @@ import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { SIZES, COLORS } from "../../constants";
 import { Header } from "../../UI";
-import * as actions from "../../store/actions";
+import * as actions from "../../actions";
 
 export default function EditProfile({ navigation }) {
   const profile = useSelector((state) => state.myProfile);

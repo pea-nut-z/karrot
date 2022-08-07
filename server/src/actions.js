@@ -10,6 +10,16 @@ export const getDraft = async () => {
   return account.draft;
 };
 
+export const deleteDraft = async () => {
+  const result = await Account.findOneAndUpdate({ privateId }, { draft: false });
+  return result;
+};
+
+export const createDraft = async (draft) => {
+  const result = await Account.findOneAndUpdate({ privateId }, { draft });
+  return result;
+};
+
 export const getRestrictions = async () => {
   const restrictions = await Restriction.findOne({ privateId });
   return restrictions;

@@ -1,7 +1,7 @@
 export const SET_MY_DATA = "set-my-data";
-export const UPDATE_MY_PROFILE = "update-my-profile";
-
 export const REMOVE_DRAFT = "remove-draft";
+
+export const UPDATE_MY_PROFILE = "update-my-profile";
 
 export const INCREMENT_VIEW = "increment-view";
 

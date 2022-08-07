@@ -59,14 +59,3 @@ export const patchMyProfile = (changes) => {
       });
   };
 };
-
-// export const getistings = () => {
-//   return (dispath) => {
-//     axios.get(`${PROXY}/`).then((res) => {
-//       dispatch({
-//         type: types.SET_SELLER_LISTINGS,
-//         pay,
-//       });
-//     });
-//   };
-// };

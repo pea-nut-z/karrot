@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES } from "../../constants";
 import { Header, ItemCard, ModalAlert } from "../../UI";
-import * as types from "../../store/actionTypes";
 import axios from "axios";
 import * as helper from "../../helper";
 
@@ -19,7 +18,7 @@ LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   const [listings, setListings] = useState([]);
-  const [draft, setDraft] = useState([]);
+  const [draft, setDraft] = useState(false);
   const [draftAlert, setDraftAlert] = useState(false);
 
   useEffect(() => {
@@ -44,11 +43,15 @@ export default function Home({ navigation }) {
 
   const handleDraftOption = (option) => {
     if (option === "no") {
-      axios.patch(`${PROXY}/draft`).catch((err) => {
-        console.log("Homepage delete draft error: ", err);
-      });
+      axios
+        .delete(`${helper.proxy}/draft/delete`)
+        .then(() => navigation.navigate("Sell", { item: false }))
+        .catch((err) => {
+          console.log("Homepage delete draft error: ", err);
+        });
+    } else {
+      navigation.navigate("Sell", { item: draft });
     }
-    navigation.navigate("Sell", { draft });
     closeDraftModal();
   };
 
@@ -66,12 +69,10 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
-            console.log({ draft });
-
             if (draft) {
               setDraftAlert(true);
             } else {
-              navigation.navigate("Sell");
+              navigation.navigate("Sell", { item: false });
             }
           }}
         >

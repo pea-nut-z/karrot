@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 
 const item = new Schema({
   itemId: reqStr,
-  status: reqStr,
+  status: { type: String, default: "Active" },
   date: defaultDate,
   chats: defaultNum,
   favourites: defaultNum,
