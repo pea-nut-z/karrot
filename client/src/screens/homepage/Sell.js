@@ -393,10 +393,6 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: SIZES.padding,
   },
-  //   dropDownOpen: {
-  //     position: "absolute",
-  //     width: SIZES.width,
-  //   },
   dropDown: {
     borderRadius: 0,
     borderColor: "transparent",
