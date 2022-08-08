@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { Border, Header, ImageScrollView, MemberInfo, MemberRating, SellerOtherItems } from "../UI";
 import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
-import { timeSince } from "../helper";
 import * as actions from "../store/actionTypes";
 import { selectMemberAllItems } from "../store/selectors";
 import axios from "axios";
@@ -20,6 +19,8 @@ export default function ItemDetails({ route, navigation }) {
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
   const [useWhiteBtns, setUseWhiteBtns] = useState();
 
+  const myId = useSelector((state) => state.profile.id);
+
   useEffect(() => {
     const props = route.params.listing;
     setProfile(props);
@@ -28,9 +29,9 @@ export default function ItemDetails({ route, navigation }) {
 
     const images = props.items.images;
     setUseWhiteBtns(typeof images[0] === "number" || images[0].includes(".png") ? false : true);
-    if (helper.myId !== props.id) {
+    if (myId !== props.id) {
       axios
-        .patch(`${helper.proxy}/listing/add-view/${props.id}/${props.items.itemId}`)
+        .patch(`${helper.proxy}/memberListing/add-view/${props.id}/${props.items.itemId}`)
         .catch((err) => {
           console.log("ItemDetails page listing add-view: ", err);
         });
@@ -69,7 +70,7 @@ export default function ItemDetails({ route, navigation }) {
                 atItemDetails={true}
               />
 
-              {/* <MemberRating memberId={profile.id} atItemDetails={true} /> */}
+              <MemberRating memberId={profile.id} atItemDetails={true} />
             </TouchableOpacity>
 
             <Border />

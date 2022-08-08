@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/myAccount", routes.myAccount);
-app.use("/listing", routes.listing);
+app.use("/memberListing", routes.memberListing);
+app.use("/review", routes.review);
 
 app.get("/homeListings", async (req, res) => {
   const listings = await actions.getHomeListings();
