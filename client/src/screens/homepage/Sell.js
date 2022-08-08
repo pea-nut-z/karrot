@@ -20,11 +20,13 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as helper from "../../helper";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import * as types from "../../store/actionTypes";
 
 export default function Sell({ route, navigation }) {
-  const { item } = route.params;
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
+  const [newItem, setNewItem] = useState(true);
   const [numOfImg, setNumOfImg] = useState(0);
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
@@ -35,9 +37,11 @@ export default function Sell({ route, navigation }) {
   const [description, setDescription] = useState("");
   const [alert, setAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (item) {
+    if (route.params.item) {
+      const { item } = route.params;
       const { images, title, price, free, negotiable, category, description } = item;
       setNumOfImg(images.length);
       setImages(images);
@@ -47,6 +51,7 @@ export default function Sell({ route, navigation }) {
       setNegotiable(negotiable);
       setCategory(category);
       setDescription(description);
+      if (item.hasOwnProperty("itemId")) setNewItem(false);
     }
   }, []);
 
@@ -84,14 +89,14 @@ export default function Sell({ route, navigation }) {
     }
   };
 
-  const renderImage = ({ item }) => {
+  const renderImage = ({ img }) => {
     return (
       <View style={styles.imgContainer}>
         <ImageBackground
-          source={typeof item === "number" ? item : { uri: item }}
+          source={typeof img === "number" ? img : { uri: img }}
           style={styles.img}
         ></ImageBackground>
-        <TouchableOpacity onPress={() => deleteImg(item)} style={styles.deleteImgBtn}>
+        <TouchableOpacity onPress={() => deleteImg(img)} style={styles.deleteImgBtn}>
           <Ionicons name="close-circle" size={25} />
         </TouchableOpacity>
       </View>
@@ -115,7 +120,7 @@ export default function Sell({ route, navigation }) {
       imgPath = images;
     }
 
-    const listing = {
+    const itemData = {
       images: imgPath,
       title,
       price,
@@ -125,10 +130,10 @@ export default function Sell({ route, navigation }) {
       description,
     };
 
-    if (item.hasOwnProperty("itemId")) {
+    if (newItem) {
       // it is a draft or new item
       axios
-        .post(`${helper.proxy}/item`, listing)
+        .post(`${helper.proxy}/item`, itemData)
         .then((res) => {
           navigation.navigate("ItemDetails", {
             itemId: res.itemId,
@@ -140,7 +145,7 @@ export default function Sell({ route, navigation }) {
     } else {
       // it is a edit
       axios
-        .patch(`${helper.proxy}/item`, listing)
+        .patch(`${helper.proxy}/item`, itemData)
         .then((res) => {
           navigation.navigate("ItemDetails", {
             itemId: res.itemId,
@@ -178,25 +183,28 @@ export default function Sell({ route, navigation }) {
       category,
       description,
     };
-    const notBlank = (value) => value !== "" && value?.length !== 0 && value !== undefined;
+    const notBlank = (value) => value !== "" && value?.length !== 0 && value !== null;
     const values = Object.values(fields);
-    const listingIsNotBlank = values.some(notBlank);
+    const listingIsNotBlank = values.some((val) => notBlank(val));
 
     if (listingIsNotBlank) {
       axios
-        .patch(`${helper.proxy}/draft/create`, fields)
-        .then(() => navigation.goBack())
+        .patch(`${helper.proxy}/myAccount/update`, { draft: fields })
+        .then(() => {
+          dispatch({ type: types.UPDATE_PROFILE, changes: { draft: fields } });
+        })
         .catch((err) => {
           console.log("Sell page add draft error: ", err);
         });
     }
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
         navigation={navigation}
-        title={item.hasOwnProperty("itemId") ? "Edit Post" : "Post For Sale"}
+        title={newItem ? "Post For Sale" : "Edit Post"}
         saveDraft={saveDraft}
         useBackBtn={true}
         useRightBtns={["checkmark-done"]}

@@ -13,13 +13,17 @@ import { COLORS, SIZES } from "../../constants";
 import { Header, ItemCard, ModalAlert } from "../../UI";
 import axios from "axios";
 import * as helper from "../../helper";
+import * as types from "../../store/actionTypes";
+import { useDispatch, useSelector } from "react-redux";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   const [listings, setListings] = useState([]);
-  const [draft, setDraft] = useState(false);
   const [draftAlert, setDraftAlert] = useState(false);
+  const dispatch = useDispatch();
+
+  const draft = useSelector((state) => state.profile.draft);
 
   useEffect(() => {
     axios
@@ -30,11 +34,11 @@ export default function Home({ navigation }) {
       .catch((err) => console.error("Homepage listing error: ", err));
 
     axios
-      .get(`${helper.proxy}/draft`)
+      .get(`${helper.proxy}/myAccount`)
       .then((res) => {
-        setDraft(res.data.draft);
+        dispatch({ type: types.SET_DATA, data: res.data.account });
       })
-      .catch((err) => console.error("Homepage draft error: ", err));
+      .catch((err) => console.error("Homepage data error: ", err));
   }, []);
 
   const closeDraftModal = () => {
@@ -44,8 +48,11 @@ export default function Home({ navigation }) {
   const handleDraftOption = (option) => {
     if (option === "no") {
       axios
-        .delete(`${helper.proxy}/draft/delete`)
-        .then(() => navigation.navigate("Sell", { item: false }))
+        .patch(`${helper.proxy}/myAccount/update`, { draft: false })
+        .then(() => {
+          dispatch({ type: types.UPDATE_PROFILE, changes: { draft: false } });
+          navigation.navigate("Sell", { item: false });
+        })
         .catch((err) => {
           console.log("Homepage delete draft error: ", err);
         });

@@ -3,6 +3,7 @@ import { View, Animated, Image, Platform } from "react-native";
 import { SIZES, COLORS } from "../constants";
 
 export default function ImageScrollView({ images }) {
+  // console.log({ images });
   const scrollX = new Animated.Value(0);
   const dotPosition = Animated.divide(scrollX, SIZES.width);
 

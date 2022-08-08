@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import * as actions from "./actionTypes";
+import * as types from "./actionTypes";
 import { dateWithoutTime } from "../helper";
 
 const members = {
@@ -129,21 +129,18 @@ const iReview = [];
 
 // NEW REDUCERS my info
 const profileReducer = (state = profile, action) => {
-  const { profile, changes } = action;
+  const { data, changes } = action;
   switch (action.type) {
-    case actions.SET_MY_DATA:
+    case types.SET_DATA:
+      const copy = { ...data };
+      delete copy.items; // remove listings from data
       return {
-        ...profile,
+        ...copy,
       };
-    case actions.UPDATE_MY_PROFILE:
+    case types.UPDATE_PROFILE:
       return {
         ...state,
         ...changes,
-      };
-    case actions.REMOVE_DRAFT:
-      return {
-        ...state,
-        draft: null,
       };
     default:
       return state;
@@ -151,10 +148,10 @@ const profileReducer = (state = profile, action) => {
 };
 
 const listingsReducer = (state = listings, action) => {
-  const { listings, changes } = action;
+  const { data, changes } = action;
   switch (action.type) {
-    case actions.SET_MY_DATA:
-      return [...listings];
+    case types.SET_DATA:
+      return [...data.items];
     default:
       return state;
   }
@@ -164,9 +161,9 @@ const myFavouritesReducer = (state = myFavourites, action) => {
   const { favourites } = action;
 
   switch (action.type) {
-    case actions.SET_MY_DATA:
+    case types.SET_MY_DATA:
       return [...favourites];
-    case actions.FAVOURITE_REMOVED:
+    case types.FAVOURITE_REMOVED:
       return {
         ...state,
         [userId]: state[userId].filter((item) => item.itemId !== itemId),
@@ -179,7 +176,7 @@ const myFavouritesReducer = (state = myFavourites, action) => {
 const restrictionReducer = (state = restriction, action) => {
   const { restrictions } = action;
   switch (action.type) {
-    case actions.SET_MY_DATA:
+    case types.SET_MY_DATA:
       return { ...restrictions };
     default:
       return state;
@@ -189,7 +186,7 @@ const restrictionReducer = (state = restriction, action) => {
 const iReviewReducer = (state = iReview, action) => {
   const { iReview } = action;
   switch (action.type) {
-    case actions.SET_MY_DATA:
+    case types.SET_MY_DATA:
       return [...iReview];
     default:
       return state;
@@ -201,13 +198,13 @@ const favouritesReducer = (state = favourites, action) => {
   const { userId, sellerId, itemId } = action;
 
   switch (action.type) {
-    case actions.FAVOURITE_ADDED:
+    case types.FAVOURITE_ADDED:
       return {
         ...state,
         [userId]: [...state[userId], { sellerId, itemId }],
       };
 
-    case actions.FAVOURITE_REMOVED:
+    case types.FAVOURITE_REMOVED:
       return {
         ...state,
         [userId]: state[userId].filter((item) => item.itemId !== itemId),
@@ -221,7 +218,7 @@ const usersReducer = (state = members, action) => {
   const { userId, username, image } = action;
 
   switch (action.type) {
-    case actions.USER_ADDED:
+    case types.USER_ADDED:
       return {
         ...state,
         [userId]: {
@@ -231,7 +228,7 @@ const usersReducer = (state = members, action) => {
           joined: dateWithoutTime(),
         },
       };
-    case actions.USERNAME_CHANGED:
+    case types.USERNAME_CHANGED:
       return {
         ...state,
         [userId]: {
@@ -239,7 +236,7 @@ const usersReducer = (state = members, action) => {
           username: username,
         },
       };
-    case actions.USER_DISPLAYPIC_CHANGED:
+    case types.USER_DISPLAYPIC_CHANGED:
       return {
         ...state,
         [userId]: {
@@ -247,7 +244,7 @@ const usersReducer = (state = members, action) => {
           displayPic: image,
         },
       };
-    // case actions.DISPLAYPIC_DELETED:
+    // case types.DISPLAYPIC_DELETED:
     //   return {
     //     ...state,
     //     [action.userId]: {
@@ -264,7 +261,7 @@ const usersReducer = (state = members, action) => {
 //   const { sellerId, itemId, status } = action;
 
 //   switch (action.type) {
-//     case actions.ITEM_ADDED:
+//     case types.ITEM_ADDED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -279,7 +276,7 @@ const usersReducer = (state = members, action) => {
 //           },
 //         },
 //       };
-//     case actions.ITEM_EDITED:
+//     case types.ITEM_EDITED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -290,7 +287,7 @@ const usersReducer = (state = members, action) => {
 //           },
 //         },
 //       };
-//     case actions.ITEM_DELETED:
+//     case types.ITEM_DELETED:
 //       const key = itemId;
 //       const { [key]: value, ...others } = state[sellerId];
 //       return {
@@ -299,7 +296,7 @@ const usersReducer = (state = members, action) => {
 //           ...others,
 //         },
 //       };
-//     case actions.ITEM_STATUS_CHANGED:
+//     case types.ITEM_STATUS_CHANGED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -310,7 +307,7 @@ const usersReducer = (state = members, action) => {
 //           },
 //         },
 //       };
-//     case actions.FAVOURITE_ADDED:
+//     case types.FAVOURITE_ADDED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -321,7 +318,7 @@ const usersReducer = (state = members, action) => {
 //           },
 //         },
 //       };
-//     case actions.FAVOURITE_REMOVED:
+//     case types.FAVOURITE_REMOVED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -332,7 +329,7 @@ const usersReducer = (state = members, action) => {
 //           },
 //         },
 //       };
-//     case actions.ITEM_VIEW_INCREMENTED:
+//     case types.ITEM_VIEW_INCREMENTED:
 //       return {
 //         ...state,
 //         [sellerId]: {
@@ -351,12 +348,12 @@ const usersReducer = (state = members, action) => {
 const feedsReducer = (state = feeds, action) => {
   const { userId, feed } = action;
   switch (action.type) {
-    case actions.FEED_ADDED:
+    case types.FEED_ADDED:
       return {
         ...state,
         [userId]: [...state[userId], feed],
       };
-    case actions.FEED_REMOVED:
+    case types.FEED_REMOVED:
       return {
         ...state,
         [userId]: state[userId].filter((item) => item !== feed),
@@ -370,7 +367,7 @@ const restrictionsReducer = (state = restrictions, action) => {
   const { userId, sellerId } = action;
 
   switch (action.type) {
-    case actions.BLOCK_ADDED:
+    case types.BLOCK_ADDED:
       return {
         ...state,
         [userId]: {
@@ -384,7 +381,7 @@ const restrictionsReducer = (state = restrictions, action) => {
         },
       };
 
-    case actions.BLOCK_REMOVED:
+    case types.BLOCK_REMOVED:
       return {
         ...state,
         [userId]: {
@@ -397,7 +394,7 @@ const restrictionsReducer = (state = restrictions, action) => {
         },
       };
 
-    case actions.HIDE_ADDED:
+    case types.HIDE_ADDED:
       return {
         ...state,
         [userId]: {
@@ -405,7 +402,7 @@ const restrictionsReducer = (state = restrictions, action) => {
           hide: [...state[userId]["hide"], sellerId],
         },
       };
-    case actions.HIDE_REMOVED:
+    case types.HIDE_REMOVED:
       return {
         ...state,
         [userId]: {
@@ -422,12 +419,12 @@ const restrictionsReducer = (state = restrictions, action) => {
 const draftsReducer = (state = drafts, action) => {
   const { userId, itemId } = action;
   switch (action.type) {
-    case actions.DRAFT_ADDED:
+    case types.DRAFT_ADDED:
       return {
         ...state,
         [userId]: itemId,
       };
-    case actions.DRAFT_DELETED:
+    case types.DRAFT_DELETED:
       const key = userId;
       const { [key]: value, ...withoutDeletedItem } = state;
       return {
@@ -442,7 +439,7 @@ const reviewsReducer = (state = reviews, action) => {
   const { memberId, reviewerId } = action;
 
   switch (action.type) {
-    case actions.REVIEW_ADDED:
+    case types.REVIEW_ADDED:
       const reviewReplaced = state[memberId]["reviewers"].includes(reviewerId) ? true : false;
       const prevRating =
         reviewReplaced &&

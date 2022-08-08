@@ -5,21 +5,6 @@ import ShortUniqueId from "short-unique-id";
 const uid = new ShortUniqueId({ length: 4 });
 let privateId = "62e87ec387aecd786da8d937";
 
-export const getDraft = async () => {
-  const account = await Account.findOne({ privateId });
-  return account.draft;
-};
-
-export const deleteDraft = async () => {
-  const result = await Account.findOneAndUpdate({ privateId }, { draft: false });
-  return result;
-};
-
-export const createDraft = async (draft) => {
-  const result = await Account.findOneAndUpdate({ privateId }, { draft });
-  return result;
-};
-
 export const getRestrictions = async () => {
   const restrictions = await Restriction.findOne({ privateId });
   return restrictions;
