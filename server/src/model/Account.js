@@ -26,7 +26,7 @@ const schema = new Schema({
   location: reqStr,
   image: reqStr,
   joined: defaultDate,
-  draft: { type: Schema.Types.Mixed, default: null }, // item id for listing draft
+  draft: { type: Schema.Types.Mixed, default: false }, // item id for listing draft
   items: [item],
 });
 

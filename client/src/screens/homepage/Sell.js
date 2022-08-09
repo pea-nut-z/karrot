@@ -130,10 +130,11 @@ export default function Sell({ route, navigation }) {
       description,
     };
 
+    // MISING PATCH ACTION; axios post ...account/
     if (newItem) {
       // it is a draft or new item
       axios
-        .post(`${helper.proxy}/item`, itemData)
+        .post(`${helper.proxy}/account/item`, itemData)
         .then((res) => {
           navigation.navigate("ItemDetails", {
             itemId: res.itemId,
@@ -145,7 +146,7 @@ export default function Sell({ route, navigation }) {
     } else {
       // it is a edit
       axios
-        .patch(`${helper.proxy}/item`, itemData)
+        .patch(`${helper.proxy}/account/item`, itemData)
         .then((res) => {
           navigation.navigate("ItemDetails", {
             itemId: res.itemId,
@@ -189,9 +190,9 @@ export default function Sell({ route, navigation }) {
 
     if (listingIsNotBlank) {
       axios
-        .patch(`${helper.proxy}/myAccount/update`, { draft: fields })
+        .patch(`${helper.proxy}/account/update`, { draft: fields })
         .then(() => {
-          dispatch({ type: types.UPDATE_PROFILE, changes: { draft: fields } });
+          dispatch({ type: types.UPDATE_PROFILE, data: { draft: fields } });
         })
         .catch((err) => {
           console.log("Sell page add draft error: ", err);

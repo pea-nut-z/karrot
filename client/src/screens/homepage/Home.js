@@ -27,16 +27,16 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`${helper.proxy}/homeListings`)
+      .get(`${helper.proxy}/listing/?home=true`)
       .then((res) => {
-        setListings(res.data.listings);
+        setListings(res.data.docs);
       })
       .catch((err) => console.error("Homepage listing error: ", err));
 
     axios
-      .get(`${helper.proxy}/myAccount`)
+      .get(`${helper.proxy}`)
       .then((res) => {
-        dispatch({ type: types.SET_DATA, data: res.data.account });
+        dispatch({ type: types.SET_DATA, data: res.data });
       })
       .catch((err) => console.error("Homepage data error: ", err));
   }, []);
@@ -48,9 +48,9 @@ export default function Home({ navigation }) {
   const handleDraftOption = (option) => {
     if (option === "no") {
       axios
-        .patch(`${helper.proxy}/myAccount/update`, { draft: false })
+        .patch(`${helper.proxy}/account/update`, { draft: false })
         .then(() => {
-          dispatch({ type: types.UPDATE_PROFILE, changes: { draft: false } });
+          dispatch({ type: types.UPDATE_PROFILE, data: { draft: false } });
           navigation.navigate("Sell", { item: false });
         })
         .catch((err) => {

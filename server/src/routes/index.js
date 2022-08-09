@@ -1,5 +1,6 @@
-import myAccount from "./myAccount.js";
-import memberListing from "./memberListing.js";
+import account from "./account.js";
 import review from "./review.js";
+import activity from "./activity.js";
+import listing from "./listing.js";
 
-export { myAccount, memberListing, review };
+export { account, activity, review, listing };

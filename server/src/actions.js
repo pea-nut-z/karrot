@@ -1,20 +1,4 @@
-import mongoose from "mongoose";
-import { Restriction, Account, Review, Favourite, IReview } from "./model/index.js";
-import ShortUniqueId from "short-unique-id";
-
-const uid = new ShortUniqueId({ length: 4 });
-let privateId = "62e87ec387aecd786da8d937";
-
-export const getRestrictions = async () => {
-  const restrictions = await Restriction.findOne({ privateId });
-  return restrictions;
-};
-
-export const getAccounts = async () => {
-  // exclude mine
-  const listings = await Account.find({ id: { $nin: privateId } });
-  return listings;
-};
+import { Restriction, Account } from "./model/index.js";
 
 export const getDocs = async (filters, restrictions, categories) => {
   let docs, query;
@@ -46,9 +30,4 @@ export const getDocs = async (filters, restrictions, categories) => {
       docs = await Account.aggregate([{ $match: query }, { $unwind: "$items" }]);
   }
   return docs;
-};
-
-export const getHomeListings = async () => {
-  const restrictions = await getRestrictions();
-  return getDocs("Block/Hide/Category", restrictions, restrictions.feeds);
 };

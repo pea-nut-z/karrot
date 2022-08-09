@@ -1,10 +1,8 @@
 export const SET_DATA = "set-my-data";
-export const UPDATE_PROFILE = "update-profile";
 export const DELETE_DRAFT = "set-my-data";
+export const ADD_VIEW = "add-view";
 
-export const REMOVE_DRAFT = "remove-draft";
-
-export const INCREMENT_VIEW = "increment-view";
+export const UPDATE_PROFILE = "update-profile";
 
 // OLD
 export const ITEM_ADDED = "item-added";

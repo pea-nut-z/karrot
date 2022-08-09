@@ -29,3 +29,8 @@ export const defaultNum = {
   type: Number,
   default: 0,
 };
+
+export const defaultArr = {
+  type: [String],
+  default: [],
+};

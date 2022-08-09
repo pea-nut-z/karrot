@@ -123,16 +123,15 @@ const reviews = {
 // STATES
 const profile = {};
 const listings = [];
-const myFavourites = [];
+const activity = {};
 const restriction = {}; // change name to restrictions
-const iReview = [];
 
 // NEW REDUCERS my info
 const profileReducer = (state = profile, action) => {
-  const { data, changes } = action;
+  const { data } = action;
   switch (action.type) {
     case types.SET_DATA:
-      const copy = { ...data };
+      const copy = { ...data.account };
       delete copy.items; // remove listings from data
       return {
         ...copy,
@@ -140,7 +139,7 @@ const profileReducer = (state = profile, action) => {
     case types.UPDATE_PROFILE:
       return {
         ...state,
-        ...changes,
+        ...data,
       };
     default:
       return state;
@@ -148,46 +147,33 @@ const profileReducer = (state = profile, action) => {
 };
 
 const listingsReducer = (state = listings, action) => {
-  const { data, changes } = action;
+  const { data } = action;
   switch (action.type) {
     case types.SET_DATA:
-      return [...data.items];
+      return [...data.account.items];
     default:
       return state;
   }
 };
 
-const myFavouritesReducer = (state = myFavourites, action) => {
-  const { favourites } = action;
+const activityReducer = (state = activity, action) => {
+  const { data } = action;
 
   switch (action.type) {
-    case types.SET_MY_DATA:
-      return [...favourites];
-    case types.FAVOURITE_REMOVED:
-      return {
-        ...state,
-        [userId]: state[userId].filter((item) => item.itemId !== itemId),
-      };
+    case types.SET_DATA:
+      return { ...data.activity };
+    case types.ADD_VIEW:
+      return { ...state, views: [...state.views, data] };
     default:
       return state;
   }
 };
 
 const restrictionReducer = (state = restriction, action) => {
-  const { restrictions } = action;
+  const { data } = action;
   switch (action.type) {
-    case types.SET_MY_DATA:
-      return { ...restrictions };
-    default:
-      return state;
-  }
-};
-
-const iReviewReducer = (state = iReview, action) => {
-  const { iReview } = action;
-  switch (action.type) {
-    case types.SET_MY_DATA:
-      return [...iReview];
+    case types.SET_DATA:
+      return { ...data.restriction };
     default:
       return state;
   }
@@ -487,9 +473,8 @@ const rootReducer = combineReducers({
 
   profile: profileReducer,
   listings: listingsReducer,
-  myFavourites: myFavouritesReducer,
+  activity: activityReducer,
   restriction: restrictionReducer,
-  iReview: iReviewReducer,
 });
 
 export default rootReducer;

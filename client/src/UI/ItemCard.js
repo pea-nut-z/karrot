@@ -31,7 +31,8 @@ export default function ItemCard({ listing, navigation }) {
           style={styles.outterContainer}
           onPress={() =>
             navigation.navigate("ItemDetails", {
-              listing,
+              memberId: profile.id,
+              itemId: item.itemId,
             })
           }
         >
