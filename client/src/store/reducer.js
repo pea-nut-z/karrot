@@ -123,7 +123,7 @@ const reviews = {
 // STATES
 const profile = {};
 const listings = [];
-const activity = {};
+const activities = {};
 const restriction = {}; // change name to restrictions
 
 // NEW REDUCERS my info
@@ -156,14 +156,18 @@ const listingsReducer = (state = listings, action) => {
   }
 };
 
-const activityReducer = (state = activity, action) => {
+const activitiesReducer = (state = activities, action) => {
   const { data } = action;
 
   switch (action.type) {
     case types.SET_DATA:
-      return { ...data.activity };
+      return { ...data.activities };
     case types.ADD_VIEW:
       return { ...state, views: [...state.views, data] };
+    case types.ADD_FAV:
+      return { ...state, favourites: [...state.favourites, data] };
+    case types.MINS_FAV:
+      return { ...state, favourites: state.favourites.filter((id) => id !== data) };
     default:
       return state;
   }
@@ -473,7 +477,7 @@ const rootReducer = combineReducers({
 
   profile: profileReducer,
   listings: listingsReducer,
-  activity: activityReducer,
+  activities: activitiesReducer,
   restriction: restrictionReducer,
 });
 

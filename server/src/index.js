@@ -25,17 +25,17 @@ app.use("/review", routes.review);
 
 app.get("/", async (req, res) => {
   const account = Account.findOne({ privateId }, { _id: 0, __v: 0 });
-  const activity = Activity.findOne({ privateId }, { privateId: 0, _id: 0, __v: 0 });
+  const activities = Activity.findOne({ privateId }, { privateId: 0, _id: 0, __v: 0 });
   const restriction = Restriction.findOne(
     { privateId },
     { privateId: 0, blockBy: 0, _id: 0, __v: 0 }
   );
 
-  Promise.all([account, activity, restriction])
+  Promise.all([account, activities, restriction])
     .then((docs) => {
       res.json({
         account: docs[0],
-        activity: docs[1],
+        activities: docs[1],
         restriction: docs[2],
       });
     })

@@ -4,7 +4,7 @@ import Header from "./Header";
 import HeaderButton from "./HeaderButton";
 import ImageScrollView from "./ImageScrollView";
 import MemberRating from "./MemberRating";
-import SellerOtherItems from "./SellerOtherItems";
+import OtherItem from "./OtherItem";
 import ItemCard from "./ItemCard";
 import MemberInfo from "./MemberInfo";
 import ModalMenu from "./ModalMenu";
@@ -18,7 +18,7 @@ export {
   HeaderButton,
   ImageScrollView,
   MemberRating,
-  SellerOtherItems,
+  OtherItem,
   ItemCard,
   MemberInfo,
   ModalMenu,

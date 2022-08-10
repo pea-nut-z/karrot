@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`${helper.proxy}/listing/?home=true`)
+      .get(`${helper.proxy}/listing/search?by=category`)
       .then((res) => {
         setListings(res.data.docs);
       })

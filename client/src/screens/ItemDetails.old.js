@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import DropDownPicker from "react-native-dropdown-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { Border, Header, ImageScrollView, MemberInfo, MemberRating, SellerOtherItems } from "../UI";
+import { Border, Header, ImageScrollView, MemberInfo, MemberRating, OtherItem } from "../UI";
 import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
 import { timeSince } from "../helper";
 import * as actions from "../store/actionTypes";
@@ -238,12 +238,7 @@ export default function ItemDetails({ route, navigation }) {
               </TouchableOpacity>
             </View>
             {/* FOUR OTHER ITEMS */}
-            <SellerOtherItems
-              userId={userId}
-              sellerId={sellerId}
-              itemId={itemId}
-              navigation={navigation}
-            />
+            <OtherItem userId={userId} sellerId={sellerId} itemId={itemId} navigation={navigation} />
           </View>
         )}
       </KeyboardAwareScrollView>
