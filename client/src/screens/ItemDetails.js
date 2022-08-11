@@ -85,7 +85,7 @@ export default function ItemDetails({ route, navigation }) {
 
               {/* SELLER INFO */}
               <TouchableOpacity
-                // onPress={() => navigation.navigate("Profile", { userId, sellerId })}
+                onPress={() => navigation.navigate("Profile", { memberId: profile.id })}
                 style={styles.memberInfoContainer}
               >
                 <MemberInfo

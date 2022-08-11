@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -11,24 +11,34 @@ import { useSelector, useDispatch } from "react-redux";
 import { Header, MemberInfo, MemberRating, ModalAlert } from "../UI";
 import { SIZES, COLORS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
-import * as types from "../store/actionTypes";
-import axios from "axios";
-import * as helper from "../helper";
+import * as actions from "../store/actionTypes";
 
 export default function Profile({ route, navigation }) {
-  const memberId = useRef(route.params.memberId).current;
-  const myId = useSelector((state) => state.memberId);
+  const { sellerId, userId } = route.params;
+
+  const seller = useSelector((state) => state.pro[sellerId]);
+
+  const atCurrentUserProfile = sellerId === userId ? true : false;
+
+  // const numOfItems = useSelector((state) => {
+  //   const items = state.listings[sellerId];
+  //   return Object.keys(items).length;
+  // });
+
+  // const numOfReviews = useSelector((state) => state["reviews"][sellerId]["reviewers"].length);
+
   const sellerIsBlocked = useSelector((state) => {
-    if (memberId !== myId) {
-      const list = state.restriction.block;
-      return list.includes(memberId);
+    if (!atCurrentUserProfile) {
+      const list = state.restrictions[userId]["block"];
+      return list.includes(sellerId);
     }
   });
-  const atCurrentUserProfile = useRef(memberId === myId);
 
-  const [profile, setProfile] = useState();
-  const [numOfItems, setNumOfItems] = useState();
-  const [numOfReviews, setNumOfReivews] = useState();
+  const sellerIsHidden = useSelector((state) => {
+    if (!atCurrentUserProfile) {
+      return state.restrictions[userId]["hide"];
+    }
+  });
 
   // Modal
   const [popupMenu, setPopupMenu] = useState(false);
@@ -37,24 +47,6 @@ export default function Profile({ route, navigation }) {
   const [unblockMsg, setUnblockMsg] = useState(false);
   const [unhideMsg, setUnhideMsg] = useState(false);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    axios
-      .get(`${helper.proxy}/listing/search?by=id&collection=profile&id=${memberId}`)
-      .then((res) => {
-        const { docs } = res.data;
-        setProfile(docs);
-        setNumOfItems(docs.items.length);
-      })
-      .catch((err) => console.error("Profile get profile error: ", err));
-
-    axios
-      .get(`${helper.proxy}/review/${memberId}`)
-      .then((res) => {
-        setNumOfReivews(res.data.doc["numOfReviews"]);
-      })
-      .catch((err) => console.error("Profile get reviews error: ", err));
-  }, []);
 
   const showPopoutMenu = () => {
     setPopupMenu(true);
@@ -73,45 +65,85 @@ export default function Profile({ route, navigation }) {
     setUnblockMsg(false);
     setUnhideMsg(false);
   };
-
   const onClickOption = (option) => {
-    if (option === "Report") navigation.navigate("Report", { memberId });
+    if (option === "Report") navigation.navigate("Report", { sellerId, userId });
     if (option === "Block") setBlockAlert(true);
     if (option === "Unblock") {
       setUnblockMsg(true);
       dispatch({
-        type: types.UNBLOCK,
-        data: memberId,
+        type: actions.BLOCK_REMOVED,
+        userId,
+        sellerId,
       });
     }
     if (option === "Hide this seller") setHideAlert(true);
     if (option === "Unhide this seller's posts") {
       setUnhideMsg(true);
       dispatch({
-        type: types.UNHIDE,
-        data: memberId,
+        type: actions.HIDE_REMOVED,
+        userId,
+        sellerId,
       });
     }
     // CONFIRMATION
     if (option === "block-confirmed") {
       closeAlertModal();
       dispatch({
-        type: types.BLOCK,
-        data: memberId,
+        type: actions.BLOCK_ADDED,
+        userId,
+        sellerId,
       });
     }
     if (option === "hide-confirmed") {
       closeAlertModal();
       dispatch({
-        type: types.HIDE,
-        data: memberId,
+        type: actions.HIDE_ADDED,
+        userId,
+        sellerId,
       });
     }
     if (option === "cancel") closeAlertModal();
   };
 
   const renderPopoutMenu = () => {
-    console.log("renderPopoutMenu");
+    if (atCurrentUserProfile) {
+      return (
+        <View style={styles.popupMenuContainer}>
+          <TouchableOpacity
+            style={styles.popupMenuOption}
+            onPress={() => {
+              hidePopoutMenu();
+              navigation.navigate("EditProfile");
+            }}
+          >
+            <Text>Edit</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      const options = sellerIsBlocked
+        ? ["Report", "Unblock"]
+        : ["Report", "Block", sellerIsHidden ? "Unhide this seller's posts" : "Hide this seller"];
+
+      return (
+        <View style={styles.popupMenuContainer}>
+          {options.map((option) => {
+            return (
+              <TouchableOpacity
+                key={option}
+                style={styles.popupMenuOption}
+                onPress={() => {
+                  onClickOption(option);
+                  hidePopoutMenu();
+                }}
+              >
+                <Text>{option}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      );
+    }
   };
 
   return (
@@ -121,6 +153,7 @@ export default function Profile({ route, navigation }) {
       }}
     >
       <Header
+        sellerId={sellerId}
         navigation={navigation}
         title={"Profile"}
         showPopoutMenu={showPopoutMenu}
@@ -141,74 +174,71 @@ export default function Profile({ route, navigation }) {
         </View>
       )}
 
+      <ModalAlert
+        visibleVariable={blockAlert}
+        closeModal={closeAlertModal}
+        onClickOption={onClickOption}
+        message={`Are you sure you want to block ${seller.username}? Their posts won't be visible to you and they won't be able to chat with you.`}
+        options={["CANCEL", "BLOCK"]}
+        actions={["cancel", "block-confirmed"]}
+      />
+      <ModalAlert
+        visibleVariable={hideAlert}
+        closeModal={closeAlertModal}
+        onClickOption={onClickOption}
+        message={`Hide ${seller.username} and all of ${seller.username}'s post ?
+        `}
+        options={["CANCEL", "YES, HIDE"]}
+        actions={["cancel", "hide-confirmed"]}
+      />
+      <ModalAlert
+        visibleVariable={unblockMsg}
+        closeModal={closeMsgModal}
+        onClickOption={onClickOption}
+        message={`${seller.username} was unblocked`}
+      />
+      <ModalAlert
+        visibleVariable={unhideMsg}
+        closeModal={closeMsgModal}
+        onClickOption={onClickOption}
+        message={`${seller.username}'s posts have been unhidden`}
+      />
+
+      <View
+        style={{
+          position: "absolute",
+          top: 65,
+          right: SIZES.padding * 2,
+          zIndex: 1,
+        }}
+      >
+        {popupMenu && renderPopoutMenu()}
+      </View>
+
       <TouchableWithoutFeedback onPress={hidePopoutMenu}>
         <View style={{ flex: 1 }}>
           <View style={styles.topContainer}>
-            {profile && (
-              <View>
-                <ModalAlert
-                  visibleVariable={blockAlert}
-                  closeModal={closeAlertModal}
-                  onClickOption={onClickOption}
-                  message={`Are you sure you want to block ${profile.name}? Their posts won't be visible to you and they won't be able to chat with you.`}
-                  options={["CANCEL", "BLOCK"]}
-                  actions={["cancel", "block-confirmed"]}
-                />
-                <ModalAlert
-                  visibleVariable={hideAlert}
-                  closeModal={closeAlertModal}
-                  onClickOption={onClickOption}
-                  message={`Hide ${profile.name} and all of ${profile.name}'s post ?
-        `}
-                  options={["CANCEL", "YES, HIDE"]}
-                  actions={["cancel", "hide-confirmed"]}
-                />
-                <ModalAlert
-                  visibleVariable={unblockMsg}
-                  closeModal={closeMsgModal}
-                  onClickOption={onClickOption}
-                  message={`${profile.name} was unblocked`}
-                />
-                <ModalAlert
-                  visibleVariable={unhideMsg}
-                  closeModal={closeMsgModal}
-                  onClickOption={onClickOption}
-                  message={`${profile.name}'s posts have been unhidden`}
-                />
-
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 65,
-                    right: SIZES.padding * 2,
-                    zIndex: 1,
-                  }}
-                >
-                  {/* {popupMenu && renderPopoutMenu()} */}
-                </View>
-                {/* MEMBER INFO */}
-                <View style={styles.margin}>
-                  <MemberInfo
-                    picture={profile.image}
-                    name={profile.name}
-                    location={profile.location}
-                  />
-                </View>
-              </View>
-            )}
+            {/* MEMBER INFO */}
+            <View style={styles.margin}>
+              <MemberInfo
+                picture={seller.displayPic}
+                name={seller.username}
+                location={seller.location}
+              />
+            </View>
 
             {/* MEMBER RATING */}
             <View style={styles.margin}>
-              <MemberRating memberId={memberId} />
+              <MemberRating memberId={sellerId} />
             </View>
 
             {/* RATE BUTTON  */}
             {!atCurrentUserProfile && (
               <TouchableOpacity
                 style={[styles.rateBtn, styles.margin]}
-                // onPress={() => {
-                //   navigation.navigate("Rate", { userId, sellerId });
-                // }}
+                onPress={() => {
+                  navigation.navigate("Rate", { userId, sellerId });
+                }}
               >
                 <Text>Rate</Text>
               </TouchableOpacity>
@@ -218,28 +248,26 @@ export default function Profile({ route, navigation }) {
           <View style={styles.bottomContainer}>
             {/* ITEMS */}
             <TouchableOpacity
-              //   onPress={() =>
-              //     navigation.navigate(atCurrentUserProfile ? "UserItemsTabs" : "SellerItemsTabs", {
-              //       userId,
-              //       sellerId,
-              //     })
-              //   }
+              onPress={() =>
+                navigation.navigate(atCurrentUserProfile ? "UserItemsTabs" : "SellerItemsTabs", {
+                  userId,
+                  sellerId,
+                })
+              }
               style={[styles.bottomSubContainer, styles.margin]}
             >
-              <Text style={{ fontSize: 16 }}>
-                {numOfItems} item{numOfItems > 1 && "s"}
-              </Text>
+              <Text style={{ fontSize: 16 }}>{/* {numOfItems} item{numOfItems > 1 && "s"} */}</Text>
               <Ionicons name={"chevron-forward-outline"} size={25} />
             </TouchableOpacity>
 
             {/* REVIEWS */}
             <TouchableOpacity
-              //   onPress={() => navigation.navigate("AllReviews", { userId, memberId: sellerId })}
+              onPress={() => navigation.navigate("AllReviews", { userId, memberId: sellerId })}
               style={[styles.bottomSubContainer, styles.margin]}
             >
               <View>
                 <Text style={{ fontSize: 16 }}>
-                  {numOfReviews} review{numOfReviews > 1 && "s"}
+                  {/* {numOfReviews} review{numOfReviews > 1 && "s"} */}
                 </Text>
               </View>
               <Ionicons name={"chevron-forward-outline"} size={25} />

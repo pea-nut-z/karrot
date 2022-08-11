@@ -19,30 +19,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/account", routes.account);
+app.use("/profile", routes.profile);
 app.use("/activity", routes.activity);
 app.use("/listing", routes.listing);
 app.use("/review", routes.review);
 
-app.get("/", async (req, res) => {
-  const account = Account.findOne({ privateId }, { _id: 0, __v: 0 });
-  const activities = Activity.findOne({ privateId }, { privateId: 0, _id: 0, __v: 0 });
-  const restriction = Restriction.findOne(
-    { privateId },
-    { privateId: 0, blockBy: 0, _id: 0, __v: 0 }
-  );
+// app.get("/", async (req, res) => {
+//   // const account = Account.findOne({ privateId }, { _id: 0, __v: 0 });
+//   const activities = Activity.findOne({ privateId }, { privateId: 0, _id: 0, __v: 0 });
+//   const restriction = Restriction.findOne(
+//     { privateId },
+//     { privateId: 0, blockBy: 0, _id: 0, __v: 0 }
+//   );
 
-  Promise.all([account, activities, restriction])
-    .then((docs) => {
-      res.json({
-        account: docs[0],
-        activities: docs[1],
-        restriction: docs[2],
-      });
-    })
-    .catch((err) => {
-      throw new Error(err);
-    });
-});
+//   // Promise.all([account, activities, restriction])
+//   //   .then((docs) => {
+//   //     res.json({
+//   //       account: docs[0],
+//   //       activities: docs[1],
+//   //       restriction: docs[2],
+//   //     });
+//   //   })
+//   //   .catch((err) => {
+//   //     throw err;
+//   //   });
+
+//   Account.findOne({ privateId }, { draft: 1, _id: 0 }, (err, doc) => {
+//     if (err) throw err;
+//     res.json({ doc });
+//   });
+// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

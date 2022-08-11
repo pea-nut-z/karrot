@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -20,13 +20,10 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as helper from "../../helper";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import * as types from "../../store/actionTypes";
 
 export default function Sell({ route, navigation }) {
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
-  const [newItem, setNewItem] = useState(true);
   const [numOfImg, setNumOfImg] = useState(0);
   const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
@@ -36,23 +33,23 @@ export default function Sell({ route, navigation }) {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [alert, setAlert] = useState(false);
-  const [alertMsg, setAlertMsg] = useState("");
-  const dispatch = useDispatch();
+  const [submitAlert, setSubmitAlert] = useState("");
+  const [draftAlert, setDraftAlert] = useState(false);
+  const [draft, setDraft] = useState(false);
+
+  const newItem = useRef(route.params.newItem).current;
 
   useEffect(() => {
-    if (route.params.item) {
-      const { item } = route.params;
-      const { images, title, price, free, negotiable, category, description } = item;
-      setNumOfImg(images.length);
-      setImages(images);
-      setTitle(title);
-      setPrice(price);
-      setFree(free);
-      setNegotiable(negotiable);
-      setCategory(category);
-      setDescription(description);
-      if (item.hasOwnProperty("itemId")) setNewItem(false);
-    }
+    axios
+      .get(`${helper.proxy}/profile/draft`)
+      .then((res) => {
+        const existngDraft = res["data"]["doc"]["draft"];
+        if (existngDraft) {
+          setDraftAlert(true);
+          setDraft(existngDraft);
+        }
+      })
+      .catch((err) => console.error("Homepage data error: ", err));
   }, []);
 
   useEffect(() => {
@@ -61,6 +58,34 @@ export default function Sell({ route, navigation }) {
       setPrice(null);
     }
   }, [price]);
+
+  const handleDraftOption = (option) => {
+    if (option === "no") {
+      axios
+        .patch(`${helper.proxy}/profile/update`, { draft: false })
+        .then(() => {
+          setDraft(false);
+        })
+        .catch((err) => {
+          console.error("Sell->delete draft error: ", err);
+        });
+    } else {
+      const { images, title, price, free, negotiable, category, description } = draft;
+      setNumOfImg(images.length);
+      setImages(images);
+      setTitle(title);
+      setPrice(price);
+      setFree(free);
+      setNegotiable(negotiable);
+      setCategory(category);
+      setDescription(description);
+    }
+    closeDraftModal();
+  };
+
+  const closeDraftModal = () => {
+    setDraftAlert(false);
+  };
 
   const closeModal = () => {
     setAlert(false);
@@ -120,7 +145,7 @@ export default function Sell({ route, navigation }) {
       imgPath = images;
     }
 
-    const itemData = {
+    const listing = {
       images: imgPath,
       title,
       price,
@@ -130,46 +155,46 @@ export default function Sell({ route, navigation }) {
       description,
     };
 
-    // MISING PATCH ACTION; axios post ...account/
+    // const action = newItem?
     if (newItem) {
-      // it is a draft or new item
+      // it is a draft or new item without itemId
       axios
-        .post(`${helper.proxy}/account/item`, itemData)
+        .post(`${helper.proxy}/listing/item`, listing)
         .then((res) => {
-          navigation.navigate("ItemDetails", {
-            itemId: res.itemId,
-          });
+          // navigation.navigate("ItemDetails", {
+          //   itemId: res.itemId,
+          // });
         })
         .catch((err) => {
-          console.log("Sell page submit listing error: ", err);
+          console.error("Sell->submit listing error: ", err);
         });
     } else {
-      // it is a edit
+      // it is a edit with itemId
       axios
-        .patch(`${helper.proxy}/account/item`, itemData)
+        .patch(`${helper.proxy}/listing/item`, listing)
         .then((res) => {
           navigation.navigate("ItemDetails", {
             itemId: res.itemId,
           });
         })
         .catch((err) => {
-          console.log("Sell page submit listing error: ", err);
+          console.error("Sell page submit listing error: ", err);
         });
     }
   };
 
   const checkFields = () => {
     if (!title) {
-      setAlertMsg("Enter a title");
+      setSubmitAlert("Enter a title");
       setAlert(true);
     } else if (!category) {
-      setAlertMsg("Select a category");
+      setSubmitAlert("Select a category");
       setAlert(true);
     } else if (!description) {
-      setAlertMsg("Enter a description");
+      setSubmitAlert("Enter a description");
       setAlert(true);
     } else if (description.length < 20) {
-      setAlertMsg("Tell us a bit more for description - minimum 20 characters");
+      setSubmitAlert("Tell us a bit more for description - minimum 20 characters");
       setAlert(true);
     } else {
       submitListing();
@@ -177,7 +202,7 @@ export default function Sell({ route, navigation }) {
   };
 
   const saveDraft = () => {
-    const fields = {
+    const listing = {
       images,
       title,
       price,
@@ -185,18 +210,13 @@ export default function Sell({ route, navigation }) {
       description,
     };
     const notBlank = (value) => value !== "" && value?.length !== 0 && value !== null;
-    const values = Object.values(fields);
+    const values = Object.values(listing);
     const listingIsNotBlank = values.some((val) => notBlank(val));
 
     if (listingIsNotBlank) {
-      axios
-        .patch(`${helper.proxy}/account/update`, { draft: fields })
-        .then(() => {
-          dispatch({ type: types.UPDATE_PROFILE, data: { draft: fields } });
-        })
-        .catch((err) => {
-          console.log("Sell page add draft error: ", err);
-        });
+      axios.patch(`${helper.proxy}/profile/update`, { changes: listing }).catch((err) => {
+        console.error("Sell->add draft error: ", err);
+      });
     }
     navigation.goBack();
   };
@@ -337,7 +357,15 @@ export default function Sell({ route, navigation }) {
           />
         </View>
       </KeyboardAwareScrollView>
-      <ModalAlert visibleVariable={alert} closeModal={closeModal} message={alertMsg} />
+      <ModalAlert visibleVariable={alert} closeModal={closeModal} message={submitAlert} />
+      <ModalAlert
+        visibleVariable={draftAlert}
+        closeModal={closeDraftModal}
+        onClickOption={handleDraftOption}
+        message={"You have a saved draft. Continue writing?"}
+        options={["YES", "NO"]}
+        actions={["yes", "no"]}
+      />
     </SafeAreaView>
   );
 }

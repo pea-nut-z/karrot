@@ -178,6 +178,14 @@ const restrictionReducer = (state = restriction, action) => {
   switch (action.type) {
     case types.SET_DATA:
       return { ...data.restriction };
+    case types.BLOCK:
+      return { ...state, block: [...state.block, data] };
+    case types.UNBLOCK:
+      return { ...state, block: state.block.filter((id) => id !== data) };
+    case types.HIDE:
+      return { ...state, hide: [...state.hide, data] };
+    case types.UNHIDE:
+      return { ...state, hide: state.hide.filter((id) => id !== data) };
     default:
       return state;
   }

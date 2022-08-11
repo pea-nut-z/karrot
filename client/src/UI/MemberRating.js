@@ -15,7 +15,7 @@ export default function MemberRating({ memberId, atItemDetails }) {
     axios
       .get(`${helper.proxy}/review/${memberId}`)
       .then((res) => {
-        const { totalRating, numOfReviews } = res.data.review;
+        const { totalRating, numOfReviews } = res.data.doc;
         const ratingAverage = totalRating / numOfReviews;
         setAverage(ratingAverage);
         setNumOfReviewsState(numOfReviews);

@@ -12,7 +12,6 @@ export default function ItemCard({ listing, navigation }) {
   const [profile, setProfile] = useState();
   const [item, setItem] = useState();
   const [image, setImage] = useState();
-  console.log("ItemCard: ", image);
 
   useEffect(() => {
     setProfile(listing);

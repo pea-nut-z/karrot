@@ -44,7 +44,20 @@ router.get("/search", async (req, res) => {
       return;
   }
 
+  // handle error
+
   res.json({ docs });
 });
 
+router.post("/item", async (req, res) => {
+  const { listing } = req.body;
+  Account.findOneAndUpdate(
+    { privateId },
+    { $push: { items: { itemId: uid(), ...listing } } },
+    (err) => {
+      if (err) throw err;
+      res.send("resolved");
+    }
+  );
+});
 export default router;

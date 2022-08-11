@@ -10,20 +10,14 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES } from "../../constants";
-import { Header, ItemCard, ModalAlert } from "../../UI";
+import { Header, ItemCard } from "../../UI";
 import axios from "axios";
 import * as helper from "../../helper";
-import * as types from "../../store/actionTypes";
-import { useDispatch, useSelector } from "react-redux";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   const [listings, setListings] = useState([]);
-  const [draftAlert, setDraftAlert] = useState(false);
-  const dispatch = useDispatch();
-
-  const draft = useSelector((state) => state.profile.draft);
 
   useEffect(() => {
     axios
@@ -32,41 +26,12 @@ export default function Home({ navigation }) {
         setListings(res.data.docs);
       })
       .catch((err) => console.error("Homepage listing error: ", err));
-
-    axios
-      .get(`${helper.proxy}`)
-      .then((res) => {
-        dispatch({ type: types.SET_DATA, data: res.data });
-      })
-      .catch((err) => console.error("Homepage data error: ", err));
   }, []);
-
-  const closeDraftModal = () => {
-    setDraftAlert(false);
-  };
-
-  const handleDraftOption = (option) => {
-    if (option === "no") {
-      axios
-        .patch(`${helper.proxy}/account/update`, { draft: false })
-        .then(() => {
-          dispatch({ type: types.UPDATE_PROFILE, data: { draft: false } });
-          navigation.navigate("Sell", { item: false });
-        })
-        .catch((err) => {
-          console.log("Homepage delete draft error: ", err);
-        });
-    } else {
-      navigation.navigate("Sell", { item: draft });
-    }
-    closeDraftModal();
-  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <Header
-        // userId={userId}
         navigation={navigation}
         title={"Location"}
         useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
@@ -76,11 +41,7 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
-            if (draft) {
-              setDraftAlert(true);
-            } else {
-              navigation.navigate("Sell", { item: false });
-            }
+            navigation.navigate("Sell", { newItem: true });
           }}
         >
           <Text style={styles.btnText}>+ Sell</Text>
@@ -102,14 +63,6 @@ export default function Home({ navigation }) {
             </View>
           )}
         </View>
-        <ModalAlert
-          visibleVariable={draftAlert}
-          closeModal={closeDraftModal}
-          onClickOption={handleDraftOption}
-          message={"You have a saved draft. Continue writing?"}
-          options={["YES", "NO"]}
-          actions={["yes", "no"]}
-        />
       </View>
     </SafeAreaView>
   );
