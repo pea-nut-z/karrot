@@ -37,7 +37,7 @@ export default function Sell({ route, navigation }) {
   const [draftAlert, setDraftAlert] = useState(false);
   const [draft, setDraft] = useState(false);
 
-  const newItem = useRef(route.params.newItem).current;
+  const itemId = useRef(route.params.itemId).current;
 
   useEffect(() => {
     axios
@@ -155,30 +155,33 @@ export default function Sell({ route, navigation }) {
       description,
     };
 
-    // const action = newItem?
-    if (newItem) {
-      // it is a draft or new item without itemId
-      axios
-        .post(`${helper.proxy}/listing/item`, listing)
-        .then((res) => {
-          // navigation.navigate("ItemDetails", {
-          //   itemId: res.itemId,
-          // });
-        })
-        .catch((err) => {
-          console.error("Sell->submit listing error: ", err);
-        });
-    } else {
+    if (itemId) {
       // it is a edit with itemId
       axios
-        .patch(`${helper.proxy}/listing/item`, listing)
+        .patch(`${helper.proxy}/listing/update/${itemId}`, { changes: listing })
         .then((res) => {
+          // console.log("update: ", res.data.doc);
           navigation.navigate("ItemDetails", {
-            itemId: res.itemId,
+            profile: res.data.doc,
+            itemId,
           });
         })
         .catch((err) => {
-          console.error("Sell page submit listing error: ", err);
+          console.error("Sell -> submit existing listing error: ", err);
+        });
+    } else {
+      // it is a draft or new item without itemId
+      axios
+        .post(`${helper.proxy}/listing/create`, listing)
+        .then((res) => {
+          // console.log("post: ", res.data.doc);
+          navigation.navigate("ItemDetails", {
+            profile: res.data.doc,
+            itemId: res.date.itemId,
+          });
+        })
+        .catch((err) => {
+          console.error("Sell -> submit new listing error: ", err);
         });
     }
   };
@@ -225,7 +228,7 @@ export default function Sell({ route, navigation }) {
     <SafeAreaView style={{ flex: 1 }}>
       <Header
         navigation={navigation}
-        title={newItem ? "Post For Sale" : "Edit Post"}
+        title={itemId ? "Edit Post" : "Post For Sale"}
         saveDraft={saveDraft}
         useBackBtn={true}
         useRightBtns={["checkmark-done"]}

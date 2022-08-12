@@ -17,13 +17,13 @@ import * as helper from "../../helper";
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
-  const [listings, setListings] = useState([]);
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${helper.proxy}/listing/search?by=category`)
       .then((res) => {
-        setListings(res.data.docs);
+        setProfiles(res.data.docs);
       })
       .catch((err) => console.error("Homepage listing error: ", err));
   }, []);
@@ -41,20 +41,22 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
-            navigation.navigate("Sell", { newItem: true });
+            navigation.navigate("Sell", { itemId: false });
           }}
         >
           <Text style={styles.btnText}>+ Sell</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          {listings.length !== 0 ? (
+          {profiles.length !== 0 ? (
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
-              {listings.map((listing) => {
-                return (
-                  <View key={listing.items.itemId} style={styles.itemCard}>
-                    <ItemCard listing={listing} navigation={navigation} />
-                  </View>
-                );
+              {profiles.map((profile) => {
+                return profile.items.map((item) => {
+                  return (
+                    <View key={item.itemId} style={styles.itemCard}>
+                      <ItemCard accountInfo={profile} listing={item} navigation={navigation} />
+                    </View>
+                  );
+                });
               })}
             </KeyboardAwareScrollView>
           ) : (
