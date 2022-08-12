@@ -21,7 +21,7 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`${helper.proxy}/listing/search?by=category`)
+      .get(`${helper.proxy}/listing/filter?feeds=true`)
       .then((res) => {
         setProfiles(res.data.docs);
       })

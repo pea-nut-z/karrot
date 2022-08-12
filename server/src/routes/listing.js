@@ -9,56 +9,50 @@ const uid = new ShortUniqueId({ length: 4 });
 let privateId = "62e87ec387aecd786da8d937";
 const fieldsToHide = { _id: 0, __v: 0 };
 
-router.get("/search", async (req, res) => {
-  const { by, category } = req.query;
+router.get("/filter", async (req, res) => {
+  const { feeds, category } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });
   const baseFilters = [
     { _id: { $nin: [mongoose.Types.ObjectId(privateId)] } },
     { id: { $nin: restriction.blockBy } },
+    { id: { $nin: restriction.hide } },
+    { id: { $nin: restriction.block } },
   ];
 
   let docs;
 
-  switch (by) {
-    case "category":
-      const moreFilters = [{ id: { $nin: restriction.hide } }, { id: { $nin: restriction.block } }];
-      const categoryArr = category ? [...category] : restriction.feeds; //["Health & beauty"];
-      docs = await Account.aggregate([
-        { $match: { $and: [...baseFilters, ...moreFilters] } },
-        { $unwind: "$items" },
-        { $match: { "items.category": { $in: categoryArr } } },
-        {
-          $project: {
-            id: 1,
-            location: 1,
-            "items.itemId": 1,
-            "items.title": 1,
-            "items.date": 1,
-            "items.price": 1,
-            "items.images": 1,
+  if (feeds) {
+    docs = await Account.aggregate([
+      { $match: { $and: [...baseFilters] } },
+      { $unwind: "$items" },
+      { $match: { "items.category": { $in: restriction.feeds } } },
+      {
+        $project: {
+          id: 1,
+          location: 1,
+          "items.itemId": 1,
+          "items.title": 1,
+          "items.date": 1,
+          "items.price": 1,
+          "items.images": 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          id: {
+            $first: "$id",
+          },
+          location: {
+            $first: "$location",
+          },
+          items: {
+            $addToSet: "$items",
           },
         },
-        {
-          $group: {
-            _id: "$_id",
-            id: {
-              $first: "$id",
-            },
-            location: {
-              $first: "$location",
-            },
-            items: {
-              $addToSet: "$items",
-            },
-          },
-        },
-      ]);
-      break;
-    case "words":
-      break;
-    default:
-      return;
+      },
+    ]);
   }
 
   // handle error
