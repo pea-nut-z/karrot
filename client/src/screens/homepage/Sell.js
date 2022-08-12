@@ -272,16 +272,7 @@ export default function Sell({ route, navigation }) {
           style={[styles.container, styles.regularHeight]}
         />
 
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            },
-            styles.container,
-          ]}
-        >
+        <View style={[styles.freeNegotiableContainer, styles.container]}>
           {/* FREE LABEL */}
           {/* PRICE */}
           {free ? (
@@ -412,6 +403,11 @@ const styles = StyleSheet.create({
   regularHeight: {
     height: SIZES.height * 0.066,
     justifyContent: "center",
+  },
+  freeNegotiableContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   freeLabel: {
     height: 30,
