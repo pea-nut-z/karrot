@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { SIZES, COLORS } from "../constants";
-import { ModalAlert } from ".";
 import { Ionicons } from "@expo/vector-icons";
 import { timeSince } from "../helper";
-import { useDispatch } from "react-redux";
-import * as actions from "../store/actionTypes";
-import Modal from "react-native-modal";
 
 export default function ItemCard({ accountInfo, listing, navigation }) {
   const [profile, setProfile] = useState({});
@@ -28,12 +24,12 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
     <View>
       <TouchableOpacity
         style={styles.outterContainer}
-        // onPress={() =>
-        //   navigation.navigate("ItemDetails", {
-        //     memberId: profile.id,
-        //     itemId: item.itemId,
-        //   })
-        // }
+        onPress={() =>
+          navigation.navigate("ItemDetails", {
+            memberId: profile.id,
+            itemId: item.itemId,
+          })
+        }
       >
         <View style={styles.innerContainer}>
           <Image
