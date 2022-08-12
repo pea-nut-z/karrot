@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -11,6 +11,8 @@ import axios from "axios";
 import * as helper from "../helper";
 
 export default function ItemDetails({ route, navigation }) {
+  const memberId = useRef(route.params.memberId).current;
+  const itemId = useRef(route.params.itemID).current;
   const [profile, setProfile] = useState();
   const [item, setItem] = useState();
   const [otherItems, setOtherItems] = useState([]);
@@ -20,28 +22,28 @@ export default function ItemDetails({ route, navigation }) {
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
   const [useWhiteBtns, setUseWhiteBtns] = useState();
   const dispatch = useDispatch();
-  const myId = useSelector((state) => state.profile.id);
-  const views = useSelector((state) => state.activities.views);
-  const isFav = useSelector((state) => state.activities.favourites.includes(item?.itemId));
+  // const views = useSelector((state) => state.activities.views);
+  // const isFav = useSelector((state) => state.activities.favourites.includes(item?.itemId));
 
   useEffect(() => {
     // add if(mineNewItem)
     // setNewItem(route.params.newItem);
-
-    const { memberId, itemId } = route.params;
-    axios
-      .get(`${helper.proxy}/listing/search?by=id&collection=profile&id=${memberId}`)
-      .then((res) => {
-        const doc = res.data.docs;
-        const items = doc.items;
-        const selectedItem = items.find((item) => item.itemId === itemId);
-        const moreItems = items.filter((item) => item.itemId !== itemId);
-        setProfile(doc);
-        setItem(selectedItem);
-        setOtherItems(moreItems);
-        setItemStatus(selectedItem.status);
-      })
-      .catch((err) => console.error("itemDetail get listing error: ", err));
+    // axios
+    // .get(`${helper.proxy}/listing/search?by=id&collection=profile&id=${memberId}`)
+    // .then((res) => {
+    //   const { doc } = res.data;
+    //   const items = doc.items;
+    //   const curItem = items.find((item) => item.itemId === itemId);
+    //   const restItems = items.filter((item) => item.itemId !== itemId);
+    //   setProfile(doc);
+    //   setItem(curItem);
+    //   setOtherItems(restItems);
+    //   setItemStatus(curItem.status);
+    //   setUseWhiteBtns(
+    //     typeof curItem.images[0] === "number" || images[0].includes(".png") ? false : true
+    //   );
+    // })
+    // .catch((err) => console.error("itemDetail get listing error: ", err));
 
     if (window === undefined) {
       window.scrollTo(0, 0);
@@ -49,11 +51,7 @@ export default function ItemDetails({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (item) {
-      const images = item.images;
-      setUseWhiteBtns(typeof images[0] === "number" || images[0].includes(".png") ? false : true);
-    }
-    if (profile && myId !== profile.id && !views.includes(item.itemId)) {
+    if (profile && helper.myId !== profile.id && !views.includes(item.itemId)) {
       axios
         .patch(`${helper.proxy}/activity/add/views/${profile.id}/${item.itemId}`)
         .then(() => {
@@ -103,7 +101,7 @@ export default function ItemDetails({ route, navigation }) {
               {/* RENDER ITEM INFO */}
               {/* RENDER STATUS DROPDOWN ONLY TO SELLER */}
               <View style={styles.itemInfoContainer}>
-                {myId === profile.id && (
+                {helper.myId === profile.id && (
                   <DropDownPicker
                     open={dropDown}
                     value={itemStatus}
@@ -140,7 +138,7 @@ export default function ItemDetails({ route, navigation }) {
               <Border />
 
               {/* REPORT THIS POST  */}
-              {myId !== profile.id && (
+              {helper.myId !== profile.id && (
                 <TouchableOpacity style={styles.reportContainer}>
                   <Text>Report this post</Text>
                 </TouchableOpacity>

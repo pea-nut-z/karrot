@@ -10,7 +10,7 @@ let privateId = "62e87ec387aecd786da8d937";
 const fieldsToHide = { _id: 0, __v: 0 };
 
 router.get("/search", async (req, res) => {
-  const { by, id, category, collection } = req.query;
+  const { by, category } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });
   const baseFilters = [
@@ -29,37 +29,31 @@ router.get("/search", async (req, res) => {
         { $unwind: "$items" },
         { $match: { "items.category": { $in: categoryArr } } },
         {
+          $project: {
+            id: 1,
+            location: 1,
+            "items.itemId": 1,
+            "items.title": 1,
+            "items.date": 1,
+            "items.price": 1,
+            "items.images": 1,
+          },
+        },
+        {
           $group: {
             _id: "$_id",
             id: {
               $first: "$id",
             },
-            name: {
-              $first: "$name",
-            },
             location: {
               $first: "$location",
-            },
-            image: {
-              $first: "$image",
-            },
-            joined: {
-              $first: "$joined",
-            },
-            draft: {
-              $first: "$draft",
             },
             items: {
               $addToSet: "$items",
             },
           },
         },
-        { $unset: ["_id"] },
       ]);
-      break;
-    case "id":
-      const key = collection === "profile" ? "id" : "items.itemId";
-      docs = await Account.findOne({ $and: [...baseFilters, { [key]: id }] }, fieldsToHide);
       break;
     case "words":
       break;
@@ -107,3 +101,6 @@ router.patch("/update/:itemId", async (req, res) => {
 });
 
 export default router;
+
+// const key = collection === "profile" ? "id" : "items.itemId";
+// docs = await Account.findOne({ $and: [...baseFilters, { [key]: id }] }, fieldsToHide);
