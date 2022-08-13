@@ -10,7 +10,7 @@ const item = new Schema({
   chats: defaultNum,
   favourites: defaultNum,
   views: defaultNum,
-  images: [String],
+  images: [Schema.Types.Mixed],
   // an array of img strings, but could be a RN img obj [10]; check later
   title: reqStr,
   price: reqNum,

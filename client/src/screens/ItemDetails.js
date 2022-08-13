@@ -35,6 +35,8 @@ export default function ItemDetails({ route, navigation }) {
           setItem(curItem);
           setOtherItems(twoOtherItems);
           setItemStatus(curItem.status);
+          console.log(curItem.images);
+
           setUseWhiteBtns(
             typeof curItem.images[0] === "number" || curItem.images[0].includes(".png")
               ? false
