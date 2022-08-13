@@ -3,10 +3,6 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import * as routes from "./routes/index.js";
-import * as actions from "./actions.js";
-import { Account, Activity, Restriction } from "../src/model/index.js";
-
-let privateId = "62e87ec387aecd786da8d937";
 
 mongoose
   .connect(process.env.DATABASE_URL)
@@ -23,32 +19,6 @@ app.use("/profile", routes.profile);
 app.use("/activity", routes.activity);
 app.use("/listing", routes.listing);
 app.use("/review", routes.review);
-
-// app.get("/", async (req, res) => {
-//   // const account = Account.findOne({ privateId }, { _id: 0, __v: 0 });
-//   const activities = Activity.findOne({ privateId }, { privateId: 0, _id: 0, __v: 0 });
-//   const restriction = Restriction.findOne(
-//     { privateId },
-//     { privateId: 0, blockBy: 0, _id: 0, __v: 0 }
-//   );
-
-//   // Promise.all([account, activities, restriction])
-//   //   .then((docs) => {
-//   //     res.json({
-//   //       account: docs[0],
-//   //       activities: docs[1],
-//   //       restriction: docs[2],
-//   //     });
-//   //   })
-//   //   .catch((err) => {
-//   //     throw err;
-//   //   });
-
-//   Account.findOne({ privateId }, { draft: 1, _id: 0 }, (err, doc) => {
-//     if (err) throw err;
-//     res.json({ doc });
-//   });
-// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

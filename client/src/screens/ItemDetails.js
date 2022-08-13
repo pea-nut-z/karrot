@@ -2,66 +2,52 @@ import React, { useEffect, useState, useRef } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { Border, Header, ImageScrollView, MemberInfo, MemberRating, OtherItem } from "../UI";
 import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
-import * as types from "../store/actionTypes";
 import axios from "axios";
 import * as helper from "../helper";
 
 export default function ItemDetails({ route, navigation }) {
   const memberId = useRef(route.params.memberId).current;
-  const itemId = useRef(route.params.itemID).current;
+  const itemId = useRef(route.params.itemId).current;
+  const newItem = useRef(route.params.newItem).current;
   const [profile, setProfile] = useState();
   const [item, setItem] = useState();
   const [otherItems, setOtherItems] = useState([]);
   const [itemStatus, setItemStatus] = useState();
-  const [newItem, setNewItem] = useState();
+  const [fav, setFav] = useState();
+  const [hide, setHide] = useState();
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
   const [useWhiteBtns, setUseWhiteBtns] = useState();
-  const dispatch = useDispatch();
-  // const views = useSelector((state) => state.activities.views);
-  // const isFav = useSelector((state) => state.activities.favourites.includes(item?.itemId));
 
   useEffect(() => {
-    // add if(mineNewItem)
-    // setNewItem(route.params.newItem);
-    // axios
-    // .get(`${helper.proxy}/listing/search?by=id&collection=profile&id=${memberId}`)
-    // .then((res) => {
-    //   const { doc } = res.data;
-    //   const items = doc.items;
-    //   const curItem = items.find((item) => item.itemId === itemId);
-    //   const restItems = items.filter((item) => item.itemId !== itemId);
-    //   setProfile(doc);
-    //   setItem(curItem);
-    //   setOtherItems(restItems);
-    //   setItemStatus(curItem.status);
-    //   setUseWhiteBtns(
-    //     typeof curItem.images[0] === "number" || images[0].includes(".png") ? false : true
-    //   );
-    // })
-    // .catch((err) => console.error("itemDetail get listing error: ", err));
+    if (helper.myId !== memberId) {
+      axios
+        .get(`${helper.proxy}/listing/read-item/${memberId}/${itemId}`)
+        .then((res) => {
+          const { fav, hide, twoOtherItems, listing } = res.data;
+          const curItem = listing.items[0];
+          setFav(fav);
+          setHide(hide);
+          setProfile(listing);
+          setItem(curItem);
+          setOtherItems(twoOtherItems);
+          setItemStatus(curItem.status);
+          setUseWhiteBtns(
+            typeof curItem.images[0] === "number" || curItem.images[0].includes(".png")
+              ? false
+              : true
+          );
+        })
+        .catch((err) => console.error("itemDetail get listing error: ", err));
+    }
 
     if (window === undefined) {
       window.scrollTo(0, 0);
     }
   }, []);
-
-  useEffect(() => {
-    if (profile && helper.myId !== profile.id && !views.includes(item.itemId)) {
-      axios
-        .patch(`${helper.proxy}/activity/add/views/${profile.id}/${item.itemId}`)
-        .then(() => {
-          dispatch({ type: types.ADD_VIEW, data: item.itemId });
-        })
-        .catch((err) => {
-          console.log("ItemDetail add-view error: ", err);
-        });
-    }
-  }, [item]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -83,7 +69,7 @@ export default function ItemDetails({ route, navigation }) {
 
               {/* SELLER INFO */}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Profile", { memberId: profile.id })}
+                onPress={() => navigation.navigate("Profile", { memberId })}
                 style={styles.memberInfoContainer}
               >
                 <MemberInfo
@@ -93,7 +79,7 @@ export default function ItemDetails({ route, navigation }) {
                   atItemDetails={true}
                 />
 
-                <MemberRating memberId={profile.id} atItemDetails={true} />
+                <MemberRating memberId={memberId} atItemDetails={true} />
               </TouchableOpacity>
 
               <Border />
@@ -101,7 +87,7 @@ export default function ItemDetails({ route, navigation }) {
               {/* RENDER ITEM INFO */}
               {/* RENDER STATUS DROPDOWN ONLY TO SELLER */}
               <View style={styles.itemInfoContainer}>
-                {helper.myId === profile.id && (
+                {helper.myId === memberId && (
                   <DropDownPicker
                     open={dropDown}
                     value={itemStatus}
@@ -110,12 +96,10 @@ export default function ItemDetails({ route, navigation }) {
                     setOpen={setDropDown}
                     setValue={setItemStatus}
                     onChangeValue={(value) => {
-                      // dispatch({
-                      //   type: actions.ITEM_STATUS_CHANGED,
-                      //   sellerId,
-                      //   itemId,
-                      //   status: value,
-                      // });
+                      axios
+                        .patch(`${helper.proxy}/update/${itemId}`, { status: value })
+                        .then(() => setItemStatus(value))
+                        .catch((err) => console.error("itemDetail change item status error: ", err));
                     }}
                     setItems={setDropDownItems}
                     disableBorderRadius={true}
@@ -131,14 +115,14 @@ export default function ItemDetails({ route, navigation }) {
                 </Text>
                 <Text style={styles.desc}>{item.description}</Text>
                 <Text style={styles.chatsFavs}>
-                  {item.chats} chats • {item.favourites} favourites • {item.views} views
+                  {item.chats} chats • {item.favourites} favourites • {item.views + 1} views
                 </Text>
               </View>
 
               <Border />
 
               {/* REPORT THIS POST  */}
-              {helper.myId !== profile.id && (
+              {helper.myId !== memberId && (
                 <TouchableOpacity style={styles.reportContainer}>
                   <Text>Report this post</Text>
                 </TouchableOpacity>
@@ -168,9 +152,9 @@ export default function ItemDetails({ route, navigation }) {
                   return (
                     <OtherItem
                       key={item.itemId}
-                      memberId={profile.id}
+                      memberId={memberId}
                       itemId={item.itemId}
-                      image={item.images[0]}
+                      image={item.image}
                       title={item.title}
                       price={item.price}
                       navigation={navigation}
@@ -187,16 +171,11 @@ export default function ItemDetails({ route, navigation }) {
                 <TouchableOpacity
                   style={styles.heartContainer}
                   onPress={() => {
-                    const action = isFav ? "mins" : "add";
+                    const action = fav ? "mins" : "add";
                     axios
-                      .patch(
-                        `${helper.proxy}/activity/${action}/favourites/${profile.id}/${item.itemId}`
-                      )
+                      .patch(`${helper.proxy}/activity/${action}/favourites/${memberId}/${itemId}`)
                       .then(() => {
-                        dispatch({
-                          type: isFav ? types.MINS_FAV : types.ADD_FAV,
-                          data: item.itemId,
-                        });
+                        setFav(!fav);
                       })
                       .catch((err) => {
                         console.error("itemDetail change fav error: ", err);
@@ -204,9 +183,9 @@ export default function ItemDetails({ route, navigation }) {
                   }}
                 >
                   <Ionicons
-                    name={isFav ? "heart" : "heart-outline"}
+                    name={fav ? "heart" : "heart-outline"}
                     size={30}
-                    color={isFav ? COLORS.primary : "black"}
+                    color={fav ? COLORS.primary : "black"}
                   />
                 </TouchableOpacity>
               </View>

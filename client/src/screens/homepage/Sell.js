@@ -158,11 +158,11 @@ export default function Sell({ route, navigation }) {
     if (itemId) {
       // it is a edit with itemId
       axios
-        .patch(`${helper.proxy}/listing/update/${itemId}`, { changes: listing })
+        .patch(`${helper.proxy}/listing/update/${itemId}`, listing)
         .then((res) => {
           // console.log("update: ", res.data.doc);
           navigation.navigate("ItemDetails", {
-            profile: res.data.doc,
+            memberId: helper.memberId,
             itemId,
           });
         })
@@ -176,8 +176,9 @@ export default function Sell({ route, navigation }) {
         .then((res) => {
           // console.log("post: ", res.data.doc);
           navigation.navigate("ItemDetails", {
-            profile: res.data.doc,
+            memberId: helper.memberId,
             itemId: res.date.itemId,
+            newItem: true,
           });
         })
         .catch((err) => {
@@ -217,7 +218,7 @@ export default function Sell({ route, navigation }) {
     const listingIsNotBlank = values.some((val) => notBlank(val));
 
     if (listingIsNotBlank) {
-      axios.patch(`${helper.proxy}/profile/update`, { changes: listing }).catch((err) => {
+      axios.patch(`${helper.proxy}/profile/update`, listing).catch((err) => {
         console.error("Sell->add draft error: ", err);
       });
     }

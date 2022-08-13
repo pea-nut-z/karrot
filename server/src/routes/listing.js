@@ -7,7 +7,7 @@ const router = express.Router();
 
 const uid = new ShortUniqueId({ length: 4 });
 let privateId = "62e87ec387aecd786da8d937";
-const fieldsToHide = { _id: 0, __v: 0 };
+const hideVIDFields = { _id: 0, __v: 0 };
 
 router.get("/filter", async (req, res) => {
   const { feeds, category } = req.query;
@@ -26,7 +26,11 @@ router.get("/filter", async (req, res) => {
     docs = await Account.aggregate([
       { $match: { $and: [...baseFilters] } },
       { $unwind: "$items" },
-      { $match: { "items.category": { $in: restriction.feeds } } },
+      {
+        $match: {
+          $and: [{ "items.category": { $in: restriction.feeds } }, { "items.status": "Active" }],
+        },
+      },
       {
         $project: {
           id: 1,
@@ -60,13 +64,81 @@ router.get("/filter", async (req, res) => {
   res.json({ docs });
 });
 
+router.get("/read-item/:memberId/:itemId", (req, res) => {
+  const { memberId, itemId } = req.params;
+
+  const checkFavAndView = Activity.findOne({ privateId });
+  const checkHide = Restriction.findOne({ privateId });
+  const gettwoOtherItems = Account.aggregate([
+    { $match: { id: memberId } },
+    { $unwind: "$items" },
+    { $match: { $and: [{ "items.itemId": { $ne: itemId } }, { "items.status": "Active" }] } },
+    { $limit: 2 },
+    { $addFields: { "items.image": { $first: "$items.images" } } },
+    {
+      $project: {
+        "items.itemId": 1,
+        "items.title": 1,
+        "items.price": 1,
+        "items.image": 1,
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        items: {
+          $addToSet: "$items",
+        },
+      },
+    },
+  ]);
+
+  Promise.all([checkFavAndView, checkHide, gettwoOtherItems])
+    .then(async (docs) => {
+      const fav = docs[0].favourites.includes(itemId);
+      const view = docs[0].views.includes(itemId);
+      const hide = docs[1].hide.includes(itemId);
+      const twoOtherItems = docs[2][0]["items"];
+      const curItemFields = { name: 1, location: 1, image: 1, "items.$": 1 };
+
+      if (!view) {
+        const updateActivityView = Activity.findOneAndUpdate(
+          { privateId },
+          { $push: { views: itemId } }
+        );
+
+        const updateListingView = Account.findOneAndUpdate(
+          { id: memberId, "items.itemId": itemId },
+          { $inc: { "items.$.views": 1 } },
+          { select: curItemFields }
+        );
+
+        Promise.all([updateActivityView, updateListingView])
+          .then((docs) => {
+            res.json({ fav, hide, twoOtherItems, listing: docs[1] });
+          })
+          .catch((err) => {
+            throw err;
+          });
+      } else {
+        Account.findOne({ id: memberId, "items.itemId": itemId }, curItemFields, (err, doc) => {
+          if (err) throw err;
+          res.json({ fav, hide, twoOtherItems, listing: doc });
+        });
+      }
+    })
+    .catch((err) => {
+      throw err;
+    });
+});
+
 router.post("/create", async (req, res) => {
   const listing = req.body;
   const itemId = uid();
   Account.findOneAndUpdate(
     { privateId },
     { $push: { items: { itemId, ...listing } } },
-    { new: true, select: fieldsToHide },
+    { new: true, select: hideVIDFields },
     (err, doc) => {
       if (err) throw err;
       res.json({ doc, itemId });
@@ -75,8 +147,9 @@ router.post("/create", async (req, res) => {
 });
 
 router.patch("/update/:itemId", async (req, res) => {
+  const data = req.body;
   const changes = Object.keys(req.body).reduce(
-    (acc, cur) => Object.assign(acc, { [`items.$.${cur}`]: changes[cur] }),
+    (acc, cur) => Object.assign(acc, { [`items.$.${cur}`]: data[cur] }),
     {}
   );
 
@@ -86,7 +159,7 @@ router.patch("/update/:itemId", async (req, res) => {
     {
       $set: { ...changes },
     },
-    { new: true, select: fieldsToHide },
+    { new: true, select: hideVIDFields },
     (err, doc) => {
       if (err) throw err;
       res.json({ doc });
@@ -97,4 +170,4 @@ router.patch("/update/:itemId", async (req, res) => {
 export default router;
 
 // const key = collection === "profile" ? "id" : "items.itemId";
-// docs = await Account.findOne({ $and: [...baseFilters, { [key]: id }] }, fieldsToHide);
+// docs = await Account.findOne({ $and: [...baseFilters, { [key]: id }] }, hideVIDFields);
