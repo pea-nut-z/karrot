@@ -5,6 +5,7 @@ const { Schema, model } = mongoose;
 
 const schema = new Schema({
   privateId: reqStr,
+  id: reqStr,
   block: [String],
   blockBy: [String],
   hide: [String],

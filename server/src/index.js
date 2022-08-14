@@ -19,6 +19,7 @@ app.use("/profile", routes.profile);
 app.use("/activity", routes.activity);
 app.use("/listing", routes.listing);
 app.use("/review", routes.review);
+app.use("/restrict", routes.restrict);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

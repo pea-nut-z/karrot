@@ -64,7 +64,7 @@ router.get("/filter", async (req, res) => {
   res.json({ docs });
 });
 
-router.get("/read-item/:memberId/:itemId", (req, res) => {
+router.get("/read/:memberId/:itemId", (req, res) => {
   const { memberId, itemId } = req.params;
 
   const checkFavAndView = Activity.findOne({ privateId });
@@ -137,7 +137,7 @@ router.post("/create", async (req, res) => {
   const itemId = uid();
   Account.findOneAndUpdate(
     { privateId },
-    { $push: { items: { itemId, ...listing } } },
+    { $push: { items: { itemId, ...listing } }, $inc: { numOfItems: 1 } },
     { new: true, select: hideVIDFields },
     (err, doc) => {
       if (err) throw err;
@@ -168,6 +168,3 @@ router.patch("/update/:itemId", async (req, res) => {
 });
 
 export default router;
-
-// const key = collection === "profile" ? "id" : "items.itemId";
-// docs = await Account.findOne({ $and: [...baseFilters, { [key]: id }] }, hideVIDFields);

@@ -28,6 +28,7 @@ const schema = new Schema({
   joined: defaultDate,
   draft: { type: Schema.Types.Mixed, default: false }, // item id for listing draft
   items: [item],
+  numOfItems: defaultNum,
 });
 
 const Account = model("accounts", schema);

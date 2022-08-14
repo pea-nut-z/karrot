@@ -25,7 +25,7 @@ export default function ItemDetails({ route, navigation }) {
   useEffect(() => {
     if (helper.myId !== memberId) {
       axios
-        .get(`${helper.proxy}/listing/read-item/${memberId}/${itemId}`)
+        .get(`${helper.proxy}/listing/read/${memberId}/${itemId}`)
         .then((res) => {
           const { fav, hide, twoOtherItems, listing } = res.data;
           const curItem = listing.items[0];
@@ -35,8 +35,6 @@ export default function ItemDetails({ route, navigation }) {
           setItem(curItem);
           setOtherItems(twoOtherItems);
           setItemStatus(curItem.status);
-          console.log(curItem.images);
-
           setUseWhiteBtns(
             typeof curItem.images[0] === "number" || curItem.images[0].includes(".png")
               ? false

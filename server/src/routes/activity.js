@@ -20,7 +20,7 @@ router.patch("/:action/:key/:memberId/:itemId", (req, res) => {
   );
 
   Promise.all([promise1, promise2])
-    .then((docs) => res.send("resolved"))
+    .then(() => res.end())
     .catch((err) => {
       throw err;
     });
