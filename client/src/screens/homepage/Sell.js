@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -18,33 +18,39 @@ import Textarea from "react-native-textarea";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import * as actions from "../../store/actionTypes";
-import { useDispatch, useSelector } from "react-redux";
+import * as helper from "../../helper";
+import axios from "axios";
 
 export default function Sell({ route, navigation }) {
-  const { userId, existingItemId, continueDraft } = route.params;
-
-  const existingItem = useSelector((state) => state["listings"][userId][existingItemId]);
-
-  const maxNumOfImg = 10;
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
-  const [numOfImg, setNumOfImg] = useState(existingItem?.images.length || 0);
-  const [images, setImages] = useState(existingItem?.images || []);
-  const [title, setTitle] = useState(existingItem?.title || "");
-  const [price, setPrice] = useState(existingItem?.price || "");
-  const [free, setFree] = useState(existingItem?.free || false);
-  const [negotiable, setNegotiable] = useState(existingItem?.negotiable || true);
-  const [category, setCategory] = useState(existingItem?.category);
-  const [description, setDescription] = useState(existingItem?.description || "");
-
+  const [numOfImg, setNumOfImg] = useState(0);
+  const [images, setImages] = useState([]);
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState(0);
+  const [free, setFree] = useState(false);
+  const [negotiable, setNegotiable] = useState(true);
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
   const [alert, setAlert] = useState(false);
-  const [alertMsg, setAlertMsg] = useState("");
+  const [submitAlert, setSubmitAlert] = useState("");
+  const [draftAlert, setDraftAlert] = useState(false);
+  const [draft, setDraft] = useState(false);
 
-  let newItemId = 100;
-  let itemId = existingItemId ? existingItemId : ++newItemId;
+  const itemId = useRef(route.params.itemId).current;
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/profile/draft`)
+      .then((res) => {
+        const existngDraft = res["data"]["doc"]["draft"];
+        if (existngDraft) {
+          setDraftAlert(true);
+          setDraft(existngDraft);
+        }
+      })
+      .catch((err) => console.error("Homepage data error: ", err));
+  }, []);
 
   useEffect(() => {
     if (price === 0) {
@@ -52,6 +58,34 @@ export default function Sell({ route, navigation }) {
       setPrice(null);
     }
   }, [price]);
+
+  const handleDraftOption = (option) => {
+    if (option === "no") {
+      axios
+        .patch(`${helper.proxy}/profile/update`, { draft: false })
+        .then(() => {
+          setDraft(false);
+        })
+        .catch((err) => {
+          console.error("Sell->delete draft error: ", err);
+        });
+    } else {
+      const { images, title, price, free, negotiable, category, description } = draft;
+      setNumOfImg(images.length);
+      setImages(images);
+      setTitle(title);
+      setPrice(price);
+      setFree(free);
+      setNegotiable(negotiable);
+      setCategory(category);
+      setDescription(description);
+    }
+    closeDraftModal();
+  };
+
+  const closeDraftModal = () => {
+    setDraftAlert(false);
+  };
 
   const closeModal = () => {
     setAlert(false);
@@ -80,14 +114,14 @@ export default function Sell({ route, navigation }) {
     }
   };
 
-  const renderImage = ({ item }) => {
+  const renderImage = ({ img }) => {
     return (
       <View style={styles.imgContainer}>
         <ImageBackground
-          source={typeof item === "number" ? item : { uri: item }}
+          source={typeof img === "number" ? img : { uri: img }}
           style={styles.img}
         ></ImageBackground>
-        <TouchableOpacity onPress={() => deleteImg(item)} style={styles.deleteImgBtn}>
+        <TouchableOpacity onPress={() => deleteImg(img)} style={styles.deleteImgBtn}>
           <Ionicons name="close-circle" size={25} />
         </TouchableOpacity>
       </View>
@@ -102,112 +136,90 @@ export default function Sell({ route, navigation }) {
     setNumOfImg(numOfImg - 1);
   };
 
-  const submitPost = () => {
+  const submitListing = () => {
+    let imgPath;
+    if (images.length === 0) {
+      const obj = categoryOptions.find((obj) => obj.name === category);
+      imgPath = [obj.icon];
+    } else {
+      imgPath = images;
+    }
+
+    const listing = {
+      images: imgPath,
+      title,
+      price,
+      free,
+      negotiable,
+      category,
+      description,
+    };
+
+    if (itemId) {
+      // it is a edit with itemId
+      axios
+        .patch(`${helper.proxy}/listing/update/${itemId}`, listing)
+        .then((res) => {
+          // console.log("update: ", res.data.doc);
+          navigation.navigate("ItemDetails", {
+            memberId: helper.memberId,
+            itemId,
+          });
+        })
+        .catch((err) => {
+          console.error("Sell -> submit existing listing error: ", err);
+        });
+    } else {
+      // it is a draft or new item without itemId
+      axios
+        .post(`${helper.proxy}/listing/create`, listing)
+        .then((res) => {
+          // console.log("post: ", res.data.doc);
+          navigation.navigate("ItemDetails", {
+            memberId: helper.memberId,
+            itemId: res.date.itemId,
+            newItem: true,
+          });
+        })
+        .catch((err) => {
+          console.error("Sell -> submit new listing error: ", err);
+        });
+    }
+  };
+
+  const checkFields = () => {
     if (!title) {
-      setAlertMsg("Enter a title");
+      setSubmitAlert("Enter a title");
       setAlert(true);
     } else if (!category) {
-      setAlertMsg("Select a category");
+      setSubmitAlert("Select a category");
       setAlert(true);
     } else if (!description) {
-      setAlertMsg("Enter a description");
+      setSubmitAlert("Enter a description");
       setAlert(true);
     } else if (description.length < 20) {
-      setAlertMsg("Tell us a bit more for description - minimum 20 characters");
+      setSubmitAlert("Tell us a bit more for description - minimum 20 characters");
       setAlert(true);
     } else {
-      let imgPath;
-      if (images.length === 0) {
-        const obj = categoryOptions.find((obj) => obj.name === category);
-        imgPath = [obj.icon];
-      } else {
-        imgPath = images;
-      }
-
-      if (continueDraft || !existingItem) {
-        dispatch({
-          type: actions.ITEM_ADDED,
-          sellerId: userId,
-          itemId,
-          payload: {
-            images: imgPath,
-            title,
-            price,
-            free,
-            negotiable,
-            category,
-            description,
-          },
-        });
-      }
-
-      if (!continueDraft && existingItem) {
-        dispatch({
-          type: actions.ITEM_EDITED,
-          sellerId: userId,
-          itemId,
-          payload: {
-            images: imgPath,
-            title,
-            price,
-            free,
-            negotiable,
-            category,
-            description,
-          },
-        });
-      }
-
-      navigation.navigate("ItemDetails", {
-        userId,
-        sellerId: userId,
-        itemId,
-        newItem: true,
-      });
+      submitListing();
     }
   };
 
   const saveDraft = () => {
-    const fields = {
+    const listing = {
       images,
       title,
       price,
       category,
       description,
     };
-    const notBlank = (value) => value !== "" && value?.length !== 0 && value !== undefined;
+    const notBlank = (value) => value !== "" && value?.length !== 0 && value !== null;
+    const values = Object.values(listing);
+    const listingIsNotBlank = values.some((val) => notBlank(val));
 
-    let postIsNotBlank = Object.values(fields);
-    postIsNotBlank = postIsNotBlank.some(notBlank);
-
-    if (postIsNotBlank) {
-      let imgPath;
-      if (images.length === 0 && category) {
-        const obj = categoryOptions.find((obj) => obj.name === category);
-        imgPath = [obj.icon];
-      } else {
-        imgPath = images;
-      }
-
-      dispatch({
-        type: actions.ITEM_EDITED,
-        sellerId: userId,
-        itemId,
-        payload: {
-          images: imgPath,
-          title,
-          price,
-          free,
-          negotiable,
-          category,
-          description,
-        },
-      });
-
-      dispatch({
-        type: actions.DRAFT_ADDED,
-        userId,
-        itemId,
+    if (listingIsNotBlank) {
+      axios.patch(`${helper.proxy}/profile/update`, listing).catch((err) => {
+        console.error("Sell->add draft error: ", err);
       });
     }
     navigation.goBack();
@@ -217,11 +229,11 @@ export default function Sell({ route, navigation }) {
     <SafeAreaView style={{ flex: 1 }}>
       <Header
         navigation={navigation}
-        title={continueDraft ? "Post For Sale" : existingItem ? "Edit Post" : "Post For Sale"}
+        title={itemId ? "Edit Post" : "Post For Sale"}
         saveDraft={saveDraft}
         useBackBtn={true}
         useRightBtns={["checkmark-done"]}
-        submitFunc={submitPost}
+        submitFunc={checkFields}
       />
 
       <KeyboardAwareScrollView
@@ -233,7 +245,7 @@ export default function Sell({ route, navigation }) {
         <View style={[styles.container, styles.uploadImgContainer]}>
           <TouchableOpacity
             onPress={() => {
-              numOfImg < maxNumOfImg
+              numOfImg < helper.maxUploadImg
                 ? choosePhotoFromLibrary()
                 : Alert.alert("Choose up to 10 images");
             }}
@@ -241,7 +253,7 @@ export default function Sell({ route, navigation }) {
           >
             <Ionicons name="camera" size={25} color={COLORS.secondary} />
             <Text>
-              {numOfImg} / {maxNumOfImg}
+              {numOfImg} / {helper.maxUploadImg}
             </Text>
           </TouchableOpacity>
           <FlatList
@@ -261,16 +273,7 @@ export default function Sell({ route, navigation }) {
           style={[styles.container, styles.regularHeight]}
         />
 
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            },
-            styles.container,
-          ]}
-        >
+        <View style={[styles.freeNegotiableContainer, styles.container]}>
           {/* FREE LABEL */}
           {/* PRICE */}
           {free ? (
@@ -332,20 +335,9 @@ export default function Sell({ route, navigation }) {
           setItems={setDropDownItems}
           disableBorderRadius={true}
           listMode="SCROLLVIEW"
-          style={{
-            borderRadius: 0,
-            borderColor: "transparent",
-            backgroundColor: COLORS.lightGray4,
-            borderBottomColor: COLORS.secondary,
-          }}
-          placeholderStyle={{
-            color: COLORS.secondary,
-            marginLeft: SIZES.padding,
-          }}
-          dropDownContainerStyle={{
-            borderRadius: 0,
-            borderColor: COLORS.secondary,
-          }}
+          style={styles.dropDown}
+          placeholderStyle={styles.dropDownHolder}
+          dropDownContainerStyle={styles.dropDownContainer}
         />
         {/* DESCRIPTION */}
         <View style={{ height: 200 }}>
@@ -360,7 +352,15 @@ export default function Sell({ route, navigation }) {
           />
         </View>
       </KeyboardAwareScrollView>
-      <ModalAlert visibleVariable={alert} closeModal={closeModal} message={alertMsg} />
+      <ModalAlert visibleVariable={alert} closeModal={closeModal} message={submitAlert} />
+      <ModalAlert
+        visibleVariable={draftAlert}
+        closeModal={closeDraftModal}
+        onClickOption={handleDraftOption}
+        message={"You have a saved draft. Continue writing?"}
+        options={["YES", "NO"]}
+        actions={["yes", "no"]}
+      />
     </SafeAreaView>
   );
 }
@@ -405,6 +405,11 @@ const styles = StyleSheet.create({
     height: SIZES.height * 0.066,
     justifyContent: "center",
   },
+  freeNegotiableContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   freeLabel: {
     height: 30,
     width: 100,
@@ -426,8 +431,18 @@ const styles = StyleSheet.create({
     marginRight: SIZES.padding,
   },
   dropDown: {
-    position: "absolute",
-    width: SIZES.width,
+    borderRadius: 0,
+    borderColor: "transparent",
+    backgroundColor: COLORS.lightGray4,
+    borderBottomColor: COLORS.secondary,
+  },
+  dropDownContainer: {
+    borderRadius: 0,
+    borderColor: COLORS.secondary,
+  },
+  dropDownHolder: {
+    color: COLORS.secondary,
+    marginLeft: SIZES.padding,
   },
   textareaContainer: {
     height: SIZES.height * 0.45,

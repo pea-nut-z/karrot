@@ -3,14 +3,10 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from "r
 import { FONTS, COLORS } from "../../constants";
 import { Header } from "../../UI";
 
-export default function Purchases({ route, navigation }) {
-  const { userId } = route.params;
-
+export default function Purchases({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Purchases"} useBackBtn={true} navigation={navigation} />
-
-      {/* {items.length === 0 && <Text>No sold items</Text>} */}
       <View
         style={{
           flex: 1,

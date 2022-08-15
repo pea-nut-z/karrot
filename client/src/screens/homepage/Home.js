@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,73 +8,30 @@ import {
   LogBox,
   SafeAreaView,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { COLORS, SIZES, FONTS } from "../../constants";
-import { Header, ItemCards, ModalAlert } from "../../UI";
-import * as actions from "../../store/actionTypes";
-import { filterListings } from "../../store/selectors";
+import { COLORS, SIZES } from "../../constants";
+import { Header, ItemCard } from "../../UI";
+import axios from "axios";
+import * as helper from "../../helper";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
-  const [draftAlert, setDraftAlert] = useState(false);
-  const dispatch = useDispatch();
+  const [profiles, setProfiles] = useState([]);
 
-  const userId = 111;
-
-  // const accounts = useSelector((state) => state.accounts);
-
-  // GET LISTINGS FOR SALE
-  const getActiveListings = useMemo(filterListings, []);
-  const activeListings = useSelector((state) =>
-    getActiveListings(
-      userId,
-      state["listings"],
-      state["members"],
-      state["restrictions"],
-      state["feeds"],
-      "feed"
-    )
-  );
-
-  // GET POST DRAFTS IF ANY
-  const draftItemId = useSelector((state) => state["drafts"][userId]);
-
-  const closeModal = () => {
-    setDraftAlert(false);
-  };
-
-  const onClickOption = (option) => {
-    if (option === "yes") {
-      navigation.navigate("Sell", {
-        userId,
-        existingItemId: draftItemId,
-        continueDraft: true,
-      });
-    }
-    if (option === "no") {
-      dispatch({
-        type: actions.DRAFT_DELETED,
-        userId,
-      });
-      dispatch({
-        type: actions.ITEM_DELETED,
-        sellerId: userId,
-        itemId: draftItemId,
-      });
-      navigation.navigate("Sell", {
-        userId,
-      });
-    }
-    closeModal();
-  };
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/listing/filter?feeds=true`)
+      .then((res) => {
+        setProfiles(res.data.docs);
+      })
+      .catch((err) => console.error("Homepage listing error: ", err));
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <Header
-        userId={userId}
         navigation={navigation}
         title={"Location"}
         useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
@@ -84,56 +41,30 @@ export default function Home({ navigation }) {
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
-            if (draftItemId) {
-              setDraftAlert(true);
-            } else {
-              navigation.navigate("Sell", {
-                userId,
-              });
-            }
+            navigation.navigate("Sell", { itemId: false });
           }}
         >
           <Text style={styles.btnText}>+ Sell</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          {activeListings.length !== 0 ? (
+          {profiles.length !== 0 ? (
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
-              <View
-                style={{
-                  flex: 1,
-                  paddingBottom: 10,
-                }}
-              >
-                <ItemCards userId={userId} items={activeListings} navigation={navigation} />
-              </View>
+              {profiles.map((profile) => {
+                return profile.items.map((item) => {
+                  return (
+                    <View key={item.itemId} style={styles.itemCard}>
+                      <ItemCard accountInfo={profile} listing={item} navigation={navigation} />
+                    </View>
+                  );
+                });
+              })}
             </KeyboardAwareScrollView>
           ) : (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  // ...FONTS.h4,
-                  color: COLORS.secondary,
-                }}
-              >
-                No items
-              </Text>
+            <View style={styles.noItemsMsgContainer}>
+              <Text style={styles.noItemsText}>No items</Text>
             </View>
           )}
         </View>
-        <ModalAlert
-          visibleVariable={draftAlert}
-          closeModal={closeModal}
-          onClickOption={onClickOption}
-          message={"You have a saved draft. Continue writing?"}
-          options={["YES", "NO"]}
-          actions={["yes", "no"]}
-        />
       </View>
     </SafeAreaView>
   );
@@ -146,6 +77,10 @@ const styles = StyleSheet.create({
       width: 0,
       height: 3,
     },
+  },
+  itemCard: {
+    flex: 1,
+    paddingBottom: 10,
   },
   sellBtn: {
     position: "absolute",
@@ -162,6 +97,13 @@ const styles = StyleSheet.create({
   btnText: {
     color: COLORS.white,
     fontSize: 19,
-    // ...FONTS.body2
+  },
+  noItemsMsgContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noItemsText: {
+    color: COLORS.secondary,
   },
 });

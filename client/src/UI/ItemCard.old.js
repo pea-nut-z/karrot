@@ -9,7 +9,7 @@ import * as actions from "../store/actionTypes";
 import Modal from "react-native-modal";
 
 export default function ItemCards({
-  userId,
+  // userId,
   items,
   navigation,
   atUserActiveItemsScreen,
@@ -17,13 +17,12 @@ export default function ItemCards({
   atUserSoldItemsScreen,
   atUserFavouritesScreen,
 }) {
-  const dispatch = useDispatch();
-
   const [optionBtn, setOptionBtn] = useState(false);
   const [optionModal, setOptionModal] = useState(false);
   const [hideItemAlert, setHideItemAlert] = useState(false);
   const [unhideItemAlert, setUnhideItemAlert] = useState(false);
   const [deleteItemAlert, setDeleteItemAlert] = useState(false);
+  const dispatch = useDispatch();
 
   // THREE DOTS OPTION BTN
   const renderOptionBtn = () => {

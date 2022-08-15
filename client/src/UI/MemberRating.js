@@ -1,50 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
-
 import { icons, COLORS, SIZES } from "../constants";
+import * as helper from "../helper";
 
-export default function MemberRating({ memberId, atItemDetails }) {
-  //  MEMBER RATING INFO
-  const totalRating = useSelector((state) => state["reviews"][memberId]["total"]);
-  const numOfReviews = useSelector((state) => state["reviews"][memberId]["reviewers"].length);
-  const numerOfStars = [1, 2, 3, 4, 5];
-  const [average, setAverage] = useState();
+export default function MemberRating({ average, numOfReviews, atItemDetails }) {
+  const [rating, setRating] = useState();
+  const [reviewCount, setReviewCount] = useState();
 
   useEffect(() => {
-    const ratingAverage = totalRating / numOfReviews;
-    setAverage(ratingAverage);
-  }, [totalRating, numOfReviews]);
+    setRating(average);
+    setReviewCount(numOfReviews);
+  }, [average, numOfReviews]);
 
   return (
-    <View
-      style={{
-        alignItems: "flex-end",
-      }}
-    >
+    <View style={styles.outterContainer}>
       {/* <NUM OF REVIEWS */}
       <Text>
-        {numOfReviews} Review{numOfReviews > 1 && "s"}
+        {reviewCount} Review{reviewCount > 1 && "s"}
       </Text>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
+      <View style={styles.iconContainer}>
         {/* STARS */}
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          {numerOfStars.map((num, index) => {
+        <View style={styles.starContainer}>
+          {helper.starRatingArr.map((num) => {
             return (
               <Ionicons
-                key={`star-${index}`}
-                name={average >= num ? "star" : "star-outline"}
+                key={num}
+                name={rating >= num ? "star" : "star-outline"}
                 size={atItemDetails ? 25 : 35}
                 color={COLORS.primary}
               />
@@ -54,13 +37,9 @@ export default function MemberRating({ memberId, atItemDetails }) {
 
         {/*  EMOJI */}
         <Image
-          source={average <= 2 ? icons.unamused : average >= 4 ? icons.excited : icons.happy}
+          source={rating <= 2 ? icons.unamused : rating >= 4 ? icons.excited : icons.happy}
           resizeMode="contain"
-          style={{
-            height: atItemDetails ? 25 : 35,
-            width: atItemDetails ? 25 : 35,
-            marginLeft: SIZES.padding / 2,
-          }}
+          style={styles.emoji(atItemDetails)}
         />
       </View>
 
@@ -91,3 +70,21 @@ export default function MemberRating({ memberId, atItemDetails }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  outterContainer: {
+    alignItems: "flex-end",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  starContainer: {
+    flexDirection: "row",
+  },
+  emoji: (atItemDetails) => ({
+    height: atItemDetails ? 25 : 35,
+    width: atItemDetails ? 25 : 35,
+    marginLeft: SIZES.padding / 2,
+  }),
+});

@@ -1,13 +1,20 @@
+import { Platform } from "react-native";
+
+export const myId = "z69D";
+export const proxy = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+export const maxUploadImg = 10;
+export const starRatingArr = [1, 2, 3, 4, 5];
+
 export const timeSince = (date) => {
   //   var aDay = 24*60*60*1000;
   if (typeof date !== "object") {
     date = new Date(date);
   }
 
-  var seconds = Math.floor((new Date() - date) / 1000);
-  var intervalType;
+  const seconds = Math.floor((new Date() - date) / 1000);
+  let intervalType;
 
-  var interval = Math.floor(seconds / 31536000);
+  let interval = Math.floor(seconds / 31536000);
   if (interval >= 1) {
     intervalType = "year";
   } else {

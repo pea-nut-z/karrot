@@ -7,15 +7,9 @@ import { SIZES, COLORS, viewOptions, locationOptions, infoOptions } from "../../
 import { Header, CircleButton, FlatButtons, MemberInfo } from "../../UI";
 
 export default function MyAccount({ navigation }) {
-  // MOCK USERID
-  const userId = 111;
-  const userInfo = useSelector((state) => state.members[userId]);
+  const profile = useSelector((state) => state.myProfile);
   const flatBtnOptions = locationOptions.concat(infoOptions);
   const navigateTo = (option) => {
-    // navigation.navigate("Category", {
-    //   userId,
-    //   selectedCategory: option.name,
-    // });
     return;
   };
 
@@ -23,13 +17,13 @@ export default function MyAccount({ navigation }) {
     return (
       <View style={styles.cameraBtnContainer}>
         <MemberInfo
-          picture={userInfo.displayPic}
-          name={userInfo.username}
-          location={userInfo.location}
-          id={userId}
+          picture={profile.image}
+          name={profile.name}
+          location={profile.location}
+          id={profile.id}
         />
         <TouchableOpacity
-          onPress={() => navigation.navigate("EditProfile", { userId })}
+          onPress={() => navigation.navigate("EditProfile")}
           style={styles.cameraBtn}
         >
           <Ionicons name={"camera"} size={25} color={COLORS.darkgray} />
@@ -42,15 +36,15 @@ export default function MyAccount({ navigation }) {
     <SafeAreaView style={{ flex: 1 }}>
       <Header title={"My Account"} useRightBtns={["settings-outline"]} />
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
-        {/* PROFILE DISPLAY */}
+        {/* CAMERA BUTTON */}
         <View>{renderCamerabtn()}</View>
 
         {/* VIEW PROFILE BUTTON */}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Profile", {
-              sellerId: userId,
-              userId,
+              sellerId: profile.id,
+              userId: profile.id,
             })
           }
           style={styles.margin}
@@ -62,7 +56,7 @@ export default function MyAccount({ navigation }) {
 
         {/* CIRCLE BUTTONS */}
         <View style={[styles.circleButtons, styles.margin]}>
-          <CircleButton options={viewOptions} userId={userId} navigation={navigation} />
+          <CircleButton options={viewOptions} navigation={navigation} />
         </View>
 
         {/* FLAT BUTTONS */}

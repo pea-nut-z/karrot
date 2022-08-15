@@ -1,42 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { ItemCard } from "../../UI";
-import { COLORS, FONTS } from "../../constants";
+import { ItemCard } from "./index";
+import { COLORS } from "../constants";
 
-export default function AllItems({ accountInfo, activeData, soldData, navigation }) {
+export default function ItemStatusTab({ accountInfo, listings, message, navigation }) {
   const [profile, setProfile] = useState({});
-  const [activeItems, setActiveItems] = useState([]);
-  const [soldItems, setSoldItems] = useState([]);
+  const [items, setItems] = useState();
 
   useEffect(() => {
     setProfile(accountInfo);
-    setActiveItems(activeData);
-    setSoldItems(soldData);
-  }, [accountInfo, activeData, soldData]);
+    setItems(listings);
+    // console.log("at", message, listings);
+  }, [accountInfo, listings]);
 
   return (
     <View style={{ flex: 1 }}>
-      {!activeData && !soldData ? (
+      {listings.length === 0 ? (
         <View style={styles.noListingMsgContainer}>
-          <Text style={styles.noListingText}>No listings</Text>
+          <Text style={styles.noListingText}>{message}</Text>
         </View>
       ) : (
         <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
           <View style={styles.ListingContainer}>
-            {activeData &&
-              activeItems.map((item) => {
-                return (
-                  <ItemCard
-                    key={item.itemId}
-                    accountInfo={profile}
-                    listing={item}
-                    navigation={navigation}
-                  />
-                );
-              })}
-            {soldData &&
-              soldItems.map((item) => {
+            {items &&
+              items.map((item) => {
                 return (
                   <ItemCard
                     key={item.itemId}

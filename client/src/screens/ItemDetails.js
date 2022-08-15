@@ -1,52 +1,53 @@
-import React, { useMemo, useEffect, useState } from "react";
-import { SafeAreaView, View, Text, TouchableOpacity, Platform } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { SafeAreaView, View, Text, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { Border, Header, ImageScrollView, MemberInfo, MemberRating, SellerOtherItems } from "../UI";
+import { Border, Header, ImageScrollView, MemberInfo, MemberRating, OtherItem } from "../UI";
 import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
-import { timeSince } from "../helper";
-import * as actions from "../store/actionTypes";
-import { selectMemberAllItems } from "../store/selectors";
+import axios from "axios";
+import * as helper from "../helper";
 
 export default function ItemDetails({ route, navigation }) {
-  const { userId, sellerId, itemId, newItem } = route.params;
-
-  // SELLER INFO
-  const seller = useSelector((state) => state["members"][sellerId]);
-
-  // CURRENT ITEM INFO
-  const item = useSelector((state) => {
-    return state["listings"][sellerId][itemId];
-  });
-
-  const images = item.images;
-  const useWhiteBtns = typeof images[0] === "number" || images[0].includes(".png") ? false : true;
-
-  // USER'S FAVOURITES
-  const favs = useSelector((state) => state["favourites"][userId]);
-  const isFav = favs.find((item) => item.itemId === itemId);
-
-  // SELLER'S LISTINGS
-  const getSellerAllItems = useMemo(selectMemberAllItems, []);
-  const sellerAllItems = useSelector((state) => getSellerAllItems(state, sellerId));
-
-  // DROPDOWN MENU
+  const memberId = useRef(route.params.memberId).current;
+  const itemId = useRef(route.params.itemId).current;
+  const newItem = useRef(route.params.newItem).current;
+  const [profile, setProfile] = useState();
+  const [item, setItem] = useState();
+  const [otherItems, setOtherItems] = useState([]);
+  const [itemStatus, setItemStatus] = useState();
+  const [fav, setFav] = useState();
+  const [hide, setHide] = useState();
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
-  const [itemStatus, setItemStatus] = useState(item.status);
-
-  const dispatch = useDispatch();
+  const [useWhiteBtns, setUseWhiteBtns] = useState();
+  const [numOfReviews, setNumOfReivews] = useState();
+  const [average, setAverage] = useState();
 
   useEffect(() => {
-    if (userId !== sellerId) {
-      dispatch({
-        type: actions.ITEM_VIEW_INCREMENTED,
-        sellerId,
-        itemId,
-      });
+    if (helper.myId !== memberId) {
+      axios
+        .get(`${helper.proxy}/listing/read/item/${memberId}/${itemId}`)
+        .then((res) => {
+          const { fav, hide, twoOtherItems, listing, review } = res.data;
+          const curItem = listing.items[0];
+          setFav(fav);
+          setHide(hide);
+          setNumOfReivews(review.numOfReviews);
+          setAverage(review.totalRating / review.numOfReviews);
+          setProfile(listing);
+          setItem(curItem);
+          setOtherItems(twoOtherItems);
+          setItemStatus(curItem.status);
+          setUseWhiteBtns(
+            typeof curItem.images[0] === "number" || curItem.images[0].includes(".png")
+              ? false
+              : true
+          );
+        })
+        .catch((err) => console.error("itemDetail get listing error: ", err));
     }
+
     if (window === undefined) {
       window.scrollTo(0, 0);
     }
@@ -54,292 +55,266 @@ export default function ItemDetails({ route, navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* HEADER */}
-      <View
-        style={{
-          zIndex: 1,
-          position: "absolute",
-          top: Platform.OS === "ios" ? 35 : 0,
-        }}
-      >
-        <Header
-          navigation={navigation}
-          newItem={newItem}
-          useWhiteBtns={useWhiteBtns}
-          useBackBtn={true}
-          useHomeBtn={true}
-          useRightBtns={["share-social-outline"]}
-        />
-      </View>
-      <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
-        <ImageScrollView images={images} />
-
-        {/* SELLER INFO */}
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Profile", { userId, sellerId })}
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            paddingVertical: SIZES.padding,
-            paddingHorizontal: SIZES.padding * 2,
-          }}
-        >
-          <MemberInfo
-            picture={seller.displayPic}
-            name={seller.username}
-            location={seller.location}
-            atItemDetails={true}
-          />
-
-          <MemberRating memberId={sellerId} atItemDetails={true} />
-        </TouchableOpacity>
-
-        <Border />
-
-        {/* RENDER ITEM INFO */}
-        {/* RENDER STATUS DROPDOWN ONLY TO SELLER */}
-        <View
-          style={{
-            minHeight: SIZES.height * 0.21,
-            paddingVertical: SIZES.padding,
-            paddingHorizontal: SIZES.padding * 2,
-          }}
-        >
-          {userId === sellerId && (
-            <DropDownPicker
-              open={dropDown}
-              value={itemStatus}
-              items={dropDownItems}
-              placeholder={itemStatus}
-              setOpen={setDropDown}
-              setValue={setItemStatus}
-              onChangeValue={(value) => {
-                dispatch({
-                  type: actions.ITEM_STATUS_CHANGED,
-                  sellerId,
-                  itemId,
-                  status: value,
-                });
-              }}
-              setItems={setDropDownItems}
-              disableBorderRadius={true}
-              style={{
-                borderRadius: 0,
-                borderColor: COLORS.secondary,
-                backgroundColor: COLORS.lightGray4,
-                width: 120,
-              }}
-              placeholderStyle={{
-                color: COLORS.secondary,
-                marginLeft: SIZES.padding,
-              }}
-              dropDownContainerStyle={{
-                borderRadius: 0,
-                borderColor: COLORS.secondary,
-                width: 120,
-              }}
+      {item && (
+        <View>
+          <View style={styles.headerContainer}>
+            <Header
+              navigation={navigation}
+              newItem={newItem}
+              useWhiteBtns={useWhiteBtns}
+              useBackBtn={true}
+              useHomeBtn={true}
+              useRightBtns={["share-social-outline"]}
             />
-          )}
+          </View>
+          <View style={styles.scrollContainer}>
+            <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+              <ImageScrollView images={item.images} />
 
-          <Text style={{ paddingVertical: SIZES.padding, ...FONTS.h4 }}>{item.title}</Text>
-          <Text
-            style={{
-              paddingBottom: SIZES.padding,
-              color: COLORS.secondary,
-              // ...FONTS.body4,
-            }}
-          >
-            {item.category} • {timeSince(item.date)}
-          </Text>
-          <Text
-            style={{
-              paddingVertical: SIZES.padding,
-              // ...FONTS.body4
-            }}
-          >
-            {item.description}
-          </Text>
-          <Text
-            style={{
-              paddingVertical: SIZES.padding,
-              color: COLORS.secondary,
-              ...FONTS.body4,
-            }}
-          >
-            {item.chats} chats • {item.favourites} favourites • {item.views} views
-          </Text>
-        </View>
-
-        <Border />
-
-        {/* REPORT THIS POST  */}
-        {sellerId === userId && (
-          <TouchableOpacity
-            style={{
-              height: 60,
-              justifyContent: "center",
-              paddingHorizontal: SIZES.padding * 2,
-            }}
-          >
-            <Text
-              style={
-                {
-                  // ...FONTS.h4
-                }
-              }
-            >
-              Report this post
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <Border />
-
-        {/* OTHER ITEMS FROM SELLER */}
-        {sellerAllItems.length !== 1 && (
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingHorizontal: SIZES.padding * 2,
-                paddingVertical: SIZES.padding,
-              }}
-            >
-              <Text
-                style={
-                  {
-                    // ...FONTS.h4
-                  }
-                }
-              >
-                Other items by {seller.username}
-              </Text>
-
-              {/* SEE ALL ITEMS BUTTON */}
+              {/* SELLER INFO */}
               <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("SellerItemsTabs", {
-                    userId,
-                    sellerId,
-                  });
-                }}
+                onPress={() => navigation.navigate("Profile", { memberId })}
+                style={styles.memberInfoContainer}
               >
-                <Text
-                  style={{
-                    color: COLORS.darkgray,
-                    // ...FONTS.body4
+                <MemberInfo
+                  picture={profile.image}
+                  name={profile.name}
+                  location={profile.location}
+                  atItemDetails={true}
+                />
+
+                <MemberRating average={average} numOfReviews={numOfReviews} atItemDetails={true} />
+              </TouchableOpacity>
+
+              <Border />
+
+              {/* RENDER ITEM INFO */}
+              {/* RENDER STATUS DROPDOWN ONLY TO SELLER */}
+              <View style={styles.itemInfoContainer}>
+                {helper.myId === memberId && (
+                  <DropDownPicker
+                    open={dropDown}
+                    value={itemStatus}
+                    items={dropDownItems}
+                    placeholder={itemStatus}
+                    setOpen={setDropDown}
+                    setValue={setItemStatus}
+                    onChangeValue={(value) => {
+                      axios
+                        .patch(`${helper.proxy}/update/${itemId}`, { status: value })
+                        .then(() => setItemStatus(value))
+                        .catch((err) => console.error("itemDetail change item status error: ", err));
+                    }}
+                    setItems={setDropDownItems}
+                    disableBorderRadius={true}
+                    style={styles.dropDown}
+                    placeholderStyle={styles.dropDownPlaceholder}
+                    dropDownContainerStyle={styles.dropDownContainer}
+                  />
+                )}
+
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.categoryDate}>
+                  {item.category} • {helper.timeSince(item.date)}
+                </Text>
+                <Text style={styles.desc}>{item.description}</Text>
+                <Text style={styles.chatsFavs}>
+                  {item.chats} chats • {item.favourites} favourites • {item.views + 1} views
+                </Text>
+              </View>
+
+              <Border />
+
+              {/* REPORT THIS POST  */}
+              {helper.myId !== memberId && (
+                <TouchableOpacity style={styles.reportContainer}>
+                  <Text>Report this post</Text>
+                </TouchableOpacity>
+              )}
+
+              <Border />
+
+              {/* OTHER ITEMS FROM MEMBER */}
+              <View style={styles.otherItemsTopContainer}>
+                <Text>Other items by {profile.name}</Text>
+
+                {/* SEE ALL ITEMS BUTTON */}
+                <TouchableOpacity
+                // onPress={() => {
+                //   navigation.navigate("SellerItemsTabs", {
+                //     userId,
+                //     sellerId,
+                //   });
+                // }}
+                >
+                  <Text style={styles.seeAllText}>See all</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.otherItemsBottomContainer}>
+                {otherItems?.map((item) => {
+                  return (
+                    <OtherItem
+                      key={item.itemId}
+                      memberId={memberId}
+                      itemId={item.itemId}
+                      image={item.image}
+                      title={item.title}
+                      price={item.price}
+                      navigation={navigation}
+                    />
+                  );
+                })}
+              </View>
+            </KeyboardAwareScrollView>
+          </View>
+          {/* FIXED FAV AND FAV BAR */}
+          <View style={styles.footerContainer}>
+            <View style={styles.priceFavContainer}>
+              <View>
+                <TouchableOpacity
+                  style={styles.heartContainer}
+                  onPress={() => {
+                    const action = fav ? "pull" : "push";
+                    axios
+                      .patch(`${helper.proxy}/activity/${action}/favourites/${memberId}/${itemId}`)
+                      .then(() => {
+                        setFav(!fav);
+                      })
+                      .catch((err) => {
+                        console.error("itemDetail change fav error: ", err);
+                      });
                   }}
                 >
-                  See all
-                </Text>
+                  <Ionicons
+                    name={fav ? "heart" : "heart-outline"}
+                    size={30}
+                    color={fav ? COLORS.primary : "black"}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ paddingHorizontal: SIZES.padding * 2 }}>
+                <Text>$ {item.price}</Text>
+                {item.negotiable ? (
+                  <TouchableOpacity>
+                    <Text style={styles.makeOfferText}>Make Offer</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <Text>Non-negotiable</Text>
+                )}
+              </View>
+            </View>
+
+            <View>
+              <TouchableOpacity style={styles.chatContainer}>
+                <Text style={styles.chatText}>Chat</Text>
               </TouchableOpacity>
             </View>
-            {/* FOUR OTHER ITEMS */}
-            <SellerOtherItems
-              userId={userId}
-              sellerId={sellerId}
-              itemId={itemId}
-              navigation={navigation}
-            />
-          </View>
-        )}
-      </KeyboardAwareScrollView>
-
-      {/* FOOTER BUTTON */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: SIZES.padding * 2,
-          paddingVertical: SIZES.padding,
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <View>
-            <TouchableOpacity
-              style={{
-                paddingRight: SIZES.padding * 2,
-                borderRightWidth: 1,
-                borderRightColor: COLORS.secondary,
-              }}
-              onPress={() => {
-                dispatch({
-                  type: isFav ? actions.FAVOURITE_REMOVED : actions.FAVOURITE_ADDED,
-                  userId,
-                  sellerId,
-                  itemId,
-                });
-              }}
-            >
-              <Ionicons
-                name={isFav ? "heart" : "heart-outline"}
-                size={30}
-                color={isFav ? COLORS.primary : "black"}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ paddingHorizontal: SIZES.padding * 2 }}>
-            <Text
-              style={
-                {
-                  // ...FONTS.body4
-                }
-              }
-            >
-              $ {item.price}
-            </Text>
-            {item.negotiable ? (
-              <TouchableOpacity>
-                <Text
-                  style={{
-                    color: COLORS.primary,
-                    // ...FONTS.body4
-                  }}
-                >
-                  Make Offer
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <Text
-                style={
-                  {
-                    // ...FONTS.body4
-                  }
-                }
-              >
-                Non-negotiable
-              </Text>
-            )}
           </View>
         </View>
-
-        <View>
-          <TouchableOpacity
-            style={{
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: COLORS.primary,
-              height: 40,
-              width: 70,
-            }}
-          >
-            <Text
-              style={{
-                color: COLORS.white,
-                // ...FONTS.body4
-              }}
-            >
-              Chat
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* <SafeAreaView /> */}
+      )}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    zIndex: 1,
+    position: "absolute",
+    top: Platform.OS === "ios" ? 35 : 0,
+  },
+  scrollContainer: { paddingBottom: 100 },
+  memberInfoContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    paddingVertical: SIZES.padding,
+    paddingHorizontal: SIZES.padding * 2,
+  },
+  itemInfoContainer: {
+    minHeight: SIZES.height * 0.21,
+    paddingVertical: SIZES.padding,
+    paddingHorizontal: SIZES.padding * 2,
+  },
+  dropDown: {
+    borderRadius: 0,
+    borderColor: COLORS.secondary,
+    backgroundColor: COLORS.lightGray4,
+    width: 120,
+  },
+  dropDownPlaceholder: {
+    color: COLORS.secondary,
+    marginLeft: SIZES.padding,
+  },
+  dropDownContainer: {
+    borderRadius: 0,
+    borderColor: COLORS.secondary,
+    width: 120,
+  },
+  title: { paddingVertical: SIZES.padding },
+  categoryDate: {
+    paddingBottom: SIZES.padding,
+    color: COLORS.secondary,
+  },
+  desc: {
+    paddingVertical: SIZES.padding,
+  },
+  chatsFavs: {
+    paddingVertical: SIZES.padding,
+    color: COLORS.secondary,
+  },
+  reportContainer: {
+    height: 60,
+    justifyContent: "center",
+    paddingHorizontal: SIZES.padding * 2,
+  },
+  otherItemsTopContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: SIZES.padding * 2,
+    paddingVertical: SIZES.padding,
+  },
+  otherItemsBottomContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  seeAllText: {
+    color: COLORS.darkgray,
+  },
+  footerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: SIZES.padding * 2,
+    paddingVertical: SIZES.padding * 2,
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: COLORS.lightGray3,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.secondary,
+    width: "100%",
+  },
+  priceFavContainer: { flexDirection: "row" },
+  heartContainer: {
+    paddingRight: SIZES.padding * 2,
+    borderRightWidth: 1,
+    borderRightColor: COLORS.secondary,
+  },
+  makeOfferText: {
+    color: COLORS.primary,
+  },
+  chatContainer: {
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
+    height: 40,
+    width: 70,
+  },
+  chatText: {
+    color: COLORS.white,
+  },
+});

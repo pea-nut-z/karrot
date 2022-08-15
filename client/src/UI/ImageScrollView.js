@@ -3,6 +3,7 @@ import { View, Animated, Image, Platform } from "react-native";
 import { SIZES, COLORS } from "../constants";
 
 export default function ImageScrollView({ images }) {
+  // console.log({ images });
   const scrollX = new Animated.Value(0);
   const dotPosition = Animated.divide(scrollX, SIZES.width);
 
@@ -20,11 +21,11 @@ export default function ImageScrollView({ images }) {
         })}
       >
         {images.map((img, index) => {
-          if (Platform.OS === "web") {
-            Image.resolveAssetSource = (source) => ({
-              uri: source,
-            });
-          }
+          // if (Platform.OS === "web" && typeof image === "number") {
+          //   Image.resolveAssetSource = (source) => ({
+          //     uri: source,
+          //   });
+          // }
           return (
             <View key={`image-${index}`} style={{ alignItems: "center" }}>
               <View style={{ height: SIZES.height * 0.5 }}>

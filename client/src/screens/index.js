@@ -1,4 +1,4 @@
-// import Login from "./auth/Login";
+import Login from "./auth/Login";
 // import Signup from "./auth/Signup";
 import Home from "./homepage/Home";
 import AllItems from "./item-status/AllItems";
@@ -29,7 +29,7 @@ import Sellers from "./reviews/Sellers";
 import Rate from "./reviews/Rate";
 
 export {
-  // Login,
+  Login,
   // Signup,
   Home,
   Sell,
