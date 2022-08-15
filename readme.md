@@ -1,4 +1,4 @@
-## Web/Mobile App - eMarketplace
+## Web/Mobile App - eMarketplace (Redux Version)
 
 [DEMO](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing)
 
