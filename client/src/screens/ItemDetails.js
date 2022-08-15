@@ -27,7 +27,7 @@ export default function ItemDetails({ route, navigation }) {
   useEffect(() => {
     if (helper.myId !== memberId) {
       axios
-        .get(`${helper.proxy}/listing/read/${memberId}/${itemId}`)
+        .get(`${helper.proxy}/listing/read/item/${memberId}/${itemId}`)
         .then((res) => {
           const { fav, hide, twoOtherItems, listing, review } = res.data;
           const curItem = listing.items[0];

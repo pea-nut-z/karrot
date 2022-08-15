@@ -4,10 +4,20 @@ import { Account, Activity, Restriction, Review } from "../model/index.js";
 import ShortUniqueId from "short-unique-id";
 
 const router = express.Router();
-
 const uid = new ShortUniqueId({ length: 4 });
+
 let privateId = "62e87ec387aecd786da8d937";
 const hideVIDFields = { _id: 0, __v: 0 };
+const itemCardFields = {
+  id: 1,
+  location: 1,
+  "items.itemId": 1,
+  "items.title": 1,
+  "items.date": 1,
+  "items.price": 1,
+  "items.images": 1,
+  "items.status": 1,
+};
 
 router.get("/filter", async (req, res) => {
   const { feeds, category } = req.query;
@@ -32,15 +42,7 @@ router.get("/filter", async (req, res) => {
         },
       },
       {
-        $project: {
-          id: 1,
-          location: 1,
-          "items.itemId": 1,
-          "items.title": 1,
-          "items.date": 1,
-          "items.price": 1,
-          "items.images": 1,
-        },
+        $project: itemCardFields,
       },
       {
         $group: {
@@ -64,7 +66,7 @@ router.get("/filter", async (req, res) => {
   res.json({ docs });
 });
 
-router.get("/read/:memberId/:itemId", (req, res) => {
+router.get("/read/item/:memberId/:itemId", (req, res) => {
   const { memberId, itemId } = req.params;
 
   const checkFavAndView = Activity.findOne({ privateId });
@@ -132,6 +134,48 @@ router.get("/read/:memberId/:itemId", (req, res) => {
     .catch((err) => {
       throw err;
     });
+});
+
+router.get("/read/items", async (req, res) => {
+  const { memberId } = req.query;
+  const query = memberId ? { id: memberId } : { _id: mongoose.Types.ObjectId(privateId) };
+  try {
+    const groups = await Account.aggregate([
+      { $match: query },
+      { $unwind: "$items" },
+      { $project: itemCardFields },
+      {
+        $group: {
+          _id: "$items.status",
+          id: {
+            $first: "$id",
+          },
+          location: {
+            $first: "$location",
+          },
+          items: {
+            $addToSet: "$items",
+          },
+        },
+      },
+    ]);
+
+    let getProfile = true;
+    const profile = {};
+    const listings = {};
+    groups.forEach((group) => {
+      if (getProfile) {
+        profile.id = group.id;
+        profile.location = group.location;
+        getProfile = false;
+      }
+      listings[group._id] = group.items;
+    });
+    memberId && delete listings.Hidden;
+    res.json({ profile, listings });
+  } catch (err) {
+    throw err;
+  }
 });
 
 router.post("/create", async (req, res) => {

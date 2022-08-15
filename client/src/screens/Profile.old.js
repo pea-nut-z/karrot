@@ -249,7 +249,7 @@ export default function Profile({ route, navigation }) {
             {/* ITEMS */}
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate(atCurrentUserProfile ? "UserItemsTabs" : "SellerItemsTabs", {
+                navigation.navigate(atCurrentUserProfile ? "MyItemsTabs" : "SellerItemsTabs", {
                   userId,
                   sellerId,
                 })

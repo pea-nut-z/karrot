@@ -263,12 +263,11 @@ export default function Profile({ route, navigation }) {
           <View style={styles.bottomContainer}>
             {/* ITEMS */}
             <TouchableOpacity
-              //   onPress={() =>
-              //     navigation.navigate(atMyProfile ? "UserItemsTabs" : "SellerItemsTabs", {
-              //       userId,
-              //       sellerId,
-              //     })
-              //   }
+              onPress={() =>
+                navigation.navigate(atMyProfile ? "MyItemsTabs" : "SellerItemsTabs", {
+                  memberId,
+                })
+              }
               style={[styles.bottomSubContainer, styles.margin]}
             >
               <Text style={styles.numOfItemsText}>

@@ -30,7 +30,7 @@ export default function App() {
           <Stack.Screen name="Chats" component={screens.Chats} />
           {/* MY ACCOUNT */}
           <Stack.Screen name="MyAccount" component={screens.MyAccount} />
-          <Stack.Screen name="UserItemsTabs" component={tabs.UserItemsTabs} />
+          <Stack.Screen name="MyItemsTabs" component={tabs.MyItemsTabs} />
           <Stack.Screen name="Purchases" component={screens.Purchases} />
           <Stack.Screen name="Favourites" component={screens.Favourites} />
           <Stack.Screen name="EditProfile" component={screens.EditProfile} />

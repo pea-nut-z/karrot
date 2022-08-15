@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { AllItems, Active, Sold } from "../screens";
 import { Header } from "../UI";
 import { COLORS } from "../constants";
+import * as helper from "../helper";
+import axios from "axios";
+
 const MaterialTopTabs = createMaterialTopTabNavigator();
 
 export default function SellerItemsTabs({ route, navigation }) {
-  const { userId, sellerId } = route.params;
+  const memberId = useRef(route.params.memberId).current;
+
+  const [profile, setProfile] = useState({});
+  const [activeItems, setActiveItems] = useState([]);
+  const [soldItems, setSoldItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/listing/read/items?memberId=${memberId}`)
+      .then((res) => {
+        setProfile(res.data.profile);
+        setActiveItems(res.data.listings["Active"]);
+        setSoldItems(res.data.listings["Sold"]);
+      })
+      .catch((err) => console.error("MyItemsTabs get listings error: ", err));
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -26,9 +45,9 @@ export default function SellerItemsTabs({ route, navigation }) {
           name="All"
           children={() => (
             <AllItems
-              userId={userId}
-              sellerId={sellerId}
-              atUserItemsTabs={false}
+              accountInfo={profile}
+              activeData={activeItems}
+              soldData={soldItems}
               navigation={navigation}
             />
           )}
@@ -37,23 +56,13 @@ export default function SellerItemsTabs({ route, navigation }) {
         <MaterialTopTabs.Screen
           name="Active"
           children={() => (
-            <Active
-              userId={userId}
-              sellerId={sellerId}
-              atUserItemsTabs={false}
-              navigation={navigation}
-            />
+            <Active accountInfo={profile} activeData={activeItems} navigation={navigation} />
           )}
         />
         <MaterialTopTabs.Screen
           name="Sold"
           children={() => (
-            <Sold
-              userId={userId}
-              sellerId={sellerId}
-              atUserItemsTabs={false}
-              navigation={navigation}
-            />
+            <Sold accountInfo={profile} soldData={soldItems} navigation={navigation} />
           )}
         />
       </MaterialTopTabs.Navigator>
