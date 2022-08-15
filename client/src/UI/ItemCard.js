@@ -11,8 +11,8 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
 
   useEffect(() => {
     setProfile(accountInfo);
-    console.log({ accountInfo });
-    console.log({ listing });
+    // console.log({ accountInfo });
+    // console.log({ listing });
 
     setItem(listing);
     setImage(listing.images[0]);

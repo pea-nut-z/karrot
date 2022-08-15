@@ -2,12 +2,13 @@ import React, { useRef, useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { AllItems, Active, Sold } from "../screens";
-import { Header } from "../UI";
+import { Header, ItemStatusTab } from "../UI";
 import { COLORS } from "../constants";
 import * as helper from "../helper";
 import axios from "axios";
 
 const MaterialTopTabs = createMaterialTopTabNavigator();
+const { Navigator, Screen } = MaterialTopTabs;
 
 export default function SellerItemsTabs({ route, navigation }) {
   const memberId = useRef(route.params.memberId).current;
@@ -15,14 +16,19 @@ export default function SellerItemsTabs({ route, navigation }) {
   const [profile, setProfile] = useState({});
   const [activeItems, setActiveItems] = useState([]);
   const [soldItems, setSoldItems] = useState([]);
+  const [allItems, setAllItems] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${helper.proxy}/listing/read/items?memberId=${memberId}`)
       .then((res) => {
-        setProfile(res.data.profile);
-        setActiveItems(res.data.listings["Active"]);
-        setSoldItems(res.data.listings["Sold"]);
+        const { profile, listings } = res.data;
+        const active = listings["Active"] || [];
+        const sold = listings["Sold"] || [];
+        setProfile(profile);
+        setActiveItems(active);
+        setSoldItems(sold);
+        setAllItems([...active, ...sold]);
       })
       .catch((err) => console.error("MyItemsTabs get listings error: ", err));
   }, []);
@@ -34,38 +40,48 @@ export default function SellerItemsTabs({ route, navigation }) {
       }}
     >
       <Header navigation={navigation} title={"Items"} useBackBtn={true} />
-      <MaterialTopTabs.Navigator
+      <Navigator
         screenOptions={{
           tabBarIndicatorStyle: {
             backgroundColor: COLORS.primary,
           },
         }}
       >
-        <MaterialTopTabs.Screen
+        <Screen
           name="All"
           children={() => (
-            <AllItems
+            <ItemStatusTab
               accountInfo={profile}
-              activeData={activeItems}
-              soldData={soldItems}
+              listings={allItems}
+              message={"No listings"}
               navigation={navigation}
             />
           )}
         />
 
-        <MaterialTopTabs.Screen
+        <Screen
           name="Active"
           children={() => (
-            <Active accountInfo={profile} activeData={activeItems} navigation={navigation} />
+            <ItemStatusTab
+              accountInfo={profile}
+              listings={activeItems}
+              message={"No active items"}
+              navigation={navigation}
+            />
           )}
         />
-        <MaterialTopTabs.Screen
+        <Screen
           name="Sold"
           children={() => (
-            <Sold accountInfo={profile} soldData={soldItems} navigation={navigation} />
+            <ItemStatusTab
+              accountInfo={profile}
+              listings={soldItems}
+              message={"No sold items"}
+              navigation={navigation}
+            />
           )}
         />
-      </MaterialTopTabs.Navigator>
+      </Navigator>
     </SafeAreaView>
   );
 }
