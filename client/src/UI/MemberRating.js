@@ -13,7 +13,7 @@ export default function MemberRating({ memberId, atItemDetails }) {
 
   useEffect(() => {
     axios
-      .get(`${helper.proxy}/review/${memberId}`)
+      .get(`${helper.proxy}/review/read/${memberId}`)
       .then((res) => {
         const { totalRating, numOfReviews } = res.data.doc;
         const ratingAverage = totalRating / numOfReviews;

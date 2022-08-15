@@ -177,15 +177,8 @@ export default function Profile({ route, navigation }) {
       />
 
       {block && (
-        <View
-          style={{
-            backgroundColor: "red",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 30,
-          }}
-        >
-          <Text style={{ color: COLORS.white }}>This user is blocked</Text>
+        <View style={styles.blockMsgContianer}>
+          <Text style={styles.blockMsgText}>This user is blocked</Text>
         </View>
       )}
 
@@ -229,14 +222,7 @@ export default function Profile({ route, navigation }) {
                   message={`${profile.name}'s posts will no longer be visible to you`}
                 />
 
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 65,
-                    right: SIZES.padding * 2,
-                    zIndex: 1,
-                  }}
-                >
+                <View style={styles.popupMenuOutterContainer}>
                   {popupMenu && renderPopoutMenu()}
                 </View>
                 {/* MEMBER INFO */}
@@ -260,7 +246,7 @@ export default function Profile({ route, navigation }) {
               <TouchableOpacity
                 style={[styles.rateBtn, styles.margin]}
                 onPress={() => {
-                  navigation.navigate("Rate", { userId, sellerId });
+                  navigation.navigate("Rate", { memberId });
                 }}
               >
                 <Text>Rate</Text>
@@ -279,7 +265,7 @@ export default function Profile({ route, navigation }) {
               //   }
               style={[styles.bottomSubContainer, styles.margin]}
             >
-              <Text style={{ fontSize: 16 }}>
+              <Text style={styles.numOfItemsText}>
                 {numOfItems} item{numOfItems > 1 && "s"}
               </Text>
               <Ionicons name={"chevron-forward-outline"} size={25} />
@@ -291,7 +277,7 @@ export default function Profile({ route, navigation }) {
               style={[styles.bottomSubContainer, styles.margin]}
             >
               <View>
-                <Text style={{ fontSize: 16 }}>
+                <Text style={styles.numOfReviewsText}>
                   {numOfReviews} review{numOfReviews > 1 && "s"}
                 </Text>
               </View>
@@ -335,6 +321,12 @@ const styles = StyleSheet.create({
     borderColor: COLORS.transparent,
     borderBottomColor: COLORS.secondary,
   },
+  popupMenuOutterContainer: {
+    position: "absolute",
+    top: 65,
+    right: SIZES.padding * 2,
+    zIndex: 1,
+  },
   popupMenuContainer: {
     backgroundColor: COLORS.white,
     shadowOffset: { width: 3, height: 3 },
@@ -369,4 +361,13 @@ const styles = StyleSheet.create({
   confirmationText: {
     marginVertical: SIZES.padding,
   },
+  blockMsgContianer: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 30,
+  },
+  blockMsgText: { color: COLORS.white },
+  numOfItemsText: { fontSize: 16 },
+  numOfReviewsText: { fontSize: 16 },
 });
