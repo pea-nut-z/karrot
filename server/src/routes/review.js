@@ -13,9 +13,11 @@ router.get("/read/:memberId", (req, res) => {
 
 router.post("/create/:memberId", (req, res) => {
   const { memberId } = req.params;
-  const data = req.body;
-  const review = { reviewBy: privateId, ...data };
-  const addReview = Review.findOneAndUpdate({ id: memberId }, { $push: { reviews: review } });
+  const review = { reviewBy: privateId, ...req.body };
+  const addReview = Review.findOneAndUpdate(
+    { id: memberId },
+    { $push: { reviews: review }, $inc: { numOfReviews: 1, totalRating: review.rating } }
+  );
   const addiReview = Activity.findOneAndUpdate({ privateId }, { $push: { iReview: memberId } });
 
   Promise.all([addReview, addiReview])

@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import { Account, Activity, Restriction } from "../model/index.js";
+import { Account, Activity, Restriction, Review } from "../model/index.js";
 import ShortUniqueId from "short-unique-id";
 
 const router = express.Router();
@@ -92,13 +92,15 @@ router.get("/read/:memberId/:itemId", (req, res) => {
       },
     },
   ]);
+  const getReviewData = Review.findOne({ id: memberId }, { numOfReviews: 1, totalRating: 1 });
 
-  Promise.all([checkFavAndView, checkHide, gettwoOtherItems])
+  Promise.all([checkFavAndView, checkHide, gettwoOtherItems, getReviewData])
     .then(async (docs) => {
       const fav = docs[0].favourites.includes(itemId);
       const view = docs[0].views.includes(itemId);
       const hide = docs[1].hide.includes(itemId);
       const twoOtherItems = docs[2][0]["items"];
+      const review = docs[3];
       const curItemFields = { name: 1, location: 1, image: 1, "items.$": 1 };
 
       if (!view) {
@@ -115,7 +117,7 @@ router.get("/read/:memberId/:itemId", (req, res) => {
 
         Promise.all([updateActivityView, updateListingView])
           .then((docs) => {
-            res.json({ fav, hide, twoOtherItems, listing: docs[1] });
+            res.json({ fav, hide, twoOtherItems, listing: docs[1], review });
           })
           .catch((err) => {
             throw err;
@@ -123,7 +125,7 @@ router.get("/read/:memberId/:itemId", (req, res) => {
       } else {
         Account.findOne({ id: memberId, "items.itemId": itemId }, curItemFields, (err, doc) => {
           if (err) throw err;
-          res.json({ fav, hide, twoOtherItems, listing: doc });
+          res.json({ fav, hide, twoOtherItems, listing: doc, review });
         });
       }
     })

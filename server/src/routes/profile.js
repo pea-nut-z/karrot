@@ -28,11 +28,11 @@ router.get("/read/:memberId", (req, res) => {
     { id: memberId },
     { name: 1, image: 1, location: 1, numOfItems: 1, id: 1, _id: 0 }
   );
-  const getReview = Review.findOne({ id: memberId }, { numOfReviews: 1, _id: 0 });
+  const getReview = Review.findOne({ id: memberId }, { numOfReviews: 1, totalRating: 1, _id: 0 });
 
   Promise.all([getAccount, getReview]).then(async (docs) => {
     const account = docs[0];
-    const reviewCount = docs[1];
+    const review = docs[1];
     let hide = false;
     let block = false;
 
@@ -42,7 +42,7 @@ router.get("/read/:memberId", (req, res) => {
       if (getRestriction.block.includes(memberId)) block = true;
       if (getRestriction.hide.includes(memberId)) hide = true;
     }
-    res.json({ account, reviewCount, hide, block });
+    res.json({ account, review, hide, block });
   });
 });
 export default router;

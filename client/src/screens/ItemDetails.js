@@ -21,16 +21,20 @@ export default function ItemDetails({ route, navigation }) {
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
   const [useWhiteBtns, setUseWhiteBtns] = useState();
+  const [numOfReviews, setNumOfReivews] = useState();
+  const [average, setAverage] = useState();
 
   useEffect(() => {
     if (helper.myId !== memberId) {
       axios
         .get(`${helper.proxy}/listing/read/${memberId}/${itemId}`)
         .then((res) => {
-          const { fav, hide, twoOtherItems, listing } = res.data;
+          const { fav, hide, twoOtherItems, listing, review } = res.data;
           const curItem = listing.items[0];
           setFav(fav);
           setHide(hide);
+          setNumOfReivews(review.numOfReviews);
+          setAverage(review.totalRating / review.numOfReviews);
           setProfile(listing);
           setItem(curItem);
           setOtherItems(twoOtherItems);
@@ -79,7 +83,7 @@ export default function ItemDetails({ route, navigation }) {
                   atItemDetails={true}
                 />
 
-                <MemberRating memberId={memberId} atItemDetails={true} />
+                <MemberRating average={average} numOfReviews={numOfReviews} atItemDetails={true} />
               </TouchableOpacity>
 
               <Border />

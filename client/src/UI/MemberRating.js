@@ -2,42 +2,32 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { icons, COLORS, SIZES } from "../constants";
-import axios from "axios";
 import * as helper from "../helper";
-import ItemDetails from "../screens/ItemDetails";
 
-export default function MemberRating({ memberId, atItemDetails }) {
-  const [average, setAverage] = useState();
-  const [numOfReviewsState, setNumOfReviewsState] = useState();
-  const [numerOfStars] = useState([1, 2, 3, 4, 5]);
+export default function MemberRating({ average, numOfReviews, atItemDetails }) {
+  const [rating, setRating] = useState();
+  const [reviewCount, setReviewCount] = useState();
 
   useEffect(() => {
-    axios
-      .get(`${helper.proxy}/review/read/${memberId}`)
-      .then((res) => {
-        const { totalRating, numOfReviews } = res.data.doc;
-        const ratingAverage = totalRating / numOfReviews;
-        setAverage(ratingAverage);
-        setNumOfReviewsState(numOfReviews);
-      })
-      .catch((err) => console.log("MemeberRating page review error: ", err));
-  }, []);
+    setRating(average);
+    setReviewCount(numOfReviews);
+  }, [average, numOfReviews]);
 
   return (
     <View style={styles.outterContainer}>
       {/* <NUM OF REVIEWS */}
       <Text>
-        {numOfReviewsState} Review{numOfReviewsState > 1 && "s"}
+        {reviewCount} Review{reviewCount > 1 && "s"}
       </Text>
 
       <View style={styles.iconContainer}>
         {/* STARS */}
         <View style={styles.starContainer}>
-          {numerOfStars.map((num) => {
+          {helper.starRatingArr.map((num) => {
             return (
               <Ionicons
                 key={num}
-                name={average >= num ? "star" : "star-outline"}
+                name={rating >= num ? "star" : "star-outline"}
                 size={atItemDetails ? 25 : 35}
                 color={COLORS.primary}
               />
@@ -47,9 +37,9 @@ export default function MemberRating({ memberId, atItemDetails }) {
 
         {/*  EMOJI */}
         <Image
-          source={average <= 2 ? icons.unamused : average >= 4 ? icons.excited : icons.happy}
+          source={rating <= 2 ? icons.unamused : rating >= 4 ? icons.excited : icons.happy}
           resizeMode="contain"
-          style={styles.emoji(ItemDetails)}
+          style={styles.emoji(atItemDetails)}
         />
       </View>
 

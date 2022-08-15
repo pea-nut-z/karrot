@@ -20,6 +20,7 @@ export default function Profile({ route, navigation }) {
   const [profile, setProfile] = useState();
   const [numOfItems, setNumOfItems] = useState();
   const [numOfReviews, setNumOfReivews] = useState();
+  const [average, setAverage] = useState();
   const [block, setBlock] = useState(false);
   const [hide, setHide] = useState(false);
 
@@ -32,18 +33,23 @@ export default function Profile({ route, navigation }) {
   const [unhideMsg, setUnhideMsg] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${helper.proxy}/profile/read/${memberId}`)
-      .then((res) => {
-        const { account, reviewCount, hide, block } = res.data;
-        setProfile(account);
-        setNumOfItems(account.numOfItems);
-        setNumOfReivews(reviewCount.numOfReviews);
-        setHide(hide);
-        setBlock(block);
-      })
-      .catch((err) => console.error("Profile get initial states error: ", err));
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      axios
+        .get(`${helper.proxy}/profile/read/${memberId}`)
+        .then((res) => {
+          const { account, review, hide, block } = res.data;
+          setProfile(account);
+          setNumOfItems(account.numOfItems);
+          setNumOfReivews(review.numOfReviews);
+          setAverage(review.totalRating / review.numOfReviews);
+          setHide(hide);
+          setBlock(block);
+        })
+        .catch((err) => console.error("Profile get initial states error: ", err));
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const showPopoutMenu = () => {
     setPopupMenu(true);
@@ -238,7 +244,7 @@ export default function Profile({ route, navigation }) {
 
             {/* MEMBER RATING */}
             <View style={styles.margin}>
-              <MemberRating memberId={memberId} />
+              <MemberRating average={average} numOfReviews={numOfReviews} />
             </View>
 
             {/* RATE BUTTON  */}
