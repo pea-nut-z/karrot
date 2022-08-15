@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { AllItems, Active, Sold } from "../screens";
 import { Header, ItemStatusTab } from "../UI";
 import { COLORS } from "../constants";
 import * as helper from "../helper";

@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { Active, Sold, Hidden } from "../screens";
-import { Header } from "../UI";
+import { Header, ItemStatusTab } from "../UI";
+
 import { COLORS } from "../constants";
 import * as helper from "../helper";
 import axios from "axios";
 
 const MaterialTopTabs = createMaterialTopTabNavigator();
+const { Navigator, Screen } = MaterialTopTabs;
 
 export default function MyItemsTabs({ navigation }) {
-  const [accountInfo, setAccountInfo] = useState();
-  const [listings, setListings] = useState();
+  const [profile, setProfile] = useState({});
+  const [activeItems, setActiveItems] = useState([]);
+  const [soldItems, setSoldItems] = useState([]);
+  const [hiddenItems, setHiddenItems] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${helper.proxy}/listing/read/items`)
       .then((res) => {
-        setAccountInfo(res.data.profile);
-        setListings(res.data.items);
+        const { profile, listings } = res.data;
+        const active = listings["Active"] || [];
+        const sold = listings["Sold"] || [];
+        const hidden = listings["Hidden"] || [];
+        setProfile(profile);
+        setActiveItems(active);
+        setSoldItems(sold);
+        setHiddenItems(hidden);
       })
       .catch((err) => console.error("MyItemsTabs get listings error: ", err));
   }, []);
@@ -30,22 +39,47 @@ export default function MyItemsTabs({ navigation }) {
       }}
     >
       <Header navigation={navigation} title={"Listings"} useBackBtn={true} />
-      <MaterialTopTabs.Navigator
-        screenOptions={{ tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}
+      <Navigator
+        screenOptions={{
+          tabBarIndicatorStyle: {
+            backgroundColor: COLORS.primary,
+          },
+        }}
       >
-        <MaterialTopTabs.Screen
+        <Screen
           name="Active"
-          children={() => <Active atMyItemsTabs={true} navigation={navigation} />}
+          children={() => (
+            <ItemStatusTab
+              accountInfo={profile}
+              listings={activeItems}
+              message={"No Active items"}
+              navigation={navigation}
+            />
+          )}
         />
-        <MaterialTopTabs.Screen
+        <Screen
           name="Sold"
-          children={() => <Sold atMyItemsTabs={true} navigation={navigation} />}
+          children={() => (
+            <ItemStatusTab
+              accountInfo={profile}
+              listings={soldItems}
+              message={"No sold items"}
+              navigation={navigation}
+            />
+          )}
         />
-        <MaterialTopTabs.Screen
+        <Screen
           name="Hidden"
-          children={() => <Hidden atMyItemsTabs={true} navigation={navigation} />}
+          children={() => (
+            <ItemStatusTab
+              accountInfo={profile}
+              listings={hiddenItems}
+              message={"No hidden items"}
+              navigation={navigation}
+            />
+          )}
         />
-      </MaterialTopTabs.Navigator>
+      </Navigator>
     </SafeAreaView>
   );
 }
