@@ -264,8 +264,9 @@ export default function Profile({ route, navigation }) {
             {/* ITEMS */}
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate(atMyProfile ? "MyItemsTabs" : "SellerItemsTabs", {
+                navigation.navigate("ItemsTabs", {
                   memberId,
+                  atMyProfile,
                 })
               }
               style={[styles.bottomSubContainer, styles.margin]}

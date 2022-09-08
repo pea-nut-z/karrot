@@ -22,7 +22,6 @@ export default function App() {
           {/* <Stack.Screen name="Login" component={screens.Login} /> */}
           <Stack.Screen name="BottomMainTabs" component={tabs.BottomMainTabs} />
           <Stack.Screen name="Sell" component={screens.Sell} />
-          <Stack.Screen name="SellerItemsTabs" component={tabs.SellerItemsTabs} />
           {/* CATEGORIES */}
           <Stack.Screen name="Categories" component={screens.Categories} />
           <Stack.Screen name="Category" component={screens.Category} />
@@ -30,7 +29,7 @@ export default function App() {
           <Stack.Screen name="Chats" component={screens.Chats} />
           {/* MY ACCOUNT */}
           <Stack.Screen name="MyAccount" component={screens.MyAccount} />
-          <Stack.Screen name="MyItemsTabs" component={tabs.MyItemsTabs} />
+          <Stack.Screen name="ItemsTabs" component={tabs.ItemsTabs} />
           <Stack.Screen name="Purchases" component={screens.Purchases} />
           <Stack.Screen name="Favourites" component={screens.Favourites} />
           <Stack.Screen name="EditProfile" component={screens.EditProfile} />

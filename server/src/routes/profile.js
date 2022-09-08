@@ -23,7 +23,7 @@ router.get("/read/:memberId", (req, res) => {
   // get profile -> name image location
   // get number of items -> othersProfile: no hidden items; myProfilo: Hidden,Sold,Active
   // get reviews -> numOfReview
-  // get block -> if othersProfile; access by privateId and check is member block by me
+  // get block -> if othersProfile; access by privateId and check if member block by me
   const getAccount = Account.findOne(
     { id: memberId },
     { name: 1, image: 1, location: 1, numOfItems: 1, id: 1, _id: 0 }

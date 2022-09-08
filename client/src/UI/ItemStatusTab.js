@@ -11,7 +11,6 @@ export default function ItemStatusTab({ accountInfo, listings, message, navigati
   useEffect(() => {
     setProfile(accountInfo);
     setItems(listings);
-    // console.log("at", message, listings);
   }, [accountInfo, listings]);
 
   return (

@@ -1,8 +1,7 @@
 import BottomMainTabs from "./BottomMainTabs";
-import SellerItemsTabs from "./SellerItemsTabs";
-import MyItemsTabs from "./MyItemsTabs";
+import ItemsTabs from "./ItemsTabs";
 import SearchTabs from "./SearchTabs";
 import NotificationsTabs from "./NotificationsTabs";
 import ReviewsTabs from "./ReviewsTabs";
 
-export { BottomMainTabs, SellerItemsTabs, MyItemsTabs, SearchTabs, NotificationsTabs, ReviewsTabs };
+export { BottomMainTabs, ItemsTabs, SearchTabs, NotificationsTabs, ReviewsTabs };
