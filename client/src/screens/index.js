@@ -1,7 +1,6 @@
-import Login from "./auth/Login";
+// import Login from "./auth/Login";
 // import Signup from "./auth/Signup";
 import Home from "./homepage/Home";
-import AllItems from "./item-status/AllItems";
 import Sell from "./homepage/Sell";
 import Categories from "./categories/Categories";
 import Category from "./categories/Category";
@@ -10,9 +9,6 @@ import MyAccount from "./my-account/MyAccount";
 import ItemDetails from "./ItemDetails";
 import Purchases from "./my-account/Purchases";
 import Favourites from "./my-account/Favourites";
-import Active from "./item-status/Active";
-import Sold from "./item-status/Sold";
-import Hidden from "./item-status/Hidden";
 import ForSale from "./search/ForSale";
 import User from "./search/User";
 import Filters from "./search/Filters";
@@ -29,7 +25,7 @@ import Sellers from "./reviews/Sellers";
 import Rate from "./reviews/Rate";
 
 export {
-  Login,
+  // Login,
   // Signup,
   Home,
   Sell,
@@ -40,10 +36,6 @@ export {
   Purchases,
   Favourites,
   MyAccount,
-  AllItems,
-  Active,
-  Sold,
-  Hidden,
   ForSale,
   User,
   Filters,
