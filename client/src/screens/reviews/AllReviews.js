@@ -1,22 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, ScrollView, SafeAreaView } from "react-native";
-import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { Header, MemberInfo } from "../../UI";
-import { selectReviews } from "../../store/selectors";
-import { timeSince } from "../../helper";
+import * as helper from "../../helper";
 import { COLORS, SIZES } from "../../constants";
+import axios from "axios";
 
 export default function AllReviews({ route, navigation }) {
-  const { userId, memberId } = route.params;
-  const numOfReviews = useSelector((state) => state["reviews"][memberId]["reviewers"].length);
+  // const { userId, memberId } = route.params;
+  // const reviewCount = useSelector((state) => state["reviews"][memberId]["reviewers"].length);
   // const reviews = useSelector((state) => state["reviews"][sellerId]);
+  // const reviews = useSelector((state) =>
+  //   selectReviews(state["reviews"][memberId]["reviews"], state.members)
+  // );
+  // const numOfStars = [1, 2, 3, 4, 5];
+  const [numOfReviews, setNumOfReviews] = useState();
+  const [reviews, setReviews] = useState([]);
 
-  const reviews = useSelector((state) =>
-    selectReviews(state["reviews"][memberId]["reviews"], state.members)
-  );
-
-  const numOfStars = [1, 2, 3, 4, 5];
+  useEffect(() => {
+    const memberId = route.params.memberId;
+    axios
+      .get(`${helper.proxy}/review/read/${memberId}`)
+      .then((res) => {
+        setNumOfReviews(res.doc.numOfReviews);
+        setReviews(res.doc.reviews);
+      })
+      .catch((err) => console.error("get AllReviews error: ", err));
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -36,7 +46,7 @@ export default function AllReviews({ route, navigation }) {
           return (
             <TouchableOpacity
               key={index}
-              onPress={() => navigation.push("Profile", { userId, sellerId: reviewer.reviewerId })}
+              // onPress={() => navigation.push("Profile", { userId, sellerId: reviewer.reviewerId })}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -60,7 +70,7 @@ export default function AllReviews({ route, navigation }) {
                     paddingVertical: SIZES.padding,
                   }}
                 >
-                  {numOfStars.map((num) => {
+                  {helper.starRatingArr.map((num) => {
                     return num <= reviewer.rating ? (
                       <View key={num}>
                         <Ionicons name={"star"} size={20} color={COLORS.primary} />
@@ -72,7 +82,7 @@ export default function AllReviews({ route, navigation }) {
                     );
                   })}
                   <Text style={{ marginTop: 4, marginLeft: SIZES.padding }}>
-                    {timeSince(reviewer.date)}
+                    {helper.timeSince(reviewer.date)}
                   </Text>
                 </View>
 

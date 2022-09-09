@@ -5,10 +5,14 @@ const privateId = "62e87ec387aecd786da8d937";
 
 router.get("/read/:memberId", (req, res) => {
   const { memberId } = req.params;
-  Review.findOne({ id: memberId }, { _id: 0, __v: 0 }, (err, doc) => {
-    if (err) throw err;
-    res.json({ doc });
-  });
+  Review.findOne(
+    { id: memberId },
+    { _id: 0, __v: 0, privateId: 0, "reviews.privateId": 0 },
+    (err, doc) => {
+      if (err) throw err;
+      res.json({ doc });
+    }
+  );
 });
 
 router.post("/create/:memberId", (req, res) => {

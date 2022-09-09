@@ -4,6 +4,7 @@ import { reqStr, reqNum, defaultDate } from "./values.js";
 const { Schema, model } = mongoose;
 
 const details = new Schema({
+  privateId: reqStr,
   reviewBy: reqStr,
   date: defaultDate,
   rating: reqNum,

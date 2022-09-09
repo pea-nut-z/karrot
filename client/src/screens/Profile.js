@@ -279,7 +279,7 @@ export default function Profile({ route, navigation }) {
 
             {/* REVIEWS */}
             <TouchableOpacity
-              //   onPress={() => navigation.navigate("AllReviews", { userId, memberId: sellerId })}
+              onPress={() => navigation.navigate("AllReviews", { memberId })}
               style={[styles.bottomSubContainer, styles.margin]}
             >
               <View>

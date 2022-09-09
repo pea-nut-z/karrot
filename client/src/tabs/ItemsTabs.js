@@ -10,7 +10,6 @@ const MaterialTopTabs = createMaterialTopTabNavigator();
 const { Navigator, Screen } = MaterialTopTabs;
 
 export default function ItemsTabs({ route, navigation }) {
-  const memberId = useRef(route.params.memberId).current;
   const atMyProfile = useRef(route.params.atMyProfile).current;
 
   const [profile, setProfile] = useState({});
@@ -20,6 +19,7 @@ export default function ItemsTabs({ route, navigation }) {
   const [allItems, setAllItems] = useState([]);
 
   useEffect(() => {
+    const memberId = route.params.memberId;
     const IDquery = !atMyProfile ? "?memberId=" + memberId : null;
     axios
       .get(`${helper.proxy}/listing/read/items${IDquery}`)
