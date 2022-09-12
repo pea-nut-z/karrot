@@ -11,7 +11,6 @@ const { Navigator, Screen } = MaterialTopTabs;
 
 export default function ItemsTabs({ route, navigation }) {
   const atMyProfile = useRef(route.params.atMyProfile).current;
-  console.log(atMyProfile);
   const [profile, setProfile] = useState({});
   const [activeItems, setActiveItems] = useState([]);
   const [soldItems, setSoldItems] = useState([]);
@@ -20,7 +19,8 @@ export default function ItemsTabs({ route, navigation }) {
 
   useEffect(() => {
     const memberId = route.params.memberId;
-    const IDquery = !atMyProfile ? "?memberId=" + memberId : null;
+    const IDquery = !atMyProfile ? "?memberId=" + memberId : "";
+
     axios
       .get(`${helper.proxy}/listing/read/items${IDquery}`)
       .then((res) => {

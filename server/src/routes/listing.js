@@ -71,7 +71,7 @@ router.get("/read/item/:memberId/:itemId", (req, res) => {
 
   const checkFavAndView = Activity.findOne({ privateId });
   const checkHide = Restriction.findOne({ privateId });
-  const gettwoOtherItems = Account.aggregate([
+  const getTwoOtherItems = Account.aggregate([
     { $match: { id: memberId } },
     { $unwind: "$items" },
     { $match: { $and: [{ "items.itemId": { $ne: itemId } }, { "items.status": "Active" }] } },
@@ -96,12 +96,12 @@ router.get("/read/item/:memberId/:itemId", (req, res) => {
   ]);
   const getReviewData = Review.findOne({ id: memberId }, { numOfReviews: 1, totalRating: 1 });
 
-  Promise.all([checkFavAndView, checkHide, gettwoOtherItems, getReviewData])
+  Promise.all([checkFavAndView, checkHide, getTwoOtherItems, getReviewData])
     .then(async (docs) => {
       const fav = docs[0].favourites.includes(itemId);
       const view = docs[0].views.includes(itemId);
       const hide = docs[1].hide.includes(itemId);
-      const twoOtherItems = docs[2][0]["items"];
+      const twoOtherItems = docs[2].length == 0 ? [] : docs[2][0]["items"];
       const review = docs[3];
       const curItemFields = { name: 1, location: 1, image: 1, "items.$": 1 };
 
@@ -139,6 +139,7 @@ router.get("/read/item/:memberId/:itemId", (req, res) => {
 router.get("/read/items", async (req, res) => {
   const { memberId } = req.query;
   const query = memberId ? { id: memberId } : { _id: mongoose.Types.ObjectId(privateId) };
+
   try {
     const groups = await Account.aggregate([
       { $match: query },
@@ -163,6 +164,7 @@ router.get("/read/items", async (req, res) => {
     let getProfile = true;
     const profile = {};
     const listings = {};
+
     groups.forEach((group) => {
       if (getProfile) {
         profile.id = group.id;

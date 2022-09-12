@@ -40,7 +40,7 @@ export default function AllReviews({ route, navigation }) {
             return (
               <TouchableOpacity
                 key={reviewer.reviewBy}
-                // onPress={() => navigation.push("Profile", { memberId: reviewer.reviewBy })}
+                onPress={() => navigation.push("Profile", { memberId: reviewer.reviewBy })}
                 style={{
                   flexDirection: "row",
                   alignItems: "center",

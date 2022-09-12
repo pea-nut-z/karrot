@@ -9,11 +9,11 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
 
+  console.log({ profile });
+  console.log({ item });
+
   useEffect(() => {
     setProfile(accountInfo);
-    // console.log({ accountInfo });
-    // console.log({ listing });
-
     setItem(listing);
     setImage(listing.images[0]);
     if (Platform.OS === "web") {
@@ -28,7 +28,7 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
       <TouchableOpacity
         style={styles.outterContainer}
         onPress={() =>
-          navigation.navigate("ItemDetails", {
+          navigation.push("ItemDetails", {
             memberId: profile.id,
             itemId: item.itemId,
           })

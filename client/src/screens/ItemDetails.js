@@ -25,28 +25,26 @@ export default function ItemDetails({ route, navigation }) {
   const [average, setAverage] = useState();
 
   useEffect(() => {
-    if (helper.myId !== memberId) {
-      axios
-        .get(`${helper.proxy}/listing/read/item/${memberId}/${itemId}`)
-        .then((res) => {
-          const { fav, hide, twoOtherItems, listing, review } = res.data;
-          const curItem = listing.items[0];
-          setFav(fav);
-          setHide(hide);
-          setNumOfReivews(review.numOfReviews);
-          setAverage(review.totalRating / review.numOfReviews);
-          setProfile(listing);
-          setItem(curItem);
-          setOtherItems(twoOtherItems);
-          setItemStatus(curItem.status);
-          setUseWhiteBtns(
-            typeof curItem.images[0] === "number" || curItem.images[0].includes(".png")
-              ? false
-              : true
-          );
-        })
-        .catch((err) => console.error("itemDetail get listing error: ", err));
-    }
+    // if (helper.myId !== memberId) {
+    axios
+      .get(`${helper.proxy}/listing/read/item/${memberId}/${itemId}`)
+      .then((res) => {
+        const { fav, hide, twoOtherItems, listing, review } = res.data;
+        const curItem = listing.items[0];
+        setFav(fav);
+        setHide(hide);
+        setNumOfReivews(review.numOfReviews);
+        setAverage(review.totalRating / review.numOfReviews);
+        setProfile(listing);
+        setItem(curItem);
+        setOtherItems(twoOtherItems);
+        setItemStatus(curItem.status);
+        setUseWhiteBtns(
+          typeof curItem.images[0] === "number" || curItem.images[0].includes(".png") ? false : true
+        );
+      })
+      .catch((err) => console.error("itemDetail get listing error: ", err));
+    // }
 
     if (window === undefined) {
       window.scrollTo(0, 0);
@@ -93,6 +91,7 @@ export default function ItemDetails({ route, navigation }) {
               <View style={styles.itemInfoContainer}>
                 {helper.myId === memberId && (
                   <DropDownPicker
+                    listMode="SCROLLVIEW"
                     open={dropDown}
                     value={itemStatus}
                     items={dropDownItems}
@@ -101,7 +100,7 @@ export default function ItemDetails({ route, navigation }) {
                     setValue={setItemStatus}
                     onChangeValue={(value) => {
                       axios
-                        .patch(`${helper.proxy}/update/${itemId}`, { status: value })
+                        .patch(`${helper.proxy}/listing/update/${itemId}`, { status: value })
                         .then(() => setItemStatus(value))
                         .catch((err) => console.error("itemDetail change item status error: ", err));
                     }}
