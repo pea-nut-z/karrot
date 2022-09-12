@@ -1,18 +1,60 @@
 import express from "express";
-import { Review, Activity } from "../model/index.js";
+import { Review, Activity, Account } from "../model/index.js";
 const router = express.Router();
 const privateId = "62e87ec387aecd786da8d937";
 
-router.get("/read/:memberId", (req, res) => {
+router.get("/read/:memberId", async (req, res) => {
   const { memberId } = req.params;
-  Review.findOne(
-    { id: memberId },
-    { _id: 0, __v: 0, privateId: 0, "reviews.privateId": 0 },
-    (err, doc) => {
-      if (err) throw err;
-      res.json({ doc });
-    }
-  );
+  //  Review.findOne(
+  //   { id: memberId },
+  //   { _id: 0, __v: 0, privateId: 0, "reviews.privateId": 0 }
+  //   ,
+  //   (err, doc) => {
+  //     if (err) throw err;
+  //     const reviews = doc.reviews(review => {
+
+  //     })
+  //     res.json({ doc });
+  //   }
+  // );
+
+  const doc = await Review.aggregate([
+    { $match: { id: memberId } },
+    { $unwind: "$reviews" },
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "reviews.reviewBy",
+        foreignField: "id",
+        as: "reviews.profile",
+      },
+    },
+    {
+      $project: {
+        "reviews.privateId": 0,
+        "reviews.profile._id": 0,
+        "reviews.profile.joined": 0,
+        "reviews.profile.__v": 0,
+        "reviews.profile.draft": 0,
+        "reviews.profile.items": 0,
+        "reviews.profile.numOfItems": 0,
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        numOfReviews: {
+          $first: "$numOfReviews",
+        },
+        reviews: {
+          $addToSet: "$reviews",
+        },
+      },
+    },
+  ]);
+
+  // handle error
+  res.json(doc[0]);
 });
 
 router.post("/create/:memberId", (req, res) => {
