@@ -9,9 +9,6 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
 
-  console.log({ profile });
-  console.log({ item });
-
   useEffect(() => {
     setProfile(accountInfo);
     setItem(listing);

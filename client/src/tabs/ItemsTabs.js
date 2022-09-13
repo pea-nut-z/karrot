@@ -16,28 +16,31 @@ export default function ItemsTabs({ route, navigation }) {
   const [soldItems, setSoldItems] = useState([]);
   const [hiddenItems, setHiddenItems] = useState([]);
   const [allItems, setAllItems] = useState([]);
-
   useEffect(() => {
     const memberId = route.params.memberId;
     const IDquery = !atMyProfile ? "?memberId=" + memberId : "";
 
-    axios
-      .get(`${helper.proxy}/listing/read/items${IDquery}`)
-      .then((res) => {
-        const { profile, listings } = res.data;
-        const active = listings["Active"] || [];
-        const sold = listings["Sold"] || [];
-        if (atMyProfile) {
-          const hidden = listings["Hidden"] || [];
-          setHiddenItems(hidden);
-        } else {
-          setAllItems([...active, ...sold]);
-        }
-        setProfile(profile);
-        setActiveItems(active);
-        setSoldItems(sold);
-      })
-      .catch((err) => console.error("itemsTabs get listings error: ", err));
+    const unsubscribe = navigation.addListener("focus", () => {
+      axios
+        .get(`${helper.proxy}/listing/read/items${IDquery}`)
+        .then((res) => {
+          const { profile, listings } = res.data;
+          const active = listings["Active"] || [];
+          const sold = listings["Sold"] || [];
+          if (atMyProfile) {
+            const hidden = listings["Hidden"] || [];
+            setHiddenItems(hidden);
+          } else {
+            setAllItems([...active, ...sold]);
+          }
+          setProfile(profile);
+          setActiveItems(active);
+          setSoldItems(sold);
+        })
+        .catch((err) => console.error("itemsTabs get listings error: ", err));
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
