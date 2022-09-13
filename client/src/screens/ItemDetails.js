@@ -17,6 +17,7 @@ export default function ItemDetails({ route, navigation }) {
   const [otherItems, setOtherItems] = useState([]);
   const [itemStatus, setItemStatus] = useState();
   const [fav, setFav] = useState();
+  const [numOfFavs, setNumOfFavs] = useState();
   const [hide, setHide] = useState();
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
@@ -32,6 +33,7 @@ export default function ItemDetails({ route, navigation }) {
         const { fav, hide, twoOtherItems, listing, review } = res.data;
         const curItem = listing.items[0];
         setFav(fav);
+        setNumOfFavs(curItem.favourites);
         setHide(hide);
         setNumOfReivews(review.numOfReviews);
         setAverage(review.totalRating / review.numOfReviews);
@@ -118,7 +120,7 @@ export default function ItemDetails({ route, navigation }) {
                 </Text>
                 <Text style={styles.desc}>{item.description}</Text>
                 <Text style={styles.chatsFavs}>
-                  {item.chats} chats • {item.favourites} favourites • {item.views + 1} views
+                  {item.chats} chats • {numOfFavs} favourites • {item.views + 1} views
                 </Text>
               </View>
 
@@ -179,6 +181,9 @@ export default function ItemDetails({ route, navigation }) {
                       .patch(`${helper.proxy}/activity/${action}/favourites/${memberId}/${itemId}`)
                       .then(() => {
                         setFav(!fav);
+                        setNumOfFavs((preNum) => {
+                          return action === "add" ? preNum + 1 : preNum - 1;
+                        });
                       })
                       .catch((err) => {
                         console.error("itemDetail change fav error: ", err);
