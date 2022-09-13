@@ -12,6 +12,7 @@ router.patch("/:action/:key/:memberId/:itemId", (req, res) => {
   const promise1 = Account.findOneAndUpdate(query, update);
 
   const actionKey = action === "add" ? "$push" : "$pull";
+
   const promise2 = Activity.findOneAndUpdate(
     { privateId },
     {
