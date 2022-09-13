@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import * as routes from "./routes/index.js";
 
 mongoose
-  .connect(process.env.DATABASE_URL)
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("DB Connected"))
   .catch((err) => console.error(err));
 
