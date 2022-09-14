@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,8 @@ import {
   Platform,
   Keyboard,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
@@ -60,18 +60,9 @@ export default function EditProfile({ route, navigation }) {
   const renderPopUpMenu = () => {
     return (
       <Modal isVisible={popupMenu} onBackdropPress={() => setPopupMenu(false)}>
-        <TouchableOpacity
-          onPress={choosePhotoFromLibrary}
-          style={{
-            height: 65,
-            backgroundColor: COLORS.white,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: SIZES.padding * 2,
-          }}
-        >
+        <TouchableOpacity onPress={choosePhotoFromLibrary} style={styles.modalContainer}>
           <Ionicons name={"image-outline"} size={35} />
-          <Text style={{ marginLeft: SIZES.padding * 2 }}>Choose from album</Text>
+          <Text style={styles.modalText}>Choose from album</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -79,16 +70,10 @@ export default function EditProfile({ route, navigation }) {
             setImage("N/A");
             setPopupMenu(false);
           }}
-          style={{
-            height: 65,
-            backgroundColor: COLORS.white,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: SIZES.padding * 2,
-          }}
+          style={styles.modalContainer}
         >
           <Ionicons name={"trash-outline"} size={35} />
-          <Text style={{ marginLeft: SIZES.padding * 2 }}>Delete profile photo</Text>
+          <Text style={styles.modalText}>Delete profile photo</Text>
         </TouchableOpacity>
       </Modal>
     );
@@ -98,33 +83,11 @@ export default function EditProfile({ route, navigation }) {
     return (
       <TouchableOpacity onPress={() => setPopupMenu(!popupMenu)}>
         {image !== "N/A" ? (
-          <Image
-            source={{ uri: image }}
-            resizeMode={"contain"}
-            style={{
-              width: 110,
-              height: 110,
-              borderRadius: 300,
-            }}
-          />
+          <Image source={{ uri: image }} resizeMode={"contain"} style={styles.imageContainer} />
         ) : (
           <Ionicons name={"person-circle-outline"} size={120} color={COLORS.secondary} />
         )}
-        <View
-          style={{
-            height: 35,
-            width: 35,
-            backgroundColor: COLORS.lightGray2,
-            justifyContent: "center",
-            alignItems: "center",
-            borderWidth: 1,
-            borderColor: COLORS.secondary,
-            borderRadius: 50,
-            position: "absolute",
-            top: 80,
-            left: 80,
-          }}
-        >
+        <View style={styles.cameraIconContainer}>
           <Ionicons name={"camera"} size={20} color={COLORS.darkgray} />
         </View>
       </TouchableOpacity>
@@ -132,7 +95,7 @@ export default function EditProfile({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <Header
         title={"Edit Profile"}
         useBackBtn={true}
@@ -141,14 +104,7 @@ export default function EditProfile({ route, navigation }) {
         navigation={navigation}
       />
 
-      <View
-        style={{
-          paddingVertical: SIZES.padding * 2,
-          alignItems: "center",
-        }}
-      >
-        {renderPicBtn()}
-      </View>
+      <View style={styles.imageButtonContainer}>{renderPicBtn()}</View>
       <View>{renderPopUpMenu()}</View>
       <View>
         <TextInput
@@ -156,17 +112,54 @@ export default function EditProfile({ route, navigation }) {
           onChangeText={(text) => setName(text)}
           underlineColorAndroid="transparent"
           onSubmitEditing={() => Keyboard.dismiss}
-          style={{
-            marginHorizontal: SIZES.padding * 2,
-            height: 50,
-            borderRadius: 10,
-            borderWidth: 1,
-            padding: 9,
-            fontSize: 18,
-          }}
+          style={styles.nameInput}
         />
       </View>
       <SafeAreaView />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  modalContainer: {
+    height: 65,
+    backgroundColor: COLORS.white,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: SIZES.padding * 2,
+  },
+  modalText: { marginLeft: SIZES.padding * 2 },
+  imageContainer: {
+    width: 110,
+    height: 110,
+    borderRadius: 300,
+  },
+  imageButtonContainer: {
+    paddingVertical: SIZES.padding * 2,
+    alignItems: "center",
+  },
+  cameraIconContainer: {
+    height: 35,
+    width: 35,
+    backgroundColor: COLORS.lightGray2,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.secondary,
+    borderRadius: 50,
+    position: "absolute",
+    top: 80,
+    left: 80,
+  },
+  nameInput: {
+    marginHorizontal: SIZES.padding * 2,
+    height: 50,
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 9,
+    fontSize: 18,
+  },
+});
