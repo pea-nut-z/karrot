@@ -137,7 +137,7 @@ export default function Profile({ route, navigation }) {
             style={styles.popupMenuOption}
             onPress={() => {
               hidePopoutMenu();
-              navigation.navigate("EditProfile");
+              navigation.navigate("EditProfile", { name: profile.name, image: profile.image });
             }}
           >
             <Text>Edit</Text>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -15,19 +15,21 @@ import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import { SIZES, COLORS } from "../../constants";
 import { Header } from "../../UI";
-import * as actions from "../../actions";
+import * as helper from "../../helper";
+import axios from "axios";
 
-export default function EditProfile({ navigation }) {
-  const profile = useSelector((state) => state.myProfile);
-
-  const [image, setImage] = useState(profile.image);
-  const [name, setName] = useState(profile.name);
+export default function EditProfile({ route, navigation }) {
+  const initName = useRef(route.params.name).current;
+  const initImage = useRef(route.params.image).current;
+  const [image, setImage] = useState(initImage);
+  const [name, setName] = useState(initName);
   const [popupMenu, setPopupMenu] = useState(false);
-  const dispatch = useDispatch();
 
   const done = () => {
-    if (name !== profile.name || image !== profile.image) {
-      dispatch(actions.patchMyProfile({ name, image }));
+    if (name !== initName || image !== initImage) {
+      axios.patch(`${helper.proxy}/profile/update`, { name, image }).catch((err) => {
+        console.error("EditProfile error: ", err);
+      });
     }
     navigation.goBack();
   };
@@ -59,7 +61,7 @@ export default function EditProfile({ navigation }) {
     return (
       <Modal isVisible={popupMenu} onBackdropPress={() => setPopupMenu(false)}>
         <TouchableOpacity
-          onPress={() => choosePhotoFromLibrary()}
+          onPress={choosePhotoFromLibrary}
           style={{
             height: 65,
             backgroundColor: COLORS.white,
@@ -91,6 +93,7 @@ export default function EditProfile({ navigation }) {
       </Modal>
     );
   };
+
   const renderPicBtn = () => {
     return (
       <TouchableOpacity onPress={() => setPopupMenu(!popupMenu)}>
@@ -127,6 +130,7 @@ export default function EditProfile({ navigation }) {
       </TouchableOpacity>
     );
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
