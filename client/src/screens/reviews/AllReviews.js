@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, SafeAreaView } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, SafeAreaView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Header, MemberInfo } from "../../UI";
 import * as helper from "../../helper";
@@ -22,35 +22,21 @@ export default function AllReviews({ route, navigation }) {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <Header title={"Reviews"} useBackBtn={true} navigation={navigation} />
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          paddingVertical: SIZES.padding,
-          paddingHorizontal: SIZES.padding * 2,
-        }}
-      >
+      <Text style={styles.numOfReviewsText}>
         {numOfReviews ? numOfReviews : 0} review{numOfReviews > 1 ? "s" : null}
       </Text>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
         {reviews &&
           reviews.map((reviewer) => {
             return (
               <TouchableOpacity
                 key={reviewer.reviewBy}
                 onPress={() => navigation.push("Profile", { memberId: reviewer.reviewBy })}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: SIZES.padding * 2,
-                  paddingVertical: SIZES.padding,
-                  borderBottomColor: COLORS.secondary,
-                  borderBottomWidth: 1,
-                }}
+                style={styles.reviewOutterContainer}
               >
-                <View style={{ paddingRight: SIZES.padding * 6 }}>
+                <View style={styles.memberInfoContainer}>
                   <MemberInfo
                     picture={reviewer.profile[0].image}
                     name={reviewer.profile[0].name}
@@ -58,12 +44,7 @@ export default function AllReviews({ route, navigation }) {
                   />
                 </View>
                 <View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      paddingVertical: SIZES.padding,
-                    }}
-                  >
+                  <View style={styles.reviewInnerContainer}>
                     {helper.starRatingArr.map((num) => {
                       return num <= reviewer.rating ? (
                         <View key={num}>
@@ -75,9 +56,7 @@ export default function AllReviews({ route, navigation }) {
                         </View>
                       );
                     })}
-                    <Text style={{ marginTop: 4, marginLeft: SIZES.padding }}>
-                      {helper.timeSince(reviewer.date)}
-                    </Text>
+                    <Text style={styles.timeSinceText}>{helper.timeSince(reviewer.date)}</Text>
                   </View>
 
                   <Text>{reviewer.headline}</Text>
@@ -90,3 +69,27 @@ export default function AllReviews({ route, navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  numOfReviewsText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: SIZES.padding,
+    paddingHorizontal: SIZES.padding * 2,
+  },
+  reviewOutterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: SIZES.padding * 2,
+    paddingVertical: SIZES.padding,
+    borderBottomColor: COLORS.secondary,
+    borderBottomWidth: 1,
+  },
+  memberInfoContainer: { paddingRight: SIZES.padding * 6 },
+  reviewInnerContainer: {
+    flexDirection: "row",
+    paddingVertical: SIZES.padding,
+  },
+  timeSinceText: { marginTop: 4, marginLeft: SIZES.padding },
+});
