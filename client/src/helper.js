@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
 export const myId = "z69D";
-export const proxy = Platform.OS === "ios" ? "http://localhost:3000" : "http://10.0.2.2:3000";
+export const proxy = "https://marketplace-rtwf.onrender.com/";
 export const maxUploadImg = 10;
 export const starRatingArr = [1, 2, 3, 4, 5];
 
