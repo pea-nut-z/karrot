@@ -26,5 +26,9 @@ app.use("/listing", routes.listing);
 app.use("/review", routes.review);
 app.use("/restrict", routes.restrict);
 
+app.get("/", (req, res) => {
+  res.send("working");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
