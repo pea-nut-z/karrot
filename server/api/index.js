@@ -1,20 +1,21 @@
-import "dotenv/config"; // import cors from "cors";
-
 import express from "express";
-import mongoose from "mongoose";
-import * as routes from "./routes/index.js";
-mongoose.connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI).then(() => console.log("DB Connected at", process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI)).catch(err => console.error(err));
-const app = express(); // app.use(cors({ origin: true, credentials: true }));
+import ShortUniqueId from "short-unique-id";
 
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
-app.use("/account", routes.account);
-app.use("/profile", routes.profile);
-app.use("/activity", routes.activity);
-app.use("/listing", routes.listing);
-app.use("/review", routes.review);
-app.use("/restrict", routes.restrict);
+const uid = new ShortUniqueId({ length: 4 });
+
+const app = express();
+
+app.get("/api", (req, res) => {
+  const path = `/api/item/${uid()}`;
+  res.setHeader("Content-Type", "text/html");
+  res.setHeader("Cache-Control", "s-max-age=1, stale-while-revalidate");
+  res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
+});
+
+app.get("/api/item/:slug", (req, res) => {
+  const { slug } = req.params;
+  res.end(`Item: ${slug}`);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
