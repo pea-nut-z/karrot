@@ -1,12 +1,13 @@
-import { Platform } from "react-native";
-
 export const myId = "z69D";
-export const proxy = "https://marketplace-rtwf.onrender.com/";
+export const proxy =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://marketplace-rtwf.onrender.com";
+
 export const maxUploadImg = 10;
 export const starRatingArr = [1, 2, 3, 4, 5];
 
 export const timeSince = (date) => {
-  //   var aDay = 24*60*60*1000;
   if (typeof date !== "object") {
     date = new Date(date);
   }

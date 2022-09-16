@@ -18,7 +18,6 @@ LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   const [profiles, setProfiles] = useState([]);
-
   useEffect(() => {
     axios
       .get(`${helper.proxy}/listing/filter?feeds=true`)

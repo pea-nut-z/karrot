@@ -6,12 +6,7 @@ import * as routes from "./routes/index.js";
 
 mongoose
   .connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI)
-  .then(() =>
-    console.log(
-      "DB Connected at",
-      process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI
-    )
-  )
+  .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error(err));
 
 const app = express();
