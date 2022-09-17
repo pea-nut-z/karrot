@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { categoryOptions, COLORS, FONTS, SIZES } from "../../constants";
-import * as actions from "../../store/actionTypes";
+// import * as actions from "../../store/actionTypes";
 import { Header, ModalAlert } from "../../UI";
 
 export default function CustomizeFeed({ route, navigation }) {
@@ -64,11 +64,11 @@ export default function CustomizeFeed({ route, navigation }) {
                   if (feed.includes(option.name) && feed.length === 1) {
                     setAlert(true);
                   } else {
-                    dispatch({
-                      type: feed.includes(option.name) ? actions.FEED_REMOVED : actions.FEED_ADDED,
-                      userId,
-                      feed: option.name,
-                    });
+                    // dispatch({
+                    //   type: feed.includes(option.name) ? actions.FEED_REMOVED : actions.FEED_ADDED,
+                    //   userId,
+                    //   feed: option.name,
+                    // });
                   }
                 }}
                 style={{
