@@ -20,6 +20,7 @@ const itemCardFields = {
 };
 
 router.get("/filter", async (req, res) => {
+  console.log("reached backend");
   const { feeds, category } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });

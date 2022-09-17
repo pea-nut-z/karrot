@@ -162,7 +162,7 @@ export default function Sell({ route, navigation }) {
         .then((res) => {
           // console.log("update: ", res.data.doc);
           navigation.navigate("ItemDetails", {
-            memberId: helper.memberId,
+            memberId: helper.myId,
             itemId,
           });
         })
@@ -176,7 +176,7 @@ export default function Sell({ route, navigation }) {
         .then((res) => {
           // console.log("post: ", res.data.doc);
           navigation.navigate("ItemDetails", {
-            memberId: helper.memberId,
+            memberId: helper.myId,
             itemId: res.date.itemId,
             newItem: true,
           });

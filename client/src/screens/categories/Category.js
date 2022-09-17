@@ -1,40 +1,39 @@
 import React, { useMemo } from "react";
 import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { FONTS, COLORS } from "../../constants";
-import { filterListings } from "../../store/selectors";
 import { Header, ItemCards } from "../../UI";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
 
 export default function Category({ route, navigation }) {
-  const { userId, selectedCategory } = route.params;
-  const getItemsByCategory = useMemo(filterListings, []);
-  const itemsByCategory = useSelector((state) =>
-    getItemsByCategory(
-      userId,
-      state.listings,
-      state.members,
-      state.restrictions,
-      state.feeds,
-      "category",
-      selectedCategory
-    )
-  );
+  // const { userId, selectedCategory } = route.params;
+  // const getItemsByCategory = useMemo(filterListings, []);
+  // const itemsByCategory = useSelector((state) =>
+  //   getItemsByCategory(
+  //     userId,
+  //     state.listings,
+  //     state.members,
+  //     state.restrictions,
+  //     state.feeds,
+  //     "category",
+  //     selectedCategory
+  //   )
+  // );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header
+      {/* <Header
         navigation={navigation}
         title={selectedCategory}
         useBackBtn={true}
         useRightBtns={["search-outline", "notifications-outline"]}
-      />
+      /> */}
 
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         contentContainerStyle={itemsByCategory.length === 0 ? styles.noItemsContainer : null}
         enableOnAndroid
-      >
-        {itemsByCategory.length === 0 ? (
+      > */}
+      {/* {itemsByCategory.length === 0 ? (
           <Text
             style={{
               color: COLORS.secondary,
@@ -45,8 +44,8 @@ export default function Category({ route, navigation }) {
           </Text>
         ) : (
           <ItemCards userId={userId} items={itemsByCategory} navigation={navigation} />
-        )}
-      </KeyboardAwareScrollView>
+        )} */}
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 }

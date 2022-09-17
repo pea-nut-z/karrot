@@ -39,7 +39,7 @@ export default function MemberRating({ average, numOfReviews, atItemDetails }) {
         <Image
           source={rating <= 2 ? icons.unamused : rating >= 4 ? icons.excited : icons.happy}
           resizeMode="contain"
-          style={styles.emoji(atItemDetails)}
+          style={atItemDetails ? styles.smallEmoji : styles.bigEmoji}
         />
       </View>
 
@@ -82,9 +82,14 @@ const styles = StyleSheet.create({
   starContainer: {
     flexDirection: "row",
   },
-  emoji: (atItemDetails) => ({
-    height: atItemDetails ? 25 : 35,
-    width: atItemDetails ? 25 : 35,
+  smallEmoji: {
+    height: 25,
+    width: 25,
     marginLeft: SIZES.padding / 2,
-  }),
+  },
+  bigEmoji: {
+    height: 35,
+    width: 35,
+    marginLeft: SIZES.padding / 2,
+  },
 });

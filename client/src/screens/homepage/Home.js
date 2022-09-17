@@ -17,8 +17,7 @@ import * as helper from "../../helper";
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
-  const [profiles, setProfiles] = useState([]);
-
+  const [profiles, setProfiles] = useState();
   useEffect(() => {
     axios
       .get(`${helper.proxy}/listing/filter?feeds=true`)
@@ -47,7 +46,7 @@ export default function Home({ navigation }) {
           <Text style={styles.btnText}>+ Sell</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          {profiles.length !== 0 ? (
+          {profiles && profiles.length !== 0 && (
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
               {profiles.map((profile) => {
                 return profile.items.map((item) => {
@@ -59,11 +58,11 @@ export default function Home({ navigation }) {
                 });
               })}
             </KeyboardAwareScrollView>
-          ) : (
-            <View style={styles.noItemsMsgContainer}>
-              <Text style={styles.noItemsText}>No items</Text>
-            </View>
           )}
+          <View style={styles.noItemsMsgContainer}>
+            {!profiles && <Text style={styles.noItemsText}>Loading...</Text>}
+            {profiles && profiles.length == 0 && <Text style={styles.noItemsText}>No Items</Text>}
+          </View>
         </View>
       </View>
     </SafeAreaView>
