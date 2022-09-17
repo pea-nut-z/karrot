@@ -2,9 +2,10 @@ export const myId = "z69D";
 
 export const proxy =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
+    ? "http://localhost:3001"
     : "https://marketplace-rtwf.onrender.com";
 
+console.log({ proxy });
 export const maxUploadImg = 10;
 export const starRatingArr = [1, 2, 3, 4, 5];
 
