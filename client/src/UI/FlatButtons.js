@@ -5,7 +5,7 @@ import { SIZES } from "../constants";
 
 export default function FlatButtons({ atCategories, options, navigateTo }) {
   return (
-    <View style={{ paddingBottom: 25 }}>
+    <View style={styles.outterContainer}>
       {options.map((option, index) => {
         if (Platform.OS === "web" && typeof img === "number") {
           Image.resolveAssetSource = (source) => ({
@@ -14,16 +14,13 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
         }
         return (
           <TouchableOpacity key={`option-${index}`} onPress={() => navigateTo(option)}>
-            <View style={styles.container}>
+            <View style={styles.innerContainer}>
               {atCategories ? (
                 // CATEGORIES
                 <Image
                   source={{ uri: Image.resolveAssetSource(option.icon).uri }}
                   resizeMode={"contain"}
-                  style={{
-                    width: 35,
-                    height: 35,
-                  }}
+                  style={styles.categoryIcon}
                 />
               ) : (
                 // MY ACCOUNT
@@ -39,7 +36,8 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outterContainer: { marginBottom: 10 },
+  innerContainer: {
     flexDirection: "row",
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
@@ -47,5 +45,9 @@ const styles = StyleSheet.create({
   text: {
     paddingLeft: SIZES.padding * 2,
     paddingTop: 10,
+  },
+  categoryIcon: {
+    width: 35,
+    height: 35,
   },
 });

@@ -2,6 +2,7 @@ import icons from "./icons";
 import {
   viewOptions,
   locationOptions,
+  rewardsOption,
   infoOptions,
   categoryOptions,
   categoryDropDown,
@@ -18,6 +19,7 @@ export {
   categoryOptions,
   viewOptions,
   locationOptions,
+  rewardsOption,
   infoOptions,
   categoryDropDown,
   itemStatusOptions,

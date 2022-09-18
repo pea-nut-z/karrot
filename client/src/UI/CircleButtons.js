@@ -3,15 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SIZES, COLORS } from "../constants";
 
-export default function CircleButton({ options, navigation }) {
-  //   case "Listings":
-  //   case "Purchases":
-  //   case "Favourites":
-
-  return options.map((option, index) => {
+export default function CircleButtons({ options, navigation }) {
+  return options.map((option) => {
     return (
-      <View key={`option-${index}`} style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate(option.name)}>
+      <View key={option.name} style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate(option.navigateTo)}>
           <View style={styles.alignCircle}>
             <View style={styles.circle}>
               <Ionicons name={option.icon} size={25} />

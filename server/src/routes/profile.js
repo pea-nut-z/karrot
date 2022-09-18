@@ -11,14 +11,21 @@ router.patch("/update", (req, res) => {
   });
 });
 
-router.get("/draft", async (req, res) => {
+router.get("/read", (req, res) => {
+  Account.findOne({ privateId }, { image: 1, name: 1, location: 1, id: 1 }, (err, doc) => {
+    if (err) throw err;
+    res.json(doc);
+  });
+});
+
+router.get("/draft", (req, res) => {
   Account.findOne({ privateId }, { draft: 1, _id: 0 }, (err, doc) => {
     if (err) throw err;
     res.json({ doc });
   });
 });
 
-router.get("/read/:memberId", (req, res) => {
+router.get("/get/:memberId", (req, res) => {
   const { memberId } = req.params;
   // get profile -> name image location
   // get number of items -> othersProfile: no hidden items; myProfilo: Hidden,Sold,Active
@@ -45,4 +52,5 @@ router.get("/read/:memberId", (req, res) => {
     res.json({ account, review, hide, block });
   });
 });
+
 export default router;

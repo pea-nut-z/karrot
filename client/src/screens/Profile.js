@@ -35,7 +35,7 @@ export default function Profile({ route, navigation }) {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       axios
-        .get(`${helper.proxy}/profile/read/${memberId}`)
+        .get(`${helper.proxy}/profile/get/${memberId}`)
         .then((res) => {
           const { account, review, hide, block } = res.data;
           setProfile(account);

@@ -1,5 +1,5 @@
 import Border from "./Border";
-import CircleButton from "./CircleButton";
+import CircleButtons from "./CircleButtons";
 import FlatButtons from "./FlatButtons";
 import Header from "./Header";
 import HeaderButton from "./HeaderButton";
@@ -14,7 +14,7 @@ import OtherItem from "./OtherItem";
 
 export {
   Border,
-  CircleButton,
+  CircleButtons,
   FlatButtons,
   Header,
   HeaderButton,

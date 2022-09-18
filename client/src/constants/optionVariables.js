@@ -88,14 +88,17 @@ export const itemStatusOptions = [
 export const viewOptions = [
   {
     name: "Listings",
+    navigateTo: "ItemsTabs",
     icon: "list-circle-outline",
   },
   {
     name: "Purchases",
+    navigateTo: "Purchases",
     icon: "basket-outline",
   },
   {
     name: "Favourites",
+    navigateTo: "Favourites",
     icon: "heart-outline",
   },
 ];
@@ -114,33 +117,24 @@ export const locationOptions = [
   },
 ];
 
-export const infoOptions = [
-  {
-    name: "Get help",
-    icon: "information-circle-outline",
-  },
-  {
-    name: "Invite friends",
-    icon: "mail-outline",
-  },
+export const rewardsOption = [
   {
     name: "My rewards",
     icon: "gift-outline",
   },
+];
+
+export const infoOptions = [
   {
-    name: "Share ShopApp",
-    icon: "share-social-outline",
-  },
-  {
-    name: "What's new?",
-    icon: "mic-outline",
+    name: "Invite friends",
+    icon: "mail-outline",
   },
   {
     name: "FAQs",
     icon: "help-circle-outline",
   },
   {
-    name: "Settings",
-    icon: "settings-outline",
+    name: "Get help",
+    icon: "information-circle-outline",
   },
 ];

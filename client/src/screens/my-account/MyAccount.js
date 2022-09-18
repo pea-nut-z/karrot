@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
-import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SIZES, COLORS, viewOptions, locationOptions, infoOptions } from "../../constants";
-import { Header, CircleButton, FlatButtons, MemberInfo } from "../../UI";
+import {
+  SIZES,
+  COLORS,
+  viewOptions,
+  locationOptions,
+  rewardsOption,
+  infoOptions,
+} from "../../constants";
+import { Header, CircleButtons, FlatButtons, MemberInfo } from "../../UI";
+import * as helper from "../../helper";
+import axios from "axios";
 
 export default function MyAccount({ navigation }) {
-  const profile = useSelector((state) => state.myProfile);
-  const flatBtnOptions = locationOptions.concat(infoOptions);
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/profile/read`)
+      .then((res) => {
+        setProfile(res.data);
+      })
+      .catch((err) => console.error("Profile get initial states error: ", err));
+  }, []);
+
   const navigateTo = (option) => {
     return;
   };
@@ -23,7 +40,9 @@ export default function MyAccount({ navigation }) {
           id={profile.id}
         />
         <TouchableOpacity
-          onPress={() => navigation.navigate("EditProfile")}
+          onPress={() =>
+            navigation.navigate("EditProfile", { name: profile.name, image: profile.image })
+          }
           style={styles.cameraBtn}
         >
           <Ionicons name={"camera"} size={25} color={COLORS.darkgray} />
@@ -33,35 +52,40 @@ export default function MyAccount({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.outterContainer}>
       <Header title={"My Account"} useRightBtns={["settings-outline"]} />
       <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
-        {/* CAMERA BUTTON */}
-        <View>{renderCamerabtn()}</View>
+        <View style={styles.topContainer}>
+          <View>{renderCamerabtn()}</View>
 
-        {/* VIEW PROFILE BUTTON */}
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Profile", {
-              sellerId: profile.id,
-              userId: profile.id,
-            })
-          }
-          style={styles.margin}
-        >
-          <View style={styles.viewProfileButton}>
-            <Text>View profile</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Profile", {
+                memberId: profile.id,
+              })
+            }
+            style={styles.margin}
+          >
+            <View style={styles.viewProfileButton}>
+              <Text>View profile</Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={[styles.circleButtons, styles.margin]}>
+            <CircleButtons options={viewOptions} navigation={navigation} />
           </View>
-        </TouchableOpacity>
-
-        {/* CIRCLE BUTTONS */}
-        <View style={[styles.circleButtons, styles.margin]}>
-          <CircleButton options={viewOptions} navigation={navigation} />
         </View>
 
-        {/* FLAT BUTTONS */}
-        <View style={styles.margin}>
-          <FlatButtons options={flatBtnOptions} navigateTo={navigateTo} />
+        <View>
+          <View style={styles.flatBtnsContainer}>
+            <FlatButtons options={locationOptions} navigateTo={navigateTo} />
+          </View>
+          <View style={styles.flatBtnsContainer}>
+            <FlatButtons options={rewardsOption} navigateTo={navigateTo} />
+          </View>
+          <View style={styles.flatBtnsContainer}>
+            <FlatButtons options={infoOptions} navigateTo={navigateTo} />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -69,9 +93,10 @@ export default function MyAccount({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  outterContainer: { flex: 1 },
+  topContainer: { backgroundColor: COLORS.white },
   margin: {
     marginVertical: SIZES.padding,
-    marginHorizontal: SIZES.padding * 2,
   },
   cameraBtnContainer: {
     flexDirection: "row",
@@ -92,6 +117,7 @@ const styles = StyleSheet.create({
     left: -55,
   },
   viewProfileButton: {
+    alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
     marginTop: SIZES.padding,
@@ -105,5 +131,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     height: SIZES.height * 0.12,
+  },
+  flatBtnsContainer: {
+    marginTop: SIZES.padding,
+    backgroundColor: COLORS.white,
   },
 });
