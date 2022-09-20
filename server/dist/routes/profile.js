@@ -17,7 +17,20 @@ router.patch("/update", (req, res) => {
     res.send("resolved");
   });
 });
-router.get("/draft", async (req, res) => {
+router.get("/read", (req, res) => {
+  Account.findOne({
+    privateId
+  }, {
+    image: 1,
+    name: 1,
+    location: 1,
+    id: 1
+  }, (err, doc) => {
+    if (err) throw err;
+    res.json(doc);
+  });
+});
+router.get("/draft", (req, res) => {
   Account.findOne({
     privateId
   }, {
@@ -30,7 +43,7 @@ router.get("/draft", async (req, res) => {
     });
   });
 });
-router.get("/read/:memberId", (req, res) => {
+router.get("/get/:memberId", (req, res) => {
   const {
     memberId
   } = req.params; // get profile -> name image location

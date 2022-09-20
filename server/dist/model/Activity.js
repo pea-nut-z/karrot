@@ -4,9 +4,13 @@ const {
   Schema,
   model
 } = mongoose;
+const favourite = new Schema({
+  sellerId: reqStr,
+  itemIds: defaultArr
+});
 const schema = new Schema({
   privateId: reqStr,
-  favourites: defaultArr,
+  favourites: [favourite],
   views: defaultArr,
   chats: defaultArr,
   iReview: defaultArr

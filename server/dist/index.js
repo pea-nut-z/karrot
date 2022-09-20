@@ -1,11 +1,16 @@
-import "dotenv/config"; // import cors from "cors";
-
+import "dotenv/config";
+import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 import * as routes from "./routes/index.js";
-mongoose.connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI).then(() => console.log("DB Connected at", process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI)).catch(err => console.error(err));
-const app = express(); // app.use(cors({ origin: true, credentials: true }));
-
+mongoose.connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI).then(() => {
+  console.log("Connected to MongoDB");
+}).catch(err => console.error(err));
+const app = express();
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
@@ -19,5 +24,5 @@ app.use("/restrict", routes.restrict);
 app.get("/", (req, res) => {
   res.send("working");
 });
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

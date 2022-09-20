@@ -4,7 +4,7 @@ import { SIZES, COLORS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { timeSince } from "../helper";
 
-export default function ItemCard({ accountInfo, listing, navigation }) {
+export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen, navigation }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -64,38 +64,30 @@ export default function ItemCard({ accountInfo, listing, navigation }) {
         {/* IF ON USER LISTINGS - ITEM OPTION BUTTON */}
         <View>
           {/* {renderOptionBtn()}
-             {renderOptionModal(item.itemId)} */}
+             {renderOptionModal(item.itemId)}  */}
 
-          {/* IF ON USER FAVOURITES SCREEN */}
-          {/* {atUserFavouritesScreen && (
-               <View
-                 style={{
-                   height: "100%",
-                   justifyContent: "space-between",
-                 }}
-               >
-                 <TouchableOpacity
-                   onPress={() => {
-                     dispatch({
-                       type: actions.FAVOURITE_REMOVED,
-                       userId,
-                       sellerId,
-                       itemId,
-                     });
-                   }}
-                 >
-                   <Ionicons name={"heart"} size={30} color={COLORS.primary} />
-                 </TouchableOpacity>
-                 <View
-                   style={{
-                     flexDirection: "row",
-                   }}
-                 >
-                   <Ionicons name={"heart-outline"} size={15} color={COLORS.darkgray} />
-                   <Text> {item.favourites}</Text>
-                 </View>
-               </View>
-             )} */}
+          {atUserFavouritesScreen && (
+            <View
+              style={{
+                height: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  //  dispatch({
+                  //    type: actions.FAVOURITE_REMOVED,
+                  //    userId,
+                  //    sellerId,
+                  //    itemId,
+                  //  });
+                  return;
+                }}
+              >
+                <Ionicons name={"heart"} size={30} color={COLORS.primary} />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     </View>

@@ -7,7 +7,9 @@ export default function CircleButtons({ options, navigation }) {
   return options.map((option) => {
     return (
       <View key={option.name} style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate(option.navigateTo)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(option.navigateTo, { atMyProfile: true })}
+        >
           <View style={styles.alignCircle}>
             <View style={styles.circle}>
               <Ionicons name={option.icon} size={25} />

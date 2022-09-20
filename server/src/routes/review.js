@@ -5,18 +5,6 @@ const privateId = "62e87ec387aecd786da8d937";
 
 router.get("/read/:memberId", async (req, res) => {
   const { memberId } = req.params;
-  //  Review.findOne(
-  //   { id: memberId },
-  //   { _id: 0, __v: 0, privateId: 0, "reviews.privateId": 0 }
-  //   ,
-  //   (err, doc) => {
-  //     if (err) throw err;
-  //     const reviews = doc.reviews(review => {
-
-  //     })
-  //     res.json({ doc });
-  //   }
-  // );
 
   const doc = await Review.aggregate([
     { $match: { id: memberId } },

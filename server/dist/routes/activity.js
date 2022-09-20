@@ -1,4 +1,6 @@
 import express from "express";
+import mongoose from "mongoose";
+import Favourites from "../../../client/src/screens/my-account/Favourites.js";
 import { Account, Activity } from "../model/index.js";
 const router = express.Router();
 let privateId = "62e87ec387aecd786da8d937";

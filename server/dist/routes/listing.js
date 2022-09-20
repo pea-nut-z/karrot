@@ -28,6 +28,7 @@ const itemCardFields = {
   "items.status": 1
 };
 router.get("/filter", async (req, res) => {
+  console.log("reached backend");
   const {
     feeds,
     category
