@@ -68,8 +68,8 @@ router.get("/read/favourites", async (req, res) => {
   res.json(doc);
 });
 
-router.patch("/update/favourites/add/:sellerId/:itemId", async (req, res) => {
-  const { action, sellerId, itemId } = req.params;
+router.patch("/add/favourite/:sellerId/:itemId", async (req, res) => {
+  const { sellerId, itemId } = req.params;
   try {
     const doc = await Activity.findOne({ privateId, "favourites.sellerId": sellerId });
     if (!doc) {
@@ -100,5 +100,23 @@ router.patch("/update/favourites/add/:sellerId/:itemId", async (req, res) => {
     throw err;
   }
 });
+
+// router.patch("/remove/favourite/:sellerId/:itemId", async (req, res) => {
+//   const { sellerId, itemId } = req.params;
+//   try {
+//     const doc = await Activity.findOneAndUpdate({ privateId, "favourites.sellerId": sellerId });
+//     await Activity.findOneAndUpdate(
+//       { privateId, "favourites.sellerId": sellerId },
+//       {
+//         $pull: {
+//           "favourites.$.itemIds": itemId,
+//         },
+//       }
+//     );
+//     res.send("done");
+//   } catch (err) {
+//     throw err;
+//   }
+// });
 
 export default router;
