@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import * as routes from "./routes/index.js";
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI)
   .then(() => {
     console.log("Connected to MongoDB");
   })
