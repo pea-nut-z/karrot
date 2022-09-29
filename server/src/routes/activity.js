@@ -4,30 +4,6 @@ import { Account, Activity } from "../model/index.js";
 const router = express.Router();
 let privateId = "62e87ec387aecd786da8d937";
 
-router.patch("/:action/:key/:memberId/:itemId", (req, res) => {
-  const { action, key, memberId, itemId } = req.params;
-  const query = { id: memberId, "items.itemId": itemId };
-  let subDocKey = `items.$.${key}`;
-  const value = action === "add" ? 1 : -1;
-  const update = { $inc: { [subDocKey]: value } };
-  const promise1 = Account.findOneAndUpdate(query, update);
-
-  const actionKey = action === "add" ? "$push" : "$pull";
-
-  const promise2 = Activity.findOneAndUpdate(
-    { privateId },
-    {
-      [actionKey]: { [key]: itemId },
-    }
-  );
-
-  Promise.all([promise1, promise2])
-    .then(() => res.end())
-    .catch((err) => {
-      throw err;
-    });
-});
-
 router.get("/read/favourites", async (req, res) => {
   const doc = await Activity.aggregate([
     {
@@ -68,18 +44,17 @@ router.get("/read/favourites", async (req, res) => {
   res.json(doc);
 });
 
-router.patch("/add/favourite/:sellerId/:itemId", async (req, res) => {
-  const { sellerId, itemId } = req.params;
+router.patch("/add/favourite/:memberId/:itemId", async (req, res) => {
+  const { memberId, itemId } = req.params;
   try {
-    const doc = await Activity.findOne({ privateId, "favourites.sellerId": sellerId });
+    const doc = await Activity.findOne({ privateId, "favourites.sellerId": memberId });
     if (!doc) {
-      console.log("reach");
       await Activity.findOneAndUpdate(
         { privateId },
         {
           $push: {
             favourites: {
-              sellerId,
+              sellerId: memberId,
               itemIds: itemId,
             },
           },
@@ -87,7 +62,7 @@ router.patch("/add/favourite/:sellerId/:itemId", async (req, res) => {
       );
     } else {
       await Activity.findOneAndUpdate(
-        { privateId, "favourites.sellerId": sellerId },
+        { privateId, "favourites.sellerId": memberId },
         {
           $push: {
             "favourites.$.itemIds": itemId,
@@ -95,28 +70,38 @@ router.patch("/add/favourite/:sellerId/:itemId", async (req, res) => {
         }
       );
     }
-    res.send("done");
+    console.log(memberId, itemId);
+
+    const query = { id: memberId, "items.itemId": itemId };
+    const update = { $inc: { "items.$.favourites": 1 } };
+    await Account.findOneAndUpdate(query, update);
+
+    res.send("added favourite");
   } catch (err) {
     throw err;
   }
 });
 
-// router.patch("/remove/favourite/:sellerId/:itemId", async (req, res) => {
-//   const { sellerId, itemId } = req.params;
-//   try {
-//     const doc = await Activity.findOneAndUpdate({ privateId, "favourites.sellerId": sellerId });
-//     await Activity.findOneAndUpdate(
-//       { privateId, "favourites.sellerId": sellerId },
-//       {
-//         $pull: {
-//           "favourites.$.itemIds": itemId,
-//         },
-//       }
-//     );
-//     res.send("done");
-//   } catch (err) {
-//     throw err;
-//   }
-// });
+router.patch("/remove/favourite/:memberId/:itemId", async (req, res) => {
+  const { memberId, itemId } = req.params;
+  try {
+    await Activity.findOneAndUpdate(
+      { privateId, "favourites.sellerId": memberId },
+      {
+        $pull: {
+          "favourites.$.itemIds": itemId,
+        },
+      }
+    );
+
+    const query = { id: memberId, "items.itemId": itemId };
+    const update = { $inc: { "items.$.favourites": -1 } };
+    await Account.findOneAndUpdate(query, update);
+
+    res.send("removed favourite");
+  } catch (err) {
+    throw err;
+  }
+});
 
 export default router;

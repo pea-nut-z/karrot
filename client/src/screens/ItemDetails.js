@@ -176,9 +176,13 @@ export default function ItemDetails({ route, navigation }) {
                 <TouchableOpacity
                   style={styles.heartContainer}
                   onPress={() => {
-                    const action = fav ? "mins" : "add";
+                    const action = fav ? "remove" : "add";
+                    console.log(
+                      `${helper.proxy}/activity/${action}/favourite/${memberId}/${itemId}`
+                    );
+
                     axios
-                      .patch(`${helper.proxy}/activity/${action}/favourites/${memberId}/${itemId}`)
+                      .patch(`${helper.proxy}/activity/${action}/favourite/${memberId}/${itemId}`)
                       .then(() => {
                         setFav(!fav);
                         setNumOfFavs((preNum) => {

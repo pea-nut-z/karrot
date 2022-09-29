@@ -4,7 +4,6 @@ export const proxy =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3001"
     : "https://marketplace-v942-production-yeccqhdvqq-wm.a.run.app";
-// : "https://marketplace-server-xj6n.onrender.com";
 
 console.log({ proxy });
 export const maxUploadImg = 10;
