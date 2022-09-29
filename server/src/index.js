@@ -4,15 +4,16 @@ import express from "express";
 import mongoose from "mongoose";
 import * as routes from "./routes/index.js";
 
-console.log("ENV", process.env.NODE_ENV);
-console.log("DB_URI", process.env.MONGODB_URI);
-
 mongoose
   .connect(process.env.NODE_ENV ? process.env.MONGODB_URI : process.env.LOCAL_URI)
   .then(() => {
     console.log("Connected to MongoDB");
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.log("ENV", process.env.NODE_ENV);
+    console.log("DB_URI", process.env.MONGODB_URI);
+    console.error(err);
+  });
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
