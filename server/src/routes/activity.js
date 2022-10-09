@@ -69,13 +69,11 @@ router.patch("/add/favourite/:memberId/:itemId", async (req, res) => {
         }
       );
     }
-    console.log(memberId, itemId);
-
     const query = { id: memberId, "items.itemId": itemId };
     const update = { $inc: { "items.$.favourites": 1 } };
     await Account.findOneAndUpdate(query, update);
-
     res.send("added favourite");
+    
   } catch (err) {
     throw err;
   }
@@ -96,8 +94,8 @@ router.patch("/remove/favourite/:memberId/:itemId", async (req, res) => {
     const query = { id: memberId, "items.itemId": itemId };
     const update = { $inc: { "items.$.favourites": -1 } };
     await Account.findOneAndUpdate(query, update);
-
     res.send("removed favourite");
+
   } catch (err) {
     throw err;
   }
