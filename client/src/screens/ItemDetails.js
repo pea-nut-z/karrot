@@ -177,10 +177,6 @@ export default function ItemDetails({ route, navigation }) {
                   style={styles.heartContainer}
                   onPress={() => {
                     const action = fav ? "remove" : "add";
-                    console.log(
-                      `${helper.proxy}/activity/${action}/favourite/${memberId}/${itemId}`
-                    );
-
                     axios
                       .patch(`${helper.proxy}/activity/${action}/favourite/${memberId}/${itemId}`)
                       .then(() => {

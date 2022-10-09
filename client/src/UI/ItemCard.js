@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { SIZES, COLORS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { timeSince } from "../helper";
+import * as helper from "../helper";
+import axios from "axios";
 
-export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen, navigation }) {
+export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen, navigation,removeItem }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -48,7 +49,7 @@ export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen,
           <View style={styles.infoContainer}>
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.locationTimeText}>
-              {profile.location} • {timeSince(item.date)}
+              {profile.location} • {helper.timeSince(item.date)}
             </Text>
             <View style={styles.priceContainer}>
               {item.status === "Reserved" && (
@@ -75,13 +76,10 @@ export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen,
             >
               <TouchableOpacity
                 onPress={() => {
-                  //  dispatch({
-                  //    type: actions.FAVOURITE_REMOVED,
-                  //    userId,
-                  //    sellerId,
-                  //    itemId,
-                  //  });
-                  return;
+                  axios.patch(`${helper.proxy}/activity/remove/favourite/${profile.id}/${item.itemId}`)
+                    .then(() => {
+                    removeItem(item.itemId)
+                  })
                 }}
               >
                 <Ionicons name={"heart"} size={30} color={COLORS.primary} />

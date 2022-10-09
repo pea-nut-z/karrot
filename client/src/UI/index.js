@@ -11,6 +11,7 @@ import MemberInfo from "./MemberInfo";
 import ModalMenu from "./ModalMenu";
 import ModalAlert from "./ModalAlert";
 import OtherItem from "./OtherItem";
+import NoItemsMsg from "./NoItemsMsg";
 
 export {
   Border,
@@ -26,4 +27,5 @@ export {
   ModalMenu,
   ModalAlert,
   OtherItem,
+  NoItemsMsg
 };

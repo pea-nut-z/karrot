@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { Header, ItemCard } from "../../UI";
+import { SafeAreaView, StyleSheet,Text } from "react-native";
+import { Header, ItemCard, NoItemsMsg } from "../../UI";
+import { COLORS } from "../../constants";
 import * as helper from "../../helper";
 import axios from "axios";
 
@@ -15,10 +16,15 @@ export default function Favourites({ navigation }) {
       .catch((err) => console.error("get Favourites error: ", err));
   }, []);
 
+  const removeItem = (itemId) => {
+    const newItems = items.filter(item => item.itemId == itemId)
+    setItems(newItems)
+  }
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:"1"}}>
       <Header title={"Favourites"} useBackBtn={true} navigation={navigation} />
-      {items.map((item) => {
+      {items.length ? (items.map((item) => {
         return (
           <ItemCard
             key={item.details.items[0].itemId}
@@ -26,9 +32,13 @@ export default function Favourites({ navigation }) {
             listing={item.details.items[0]}
             atUserFavouritesScreen={true}
             navigation={navigation}
+            removeItem={removeItem}
           />
         );
-      })}
+      })) : (
+          <NoItemsMsg/>
+      )}
     </SafeAreaView>
   );
 }
+
