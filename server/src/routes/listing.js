@@ -165,17 +165,21 @@ router.get("/read/items", async (req, res) => {
 
     let getProfile = true;
     const profile = {};
-    const listings = {};
+    const listings = {
+      Active: [],
+      Sold: [],
+      Hidden:[],
+    };
 
-    groups.forEach((group) => {
+    for (const group of groups) {
+      if (memberId && group._id == "Hidden") continue;
       if (getProfile) {
         profile.id = group.id;
         profile.location = group.location;
         getProfile = false;
       }
       listings[group._id] = group.items;
-    });
-    memberId && delete listings.Hidden;
+    }
     res.json({ profile, listings });
   } catch (err) {
     throw err;
