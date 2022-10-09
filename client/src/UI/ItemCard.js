@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as helper from "../helper";
 import axios from "axios";
 
-export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen, navigation,removeItem }) {
+export default function ItemCard({ accountInfo, listing, navigation,removeFav }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -64,10 +64,10 @@ export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen,
 
         {/* IF ON USER LISTINGS - ITEM OPTION BUTTON */}
         <View>
-          {/* {renderOptionBtn()}
-             {renderOptionModal(item.itemId)}  */}
+           {/* {renderOptionBtn()} */}
+             {/* {renderOptionModal(item.itemId)}  */}
 
-          {atUserFavouritesScreen && (
+          { removeFav && (
             <View
               style={{
                 height: "100%",
@@ -78,7 +78,7 @@ export default function ItemCard({ accountInfo, listing, atUserFavouritesScreen,
                 onPress={() => {
                   axios.patch(`${helper.proxy}/activity/remove/favourite/${profile.id}/${item.itemId}`)
                     .then(() => {
-                    removeItem(item.itemId)
+                    removeFav(item.itemId)
                   })
                 }}
               >

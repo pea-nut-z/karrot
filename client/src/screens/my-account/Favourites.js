@@ -15,7 +15,7 @@ export default function Favourites({ navigation }) {
       .catch((err) => console.error("get Favourites error: ", err));
   }, []);
 
-  const removeItem = (itemId) => {
+  const removeFav = (itemId) => {
     const newItems = items.filter(item => item.itemId == itemId)
     setItems(newItems)
   }
@@ -29,9 +29,8 @@ export default function Favourites({ navigation }) {
             key={item.details.items[0].itemId}
             accountInfo={item.details}
             listing={item.details.items[0]}
-            atUserFavouritesScreen={true}
             navigation={navigation}
-            removeItem={removeItem}
+            removeFav={removeFav}
           />
         );
       })) : (
