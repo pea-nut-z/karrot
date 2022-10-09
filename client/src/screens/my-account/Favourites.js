@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet,Text } from "react-native";
+import { SafeAreaView} from "react-native";
 import { Header, ItemCard, NoItemsMsg } from "../../UI";
-import { COLORS } from "../../constants";
 import * as helper from "../../helper";
 import axios from "axios";
 
