@@ -2,25 +2,24 @@ import React from "react";
 import Modal from "react-native-modal";
 import { View, Text, TouchableOpacity } from "react-native";
 import { SIZES, COLORS } from "../constants";
+import * as variables from "../variables"
 
 export default function ModalAlert({
-  itemId,
   visibleVariable,
   closeModal,
-  onClickOption,
-  message,
-  options,
-  actions,
+  handleOption,
+  option
 }) {
   return (
-    <Modal isVisible={visibleVariable} onBackdropPress={() => closeModal()}>
+    <Modal isVisible={visibleVariable} onBackdropPress={() => {
+      closeModal()
+    }}>
       <View
         style={{
           backgroundColor: COLORS.white,
           borderRadius: 5,
           paddingHorizontal: SIZES.padding * 3,
           paddingVertical: SIZES.padding * 2,
-          marginTop: SIZES.height * 0.5,
         }}
       >
         <View
@@ -30,14 +29,8 @@ export default function ModalAlert({
             borderRadius: 5,
           }}
         >
-          <Text
-            style={
-              {
-                // ...FONTS.body4
-              }
-            }
-          >
-            {message}
+          <Text>
+            {variables['alertOptions'][option]?.message}
           </Text>
         </View>
         <View
@@ -47,13 +40,12 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {options?.map((option, index) => {
+          {variables['alertOptions'][option]?.options.map((option) => {
             return (
-              <TouchableOpacity key={option} onPress={() => onClickOption(actions[index], itemId)}>
+              <TouchableOpacity key={option} onPress={() => handleOption(option)}>
                 <Text
                   style={{
                     color: COLORS.primary,
-                    // ...FONTS.body4,
                     marginLeft: SIZES.padding * 2,
                     marginTop: SIZES.padding * 2,
                   }}

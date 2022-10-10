@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from "react-native";
+import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import * as helper from "../helper";
+import * as variables from "../variables";
 import axios from "axios";
+import Modal from "react-native-modal";
 
-export default function ItemCard({ accountInfo, listing, navigation,removeFav }) {
+
+export default function ItemCard({ accountInfo, listing,navigation,removeFav }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
+  const [showModalMenu, setShowModalMenu] = useState(false);
+  const [showModalAlert, setShowModalAlert] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 
   useEffect(() => {
     setProfile(accountInfo);
@@ -21,6 +28,25 @@ export default function ItemCard({ accountInfo, listing, navigation,removeFav })
     }
   }, [accountInfo, listing]);
 
+  const closeModal = () => {
+    setShowModalMenu(false);
+    setShowModalAlert(false);
+  };
+
+  const handleOption = (option) => {
+    switch (option) {
+      case "Hide":
+      case "Unhide":
+      case "Delete":
+        setSelectedOption(option)
+        setShowModalAlert(true)
+        break;
+      default:
+        closeModal()
+   }
+     
+  }
+
   return (
     <View>
       <TouchableOpacity
@@ -32,6 +58,7 @@ export default function ItemCard({ accountInfo, listing, navigation,removeFav })
           })
         }
       >
+        {/* ITEM DESCRIPTION */}
         <View style={styles.innerContainer}>
           <Image
             source={
@@ -45,7 +72,6 @@ export default function ItemCard({ accountInfo, listing, navigation,removeFav })
             style={styles.image}
           />
 
-          {/* ITEM INFO */}
           <View style={styles.infoContainer}>
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.locationTimeText}>
@@ -62,10 +88,45 @@ export default function ItemCard({ accountInfo, listing, navigation,removeFav })
           </View>
         </View>
 
-        {/* IF ON USER LISTINGS - ITEM OPTION BUTTON */}
+        {/* FEATURES FOR MY ITEM */}
         <View>
-           {/* {renderOptionBtn()} */}
-             {/* {renderOptionModal(item.itemId)}  */}
+          {helper.myId == profile.id && (
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalMenu(true);
+                }}
+              >
+                <Ionicons name={"ellipsis-vertical-circle"} size={40} />
+              </TouchableOpacity>
+              <Modal isVisible={showModalMenu} onBackdropPress={() => { closeModal() }}>
+              {variables['detailedItemStatusOptions'][item.status].map((option) => {
+                return (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => handleOption(option)}
+                    style={{
+                      height: 50,
+                      backgroundColor: COLORS.white,
+                      paddingHorizontal: SIZES.padding,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text>
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+                <ModalAlert
+                  visibleVariable={showModalAlert}
+                  closeModal={closeModal}
+                  handleOption={handleOption}
+                  option={selectedOption}
+                />
+              </Modal>
+            </View>
+          )}
 
           { removeFav && (
             <View
