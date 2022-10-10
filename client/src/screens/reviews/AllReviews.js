@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, ScrollView, SafeAreaView, StyleSheet } fr
 import { Ionicons } from "@expo/vector-icons";
 import { Header, MemberInfo } from "../../UI";
 import * as helper from "../../helper";
+import * as variables from "../../variables";
 import { COLORS, SIZES } from "../../constants";
 import axios from "axios";
 
@@ -45,7 +46,7 @@ export default function AllReviews({ route, navigation }) {
                 </View>
                 <View>
                   <View style={styles.reviewInnerContainer}>
-                    {helper.starRatingArr.map((num) => {
+                    {variables.starRatingArr.map((num) => {
                       return num <= reviewer.rating ? (
                         <View key={num}>
                           <Ionicons name={"star"} size={20} color={COLORS.primary} />

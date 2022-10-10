@@ -19,6 +19,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as helper from "../../helper";
+import * as variables from "../../variables";
 import axios from "axios";
 
 export default function Sell({ route, navigation }) {
@@ -245,7 +246,7 @@ export default function Sell({ route, navigation }) {
         <View style={[styles.container, styles.uploadImgContainer]}>
           <TouchableOpacity
             onPress={() => {
-              numOfImg < helper.maxUploadImg
+              numOfImg < variables.maxUploadImg
                 ? choosePhotoFromLibrary()
                 : Alert.alert("Choose up to 10 images");
             }}
@@ -253,7 +254,7 @@ export default function Sell({ route, navigation }) {
           >
             <Ionicons name="camera" size={25} color={COLORS.secondary} />
             <Text>
-              {numOfImg} / {helper.maxUploadImg}
+              {numOfImg} / {variables.maxUploadImg}
             </Text>
           </TouchableOpacity>
           <FlatList
@@ -356,7 +357,7 @@ export default function Sell({ route, navigation }) {
       <ModalAlert
         visibleVariable={draftAlert}
         closeModal={closeDraftModal}
-        onClickOption={handleDraftOption}
+        handleOption={handleDraftOption}
         message={"You have a saved draft. Continue writing?"}
         options={["YES", "NO"]}
         actions={["yes", "no"]}

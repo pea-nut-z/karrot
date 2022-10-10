@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { icons, COLORS, SIZES } from "../constants";
-import * as helper from "../helper";
+import * as variables from "../variables";
 
 export default function MemberRating({ average, numOfReviews, atItemDetails }) {
   const [rating, setRating] = useState();
@@ -23,7 +23,7 @@ export default function MemberRating({ average, numOfReviews, atItemDetails }) {
       <View style={styles.iconContainer}>
         {/* STARS */}
         <View style={styles.starContainer}>
-          {helper.starRatingArr.map((num) => {
+          {variables.starRatingArr.map((num) => {
             return (
               <Ionicons
                 key={num}

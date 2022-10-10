@@ -3,10 +3,10 @@ import Modal from "react-native-modal";
 import { Text, TouchableOpacity } from "react-native";
 import { SIZES, COLORS } from "../constants";
 
-export default function ModalMenu({ itemId, visibleVariable, closeModal, onClickOption, options }) {
+export default function ModalMenu({ visible, closeModal, handleOption, options }) {
   return (
     <Modal
-      isVisible={visibleVariable}
+      isVisible={visible}
       onBackdropPress={() => {
         closeModal();
       }}
@@ -15,7 +15,7 @@ export default function ModalMenu({ itemId, visibleVariable, closeModal, onClick
         return (
           <TouchableOpacity
             key={option}
-            onPress={() => onClickOption(option, itemId)}
+            onPress={() => handleOption(option)}
             style={{
               height: 50,
               backgroundColor: COLORS.white,
@@ -23,13 +23,7 @@ export default function ModalMenu({ itemId, visibleVariable, closeModal, onClick
               justifyContent: "center",
             }}
           >
-            <Text
-              style={
-                {
-                  // ...FONTS.body4
-                }
-              }
-            >
+            <Text>
               {option}
             </Text>
           </TouchableOpacity>

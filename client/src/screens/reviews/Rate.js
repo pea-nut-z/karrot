@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Header } from "../../UI";
 import { COLORS, SIZES } from "../../constants";
 import * as helper from "../../helper";
+import * as variables from "../../variables";
 import axios from "axios";
 
 export default function Rate({ route, navigation }) {
@@ -43,7 +44,7 @@ export default function Rate({ route, navigation }) {
         <View style={{ flex: 1, ...styles.container }}>
           <Text style={styles.subtitle}>Overall rating</Text>
           <View style={styles.starContainer}>
-            {helper.starRatingArr.map((num) => {
+            {variables.starRatingArr.map((num) => {
               return num <= rating ? (
                 <TouchableOpacity key={num} onPress={() => setRating(num)}>
                   <Ionicons name={"star"} size={40} color={COLORS.primary} />

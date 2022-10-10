@@ -66,7 +66,7 @@ export default function ItemCards({
           return (
             <TouchableOpacity
               key={option}
-              onPress={() => onClickOption(option, itemId)}
+              onPress={() => handleOption(option, itemId)}
               style={{
                 height: 50,
                 backgroundColor: COLORS.white,
@@ -74,13 +74,7 @@ export default function ItemCards({
                 justifyContent: "center",
               }}
             >
-              <Text
-                style={
-                  {
-                    // ...FONTS.body4,
-                  }
-                }
-              >
+              <Text>
                 {option}
               </Text>
             </TouchableOpacity>
@@ -90,7 +84,7 @@ export default function ItemCards({
           itemId={itemId}
           visibleVariable={hideItemAlert}
           closeModal={closeModal}
-          onClickOption={onClickOption}
+          handleOption={handleOption}
           message={"Other users won't be able to see your post. Hide post?"}
           options={["CANCEL", "HIDE"]}
           actions={["cancel", "hide-confirmed"]}
@@ -100,7 +94,7 @@ export default function ItemCards({
           itemId={itemId}
           visibleVariable={deleteItemAlert}
           closeModal={closeModal}
-          onClickOption={onClickOption}
+          handleOption={handleOption}
           message={"Are you sure you want to delete this post?"}
           options={["CANCEL", "DELETE"]}
           actions={["cancel", "delete-confirmed"]}
@@ -109,7 +103,7 @@ export default function ItemCards({
     );
   };
 
-  const onClickOption = (action, itemId, status) => {
+  const handleOption = (action, itemId, status) => {
     const sellerId = userId;
     if (action === "toggle-status") {
       dispatch({
@@ -341,7 +335,7 @@ export default function ItemCards({
                     width: "50%",
                     paddingVertical: SIZES.padding,
                   }}
-                  onPress={() => onClickOption("toggle-status", itemId, status)}
+                  onPress={() => handleOption("toggle-status", itemId, status)}
                 >
                   <Text
                     style={{
@@ -360,7 +354,7 @@ export default function ItemCards({
                     width: "50%",
                     paddingVertical: SIZES.padding,
                   }}
-                  onPress={() => onClickOption("Sold", itemId)}
+                  onPress={() => handleOption("Sold", itemId)}
                 >
                   <Text
                     style={{
@@ -385,7 +379,7 @@ export default function ItemCards({
                   alignItems: "center",
                   paddingVertical: SIZES.padding,
                 }}
-                onPress={() => onClickOption("unhide", itemId)}
+                onPress={() => handleOption("unhide", itemId)}
               >
                 <Text
                   style={{
@@ -402,7 +396,7 @@ export default function ItemCards({
               itemId={itemId}
               visibleVariable={unhideItemAlert}
               closeModal={closeModal}
-              onClickOption={onClickOption}
+              handleOption={handleOption}
               message={"Post unhidden"}
               options={["CANCEL", "UNHIDE"]}
               actions={["cancel", "unhide-confirmed"]}
@@ -417,7 +411,7 @@ export default function ItemCards({
                   alignItems: "center",
                   paddingVertical: SIZES.padding,
                 }}
-                onPress={() => onClickOption("unhide", itemId)}
+                onPress={() => handleOption("unhide", itemId)}
               >
                 <Text
                   style={{

@@ -47,7 +47,7 @@ export default function Header({
     setBackBtnAlert(false);
   };
 
-  const onClickOption = (actions) => {
+  const handleOption = (actions) => {
     closeModal();
     switch (actions) {
       case "yes":
@@ -97,7 +97,7 @@ export default function Header({
         <ModalAlert
           visibleVariable={backBtnAlert}
           closeModal={closeModal}
-          onClickOption={onClickOption}
+          handleOption={handleOption}
           message={"Quit editing post?"}
           options={["No", "Yes"]}
           actions={["no", "yes"]}
