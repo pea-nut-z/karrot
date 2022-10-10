@@ -100,7 +100,7 @@ router.get("/read/item/:memberId/:itemId", (req, res) => {
   Promise.all([checkFavAndView, checkHide, getTwoOtherItems, getReviewData])
     .then(async (docs) => {
       const favSeller = docs[0].favourites.filter((fav) => fav.sellerId == memberId);
-      const fav = favSeller[0].itemIds.includes(itemId);
+      const fav = favSeller[0]?.itemIds.includes(itemId);
       const view = docs[0].views.includes(itemId);
       const hide = docs[1].hide.includes(itemId);
       const twoOtherItems = docs[2].length == 0 ? [] : docs[2][0]["items"];
