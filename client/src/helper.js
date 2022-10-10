@@ -6,8 +6,7 @@ export const proxy =
     : "https://marketplace-v942-production-yeccqhdvqq-wm.a.run.app";
 
 console.log({ proxy });
-export const maxUploadImg = 10;
-export const starRatingArr = [1, 2, 3, 4, 5];
+
 
 export const timeSince = (date) => {
   if (typeof date !== "object") {
@@ -72,3 +71,4 @@ export const dateWithoutTime = () => {
 
   return `${monthLetters} ${date}, ${year}`;
 };
+
