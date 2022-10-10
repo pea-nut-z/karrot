@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header, ItemStatusTab } from "../UI";
@@ -9,13 +9,36 @@ import axios from "axios";
 const MaterialTopTabs = createMaterialTopTabNavigator();
 const { Navigator, Screen } = MaterialTopTabs;
 
+const initialItems = {
+  Active: [],
+  Sold: [],
+  Hidden: [],
+}
+
+function itemsReducer(state, action) {
+  const {type,fromStatus,toStatus,id,newState} =action
+  switch (type) {
+    case 'set':
+      return ({
+        ...state, ...newState
+      })
+    case 'change':
+      const item = state[fromStatus].filter(item => item.itemId !== id)
+      return ({
+        ...state,
+        [fromStatus]: state.filter(item => item.itemId == id),
+        [toStatus]: [...state[toStatus], ...item]
+      });
+    default:
+      throw new Error();
+  }
+}
+
 export default function ItemsTabs({ route, navigation }) {
   const atMyProfile = useRef(route.params.atMyProfile).current;
   const [profile, setProfile] = useState({});
-  const [activeItems, setActiveItems] = useState([]);
-  const [soldItems, setSoldItems] = useState([]);
-  const [hiddenItems, setHiddenItems] = useState([]);
-  const [allItems, setAllItems] = useState([]);
+  const [items, itemsDispatch] = useReducer(itemsReducer,initialItems)
+
   useEffect(() => {
     const memberId = route.params.memberId;
     const IDquery = !atMyProfile ? "?memberId=" + memberId : "";
@@ -25,17 +48,8 @@ export default function ItemsTabs({ route, navigation }) {
         .get(`${helper.proxy}/listing/read/items${IDquery}`)
         .then((res) => {
           const { profile, listings } = res.data;
-          const active = listings["Active"] || [];
-          const sold = listings["Sold"] || [];
-          if (atMyProfile) {
-            const hidden = listings["Hidden"] || [];
-            setHiddenItems(hidden);
-          } else {
-            setAllItems([...active, ...sold]);
-          }
           setProfile(profile);
-          setActiveItems(active);
-          setSoldItems(sold);
+          itemsDispatch({type:'set',newState:listings})
         })
         .catch((err) => console.error("itemsTabs get listings error: ", err));
     });
@@ -57,7 +71,7 @@ export default function ItemsTabs({ route, navigation }) {
             children={() => (
               <ItemStatusTab
                 accountInfo={profile}
-                listings={allItems}
+                listings={[...items.Active, ...items.Sold]}
                 message={"No listings"}
                 navigation={navigation}
               />
@@ -69,7 +83,7 @@ export default function ItemsTabs({ route, navigation }) {
           children={() => (
             <ItemStatusTab
               accountInfo={profile}
-              listings={activeItems}
+              listings={items.Active}
               message={"No active items"}
               navigation={navigation}
             />
@@ -80,7 +94,7 @@ export default function ItemsTabs({ route, navigation }) {
           children={() => (
             <ItemStatusTab
               accountInfo={profile}
-              listings={soldItems}
+              listings={items.Sold}
               message={"No sold items"}
               navigation={navigation}
             />
@@ -92,7 +106,7 @@ export default function ItemsTabs({ route, navigation }) {
             children={() => (
               <ItemStatusTab
                 accountInfo={profile}
-                listings={hiddenItems}
+                listings={items.Hidden}
                 message={"No hidden items"}
                 navigation={navigation}
               />
