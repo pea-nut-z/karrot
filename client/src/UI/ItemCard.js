@@ -71,7 +71,6 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav }) 
             resizeMode={"contain"}
             style={styles.image}
           />
-
           <View style={styles.infoContainer}>
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.locationTimeText}>
