@@ -50,7 +50,7 @@ export default function Header({
   const handleOption = (action) => {
     closeModal();
     switch (action) {
-      case "yes":
+      case "Yes":
         navigation.goBack();
       default:
         return;
