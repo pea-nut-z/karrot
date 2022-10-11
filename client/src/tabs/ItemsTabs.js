@@ -15,14 +15,14 @@ const initialItems = {
   Hidden: [],
 }
 
-function itemsReducer(state, action) {
+const itemsReducer =(state, action)=> {
   const {type,fromStatus,toStatus,id,newState} =action
   switch (type) {
-    case 'set':
+    case "set":
       return ({
         ...state, ...newState
       })
-    case 'change':
+    case "update":
       const item = state[fromStatus].filter(item => item.itemId !== id)
       return ({
         ...state,

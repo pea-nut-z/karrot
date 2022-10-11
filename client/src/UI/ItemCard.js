@@ -41,6 +41,11 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav }) 
         setSelectedOption(option)
         setShowModalAlert(true)
         break;
+      case "Edit":
+        closeModal()
+        navigation.navigate("Sell", { itemId :item.itemId });
+        
+
       default:
         closeModal()
    }
