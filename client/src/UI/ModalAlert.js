@@ -7,7 +7,7 @@ import * as variables from "../variables"
 export default function ModalAlert({
   visibleVariable,
   closeModal,
-  handleOption,
+  handleAction,
   option
 }) {
   
@@ -44,7 +44,7 @@ export default function ModalAlert({
           {variables['alertOptions'][option]?.options?.map((answer, idx) => {
             const action = variables['alertOptions'][option]['actions'][idx]
             return (
-              <TouchableOpacity key={answer} onPress={() => handleOption(action)}>
+              <TouchableOpacity key={answer} onPress={() => handleAction(action)}>
                 <Text
                   style={{
                     color: COLORS.primary,

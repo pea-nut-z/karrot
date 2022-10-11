@@ -47,7 +47,7 @@ export default function Header({
     setBackBtnAlert(false);
   };
 
-  const handleOption = (action) => {
+  const handleAction = (action) => {
     closeModal();
     switch (action) {
       case "Yes":
@@ -97,7 +97,7 @@ export default function Header({
         {title == "Edit Post" && <ModalAlert
           visibleVariable={backBtnAlert}
           closeModal={closeModal}
-          handleOption={handleOption}
+          handleAction={handleAction}
           option="editPost"
         />}
 

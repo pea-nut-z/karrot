@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { ItemCard } from "./index";
 import { COLORS } from "../constants";
 
-export default function ItemStatusTab({ accountInfo, listings, message,navigation,changeItem }) {
+export default function ItemStatusTab({ accountInfo, listings, message,navigation,changeItemStatus }) {
   const [profile, setProfile] = useState({});
   const [items, setItems] = useState();
 
@@ -30,7 +30,7 @@ export default function ItemStatusTab({ accountInfo, listings, message,navigatio
                     accountInfo={profile}
                     listing={item}
                     navigation={navigation}
-                    changeItem={changeItem}
+                    changeItemStatus={changeItemStatus}
                   />
                 );
               })}

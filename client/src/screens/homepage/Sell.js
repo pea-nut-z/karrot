@@ -110,8 +110,8 @@ export default function Sell({ route, navigation }) {
     listingDispatch({type:"update", listing:data})
   }
 
-  const handleDraftOption = (option) => {
-    if (option == "No") {
+  const handleDraftAction = (action) => {
+    if (action == "No") {
       axios
         .patch(`${helper.proxy}/profile/update`, { draft: false })
         .then(() => {
@@ -358,7 +358,7 @@ export default function Sell({ route, navigation }) {
       <ModalAlert
         visibleVariable={showDraftModal}
         closeModal={closeModal}
-        handleOption={handleDraftOption}
+        handleAction={handleDraftAction}
         option="draft"
       />
     </SafeAreaView>

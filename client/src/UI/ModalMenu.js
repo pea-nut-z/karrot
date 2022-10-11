@@ -15,7 +15,7 @@ export default function ModalMenu({ visible, closeModal, handleOption, options }
         return (
           <TouchableOpacity
             key={option}
-            onPress={() => handleOption(option)}
+            onPress={() => handleAction(option)}
             style={{
               height: 50,
               backgroundColor: COLORS.white,

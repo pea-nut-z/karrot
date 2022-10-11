@@ -64,7 +64,7 @@ export default function ItemsTabs({ route, navigation }) {
     return unsubscribe;
   }, []);
 
-  class ChangeItem {
+  class ChangeItemStatus {
     update(fromStatus, toStatus, itemId){
       itemDispatch({type:"update", fromStatus,toStatus,itemId})
     }
@@ -73,7 +73,7 @@ export default function ItemsTabs({ route, navigation }) {
     }
   }
 
-  const changeItem = new ChangeItem()
+  const changeItemStatus = new ChangeItemStatus()
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,7 +104,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Active}
               message={"No active items"}
               navigation={navigation}
-              changeItem={atMyProfile ? changeItem : null}
+              changeItemStatus={atMyProfile ? changeItemStatus : null}
             />
           )}
         />
@@ -116,7 +116,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Sold}
               message={"No sold items"}
               navigation={navigation}
-              changeItem={atMyProfile ? changeItem : null}
+              changeItemStatus={atMyProfile ? changeItemStatus : null}
             />
           )}
         />
@@ -129,7 +129,7 @@ export default function ItemsTabs({ route, navigation }) {
                 listings={items.Hidden}
                 message={"No hidden items"}
                 navigation={navigation}
-                changeItem={changeItem}
+                changeItemStatus={changeItemStatus}
                 />
             )}
           />

@@ -9,7 +9,7 @@ import axios from "axios";
 import Modal from "react-native-modal";
 
 
-export default function ItemCard({ accountInfo,listing,navigation,removeFav,changeItem }) {
+export default function ItemCard({ accountInfo,listing,navigation,removeFav,changeItemStatus }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -33,7 +33,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
     setShowModalAlert(false);
   };
 
-  const handleOption = (action) => {
+  const handleAction = (action) => {
     switch (action) {
       case "Hide":
       case "Unhide":
@@ -43,15 +43,15 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
         break;
       case "Confirm-Hide":
         closeModal()
-        changeItem.update(item.status, "Hidden", item.itemId)
+        changeItemStatus.update(item.status, "Hidden", item.itemId)
         break;
       case "Confirm-Delete":
         closeModal()
-        changeItem.delete(item.status,item.itemId)
+        changeItemStatus.delete(item.status,item.itemId)
         break;
       case "Change to active":
         closeModal()
-        changeItem.update(item.status, "Active", item.itemId)
+        changeItemStatus.update(item.status, "Active", item.itemId)
         break;
       case "Edit":
         closeModal()
@@ -119,7 +119,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
                 return (
                   <TouchableOpacity
                     key={action}
-                    onPress={() => handleOption(action)}
+                    onPress={() => handleAction(action)}
                     style={{
                       height: 50,
                       backgroundColor: COLORS.white,
@@ -136,7 +136,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
                 <ModalAlert
                   visibleVariable={showModalAlert}
                   closeModal={closeModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   option={selectedAction}
                 />
               </Modal>

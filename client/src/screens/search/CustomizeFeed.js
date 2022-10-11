@@ -95,7 +95,7 @@ export default function CustomizeFeed({ route, navigation }) {
       <ModalAlert
         visibleVariable={alert}
         closeModal={closeModal}
-        // handleOption={handleOption}
+        // handleAction={handleAction}
         message={"You must select at least one category"}
       />
     </SafeAreaView>

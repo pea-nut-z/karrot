@@ -70,7 +70,7 @@ export default function Profile({ route, navigation }) {
     setHideMsg(false);
   };
 
-  const handleOption = (option) => {
+  const handleAction = (option) => {
     let endpoint, callback;
 
     switch (option) {
@@ -155,7 +155,7 @@ export default function Profile({ route, navigation }) {
                 key={option}
                 style={styles.popupMenuOption}
                 onPress={() => {
-                  handleOption(option);
+                  handleAction(option);
                   hidePopoutMenu();
                 }}
               >
@@ -196,7 +196,7 @@ export default function Profile({ route, navigation }) {
                 <ModalAlert
                   visibleVariable={blockAlert}
                   closeModal={closeAlertModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   message={`Are you sure you want to block ${profile.name}? Their posts won't be visible to you and they won't be able to chat with you.`}
                   options={["CANCEL", "BLOCK"]}
                   actions={["cancel", "block-confirmed"]}
@@ -204,7 +204,7 @@ export default function Profile({ route, navigation }) {
                 <ModalAlert
                   visibleVariable={hideAlert}
                   closeModal={closeAlertModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   message={`Hide ${profile.name} and all of ${profile.name}'s post ?`}
                   options={["CANCEL", "YES, HIDE"]}
                   actions={["cancel", "hide-confirmed"]}
@@ -212,19 +212,19 @@ export default function Profile({ route, navigation }) {
                 <ModalAlert
                   visibleVariable={unblockMsg}
                   closeModal={closeMsgModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   message={`${profile.name} was unblocked`}
                 />
                 <ModalAlert
                   visibleVariable={unhideMsg}
                   closeModal={closeMsgModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   message={`${profile.name}'s posts have been unhidden`}
                 />
                 <ModalAlert
                   visibleVariable={hideMsg}
                   closeModal={closeMsgModal}
-                  handleOption={handleOption}
+                  handleAction={handleAction}
                   message={`${profile.name}'s posts will no longer be visible to you`}
                 />
 
