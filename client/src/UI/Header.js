@@ -47,9 +47,9 @@ export default function Header({
     setBackBtnAlert(false);
   };
 
-  const handleOption = (actions) => {
+  const handleOption = (action) => {
     closeModal();
-    switch (actions) {
+    switch (action) {
       case "yes":
         navigation.goBack();
       default:
@@ -94,14 +94,12 @@ export default function Header({
         {useHomeBtn && (
           <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
         )}
-        <ModalAlert
+        {title == "Edit Post" && <ModalAlert
           visibleVariable={backBtnAlert}
           closeModal={closeModal}
           handleOption={handleOption}
-          message={"Quit editing post?"}
-          options={["No", "Yes"]}
-          actions={["no", "yes"]}
-        />
+          option="editPost"
+        />}
 
         {/* TITLE */}
         {title && <Text style={styles.boldText}>{title}</Text>}
