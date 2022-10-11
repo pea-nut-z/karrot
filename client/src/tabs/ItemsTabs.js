@@ -26,11 +26,16 @@ const itemsReducer =(state, action)=> {
     case "update":
       const item = state[fromStatus].filter(item => item.itemId == itemId)
       item[0]['status'] = toStatus
-  return ({
+      return ({
         ...state,
         [fromStatus]: state[fromStatus].filter(item=>item.itemId != itemId),
         [toStatus]: [...state[toStatus], ...item]
       });
+    case "delete":
+      return ({
+        ...state,
+        [fromStatus]:state[fromStatus].filter(item=>item.itemId != itemId)
+      })
     default:
       throw new Error();
   }
@@ -59,9 +64,16 @@ export default function ItemsTabs({ route, navigation }) {
     return unsubscribe;
   }, []);
 
-  const updateItemStatus = (fromStatus, toStatus, itemId) => {
-    itemDispatch({type:"update", fromStatus,toStatus,itemId})
+  class ChangeItem {
+    update(fromStatus, toStatus, itemId){
+      itemDispatch({type:"update", fromStatus,toStatus,itemId})
+    }
+    delete(fromStatus, itemId) {
+      itemDispatch({type:"delete", fromStatus,itemId})
+    }
   }
+
+  const changeItem = new ChangeItem()
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,7 +104,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Active}
               message={"No active items"}
               navigation={navigation}
-              updateItemStatus={atMyProfile? updateItemStatus : null}
+              changeItem={atMyProfile ? changeItem : null}
             />
           )}
         />
@@ -104,7 +116,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Sold}
               message={"No sold items"}
               navigation={navigation}
-              updateItemStatus={atMyProfile? updateItemStatus : null}
+              changeItem={atMyProfile ? changeItem : null}
             />
           )}
         />
@@ -117,8 +129,8 @@ export default function ItemsTabs({ route, navigation }) {
                 listings={items.Hidden}
                 message={"No hidden items"}
                 navigation={navigation}
-                updateItemStatus={updateItemStatus}
-              />
+                changeItem={changeItem}
+                />
             )}
           />
         )}

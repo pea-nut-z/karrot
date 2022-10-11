@@ -9,13 +9,13 @@ import axios from "axios";
 import Modal from "react-native-modal";
 
 
-export default function ItemCard({ accountInfo, listing,navigation,removeFav,updateItemStatus }) {
+export default function ItemCard({ accountInfo,listing,navigation,removeFav,changeItem }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
   const [showModalMenu, setShowModalMenu] = useState(false);
   const [showModalAlert, setShowModalAlert] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedAction, setSelectedAction] = useState("");
 
   useEffect(() => {
     setProfile(accountInfo);
@@ -33,22 +33,29 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav,upd
     setShowModalAlert(false);
   };
 
-  const handleOption = (option) => {
-    switch (option) {
+  const handleOption = (action) => {
+    switch (action) {
       case "Hide":
       case "Unhide":
       case "Delete":
-        setSelectedOption(option)
+        setSelectedAction(action)
         setShowModalAlert(true)
         break;
       case "Confirm-Hide":
         closeModal()
-        updateItemStatus(item.status, "Hidden", item.itemId)
+        changeItem.update(item.status, "Hidden", item.itemId)
+        break;
+      case "Confirm-Delete":
+        closeModal()
+        changeItem.delete(item.status,item.itemId)
+        break;
+      case "Change to active":
+        closeModal()
+        changeItem.update(item.status, "Active", item.itemId)
         break;
       case "Edit":
         closeModal()
         navigation.navigate("Sell", { itemId: item.itemId });
-        
         break;
       default:
         closeModal()
@@ -108,11 +115,11 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav,upd
                 <Ionicons name={"ellipsis-vertical-circle"} size={40} />
               </TouchableOpacity>
               <Modal isVisible={showModalMenu} onBackdropPress={() => { closeModal() }}>
-              {variables['detailedItemStatusOptions'][item.status].map((option) => {
+              {variables['detailedItemStatusOptions'][item.status].map((action) => {
                 return (
                   <TouchableOpacity
-                    key={option}
-                    onPress={() => handleOption(option)}
+                    key={action}
+                    onPress={() => handleOption(action)}
                     style={{
                       height: 50,
                       backgroundColor: COLORS.white,
@@ -121,7 +128,7 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav,upd
                     }}
                   >
                     <Text>
-                      {option}
+                      {action}
                     </Text>
                   </TouchableOpacity>
                 )
@@ -130,7 +137,7 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav,upd
                   visibleVariable={showModalAlert}
                   closeModal={closeModal}
                   handleOption={handleOption}
-                  option={selectedOption}
+                  option={selectedAction}
                 />
               </Modal>
             </View>
