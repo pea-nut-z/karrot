@@ -34,7 +34,7 @@ export const alertOptions = {
     Hide: {
       message: "Other users won't be able to see your post. Hide post?",
       options:["Cancel", "Hide"],
-      actions:["Cancel", "Comfirm-Hide"]
+      actions:["Cancel", "Confirm-Hide"]
     },
     Unhide: {
       message: "Post unhidden",
