@@ -10,7 +10,7 @@ export default function Header({
   navigation,
   openModal,
   saveDraft,
-  showPopoutMenu,
+  toggleHeaderMenu,
   submitFunc,
   title,
   toggleFilterScreen,
@@ -57,7 +57,7 @@ export default function Header({
               name={buttonName}
               navigation={navigation}
               useWhiteBtns={useWhiteBtns}
-              showPopoutMenu={showPopoutMenu}
+              toggleHeaderMenu={toggleHeaderMenu}
               submitFunc={submitFunc}
             />
           );

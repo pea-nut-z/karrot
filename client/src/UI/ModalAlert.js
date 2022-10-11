@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import Modal from "react-native-modal";
 import { View, Text, TouchableOpacity } from "react-native";
 import { SIZES, COLORS } from "../constants";
@@ -8,7 +8,8 @@ export default function ModalAlert({
   visibleVariable,
   closeModal,
   handleAction,
-  keys
+  keys,
+  name
 }) {
   
   return (
@@ -31,7 +32,7 @@ export default function ModalAlert({
           }}
         >
           <Text>
-            {variables['alertOptions'][keys[0]]?.[keys[1]]?.message}
+            {variables['modalActions'][keys[0]][keys[1]]?.['message'](name)}
           </Text>
         </View>
         <View
@@ -41,8 +42,8 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {variables['alertOptions'][keys[0]]?.[keys[1]]?.options?.map((option, idx) => {
-            const action = variables['alertOptions'][keys[0]][keys[1]]['actions'][idx]
+          {variables['modalActions'][keys[0]][keys[1]]?.['options'].map((option, index) => {
+            const action = variables['modalActions'][keys[0]][keys[1]]?.['actions'][index]
             return (
               <TouchableOpacity key={option} onPress={() => handleAction(action)}>
                 <Text

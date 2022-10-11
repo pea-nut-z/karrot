@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function HeaderButton({
   userId,
   name,
-  showPopoutMenu,
+  toggleHeaderMenu,
   useWhiteBtns,
   submitFunc,
   navigation,
@@ -38,7 +38,7 @@ export default function HeaderButton({
       <TouchableOpacity
         onPress={() => {
           const keyword = name.split("-")[0];
-          keyword === "ellipsis" ? showPopoutMenu() : navigateTo(keyword);
+          keyword === "ellipsis" ? toggleHeaderMenu() : navigateTo(keyword);
         }}
         style={{
           padding: 5,

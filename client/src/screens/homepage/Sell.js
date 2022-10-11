@@ -64,7 +64,7 @@ export default function Sell({ route, navigation }) {
   const [category, setCategory] = useState("");
   const [draft, setDraft] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalOption, setModalOption] = useState("");
+  const [modalKey, setModalKey] = useState("");
 
 
   // no itemId is a draft and with itemId is a edit 
@@ -141,7 +141,7 @@ export default function Sell({ route, navigation }) {
   };
 
   const openModal = (option) => {
-    setModalOption(option)
+    setModalKey(option)
     setShowModal(true)
   }
 
@@ -368,7 +368,7 @@ export default function Sell({ route, navigation }) {
         visibleVariable={showModal}
         closeModal={closeModal}
         handleAction={handleAction}
-        keys={["post",modalOption]}
+        keys={["post",modalKey]}
       />
     </SafeAreaView>
   );

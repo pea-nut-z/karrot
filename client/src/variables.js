@@ -7,31 +7,32 @@ export const detailedItemStatusOptions = {
     Sold: ["Change to active", "Edit", "Hide", "Delete"],
     Hidden: ["Edit", "Delete"]
   }
-  
-class AlertOptions {
-    constructor(name) {
-        this.name = name
-    }
+
+export const getRestrictActions = (block,hide)=>{
+    return block ? ["Report", "Unblock"] : ["Report", "Block", hide ? "Unhide" : "Hide"];
+}
+
+class ModalActions {
     post = {
         title : {
-            message: "Enter a title"
+            message:()=> "Enter a title"
         },
         category : {
-            message: "Select a category"
+            message:()=> "Select a category"
         },
         description : {
-            message: "Enter a description"
+            message:()=> "Enter a description"
         },
         descLength : {
-            message: "Tell us a bit more for description - minimum 20 characters"
+            message:()=> "Tell us a bit more for description - minimum 20 characters"
         },
         draft : {
-            message: "You have a saved draft. Continue writing?",
+            message:()=> "You have a saved draft. Continue writing?",
             options:["Yes", "No"],
             actions: ["Use-Draft", "Remove-Draft"]
         },
         edit : {
-            message:"Quit editing post?",
+            message:()=>"Quit editing post?",
             options:["No", "Yes"],
             actions: ["Cancel", "Exit"]
         },
@@ -39,35 +40,44 @@ class AlertOptions {
 
     listing = {
         Hide : {
-            message: "Other users won't be able to see your post. Hide post?",
+            message:()=> "Other users won't be able to see your post. Hide post?",
             options: ["Cancel", "Hide"],
             actions: ["Cancel", "Confirm-Hide"]
         },
         Unhide : {
-            message: "Post unhidden",
+            message:()=> "Post unhidden",
             options: ["Cancel", "Unhide"],
             actions: ["Cancel", "Confirm-Unhide"]
         },
         Delete : {
-            message: "Are you sure you want to delete this post?",
+            message: ()=> "Are you sure you want to delete this post?",
             options:["Cancel", "Delete"],
             actions: ["Cancel", "Confirm-Delete"]
         },
     }
 
     user = {
-        block : {
-            message: `Are you sure you want to block ${this.name}? Their posts won't be visible to you and they won't be able to chat with you.`,
+        Block : {
+            message: (name)=> `Are you sure you want to block ${name}? Their posts won't be visible to you and they won't be able to chat with you.`,
             options:["Cancel", "Block"],
-            actions: ["Cancel", "Block"]
+            actions: ["Cancel", "Blocked"]
         },
-        hideUser : {
-            message: `Are you sure you want to block ${this.name}? Their posts won't be visible to you and they won't be able to chat with you.`,
-            options:["Cancel", "Block"],
-            actions: ["Cancel", "Block"]
-        }
+        Hide : {
+            message:()=> `Hide ${this.member} and all of ${this.member}'s post ?`,
+            options:["Cancel", "Hide"],
+            actions: ["Cancel", "Hid"]
+        },
+        Unblock: {
+            message:()=> `${this.member} was unblocked`
+        },
+        Hid: {
+            message:()=> `${this.member}'s posts will no longer be visible to you`
+        },
+        Unhide: {
+            message:()=>()=>`${this.member}'s posts have been unhidden`
+        },
     }
     
 }
   
-export const alertOptions = new AlertOptions()
+export const modalActions = new ModalActions()

@@ -12,6 +12,7 @@ import { SIZES, COLORS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import * as helper from "../helper";
+import * as variables from "../variables";
 
 export default function Profile({ route, navigation }) {
   const memberId = useRef(route.params.memberId).current;
@@ -24,13 +25,9 @@ export default function Profile({ route, navigation }) {
   const [block, setBlock] = useState(false);
   const [hide, setHide] = useState(false);
 
-  // Modal
-  const [popupMenu, setPopupMenu] = useState(false);
-  const [blockAlert, setBlockAlert] = useState(false);
-  const [hideAlert, setHideAlert] = useState(false);
-  const [hideMsg, setHideMsg] = useState(false);
-  const [unblockMsg, setUnblockMsg] = useState(false);
-  const [unhideMsg, setUnhideMsg] = useState(false);
+  const [showHeaderMenu, setShowHeaderMenu] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalKey, setModalKey] = useState("");
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -47,76 +44,63 @@ export default function Profile({ route, navigation }) {
         })
         .catch((err) => console.error("Profile get initial states error: ", err));
     });
-
     return unsubscribe;
   }, [navigation]);
 
-  const showPopoutMenu = () => {
-    setPopupMenu(true);
+  const toggleHeaderMenu = () => {
+    setShowHeaderMenu(!showHeaderMenu);
   };
 
-  const hidePopoutMenu = () => {
-    setPopupMenu(false);
+  const openModal = (action) => {
+    setShowModal(true)
+    setModalKey(action)
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
   };
 
-  const closeAlertModal = () => {
-    setBlockAlert(false);
-    setHideAlert(false);
-  };
-
-  const closeMsgModal = () => {
-    setUnblockMsg(false);
-    setUnhideMsg(false);
-    setHideMsg(false);
-  };
-
-  const handleAction = (option) => {
+  const handleAction = (action) => {
     let endpoint, callback;
 
-    switch (option) {
+    switch (action) {
       case "Report":
-        navigation.navigate("Report", { memberId });
-        return;
-      case "cancel":
-        closeAlertModal();
-        return;
+        return navigation.navigate("Report", { memberId });
       case "Hide":
-        setHideAlert(true);
-        return;
       case "Block":
-        setBlockAlert(true);
-        return;
+        return openModal(action)
       case "Unblock":
         endpoint = `pull/block`;
         callback = () => {
-          setUnblockMsg(true);
+          openModal(action)
           setBlock(false);
         };
         break;
       case "Unhide":
         endpoint = `pull/hide`;
         callback = () => {
-          setUnhideMsg(true);
+          openModal(action)
           setHide(false);
         };
         break;
-      case "block-confirmed":
+      case "Blocked":
         endpoint = `push/block`;
         callback = () => {
+          closeModal();
           setBlock(true);
-          closeAlertModal();
         };
         break;
-      case "hide-confirmed":
+      case "Hid":
         endpoint = `push/hide`;
         callback = () => {
+          openModal(action)
           setHide(true);
-          setHideMsg(true);
-          closeAlertModal();
         };
         break;
+      case "Cancel":
+        return closeModal();
       default:
-        return;
+        throw new Error("Profile->uncaught swtich action")
     }
 
     axios
@@ -129,14 +113,14 @@ export default function Profile({ route, navigation }) {
       });
   };
 
-  const renderPopoutMenu = () => {
+  const renderHeaderMenu = () => {
     if (atMyProfile) {
       return (
         <View style={styles.popupMenuContainer}>
           <TouchableOpacity
             style={styles.popupMenuOption}
             onPress={() => {
-              hidePopoutMenu();
+              toggleHeaderMenu()
               navigation.navigate("EditProfile", { name: profile.name, image: profile.image });
             }}
           >
@@ -145,21 +129,21 @@ export default function Profile({ route, navigation }) {
         </View>
       );
     } else {
-      const options = block ? ["Report", "Unblock"] : ["Report", "Block", hide ? "Unhide" : "Hide"];
+      const actions = variables.getRestrictActions(block,hide)
 
       return (
         <View style={styles.popupMenuContainer}>
-          {options.map((option) => {
+          {actions.map((action) => {
             return (
               <TouchableOpacity
-                key={option}
+                key={action}
                 style={styles.popupMenuOption}
                 onPress={() => {
-                  handleAction(option);
-                  hidePopoutMenu();
+                  toggleHeaderMenu()
+                  handleAction(action);
                 }}
               >
-                <Text>{option}</Text>
+                <Text>{action}</Text>
               </TouchableOpacity>
             );
           })}
@@ -177,7 +161,7 @@ export default function Profile({ route, navigation }) {
       <Header
         navigation={navigation}
         title={"Profile"}
-        showPopoutMenu={showPopoutMenu}
+        toggleHeaderMenu={toggleHeaderMenu}
         useBackBtn={true}
         useRightBtns={["ellipsis-vertical-circle-outline"]}
       />
@@ -188,48 +172,20 @@ export default function Profile({ route, navigation }) {
         </View>
       )}
 
-      <TouchableWithoutFeedback onPress={hidePopoutMenu}>
+      <TouchableWithoutFeedback onPress={closeModal}>
         <View style={{ flex: 1 }}>
           <View style={styles.topContainer}>
             {profile && (
               <View>
                 <ModalAlert
-                  visibleVariable={blockAlert}
-                  closeModal={closeAlertModal}
+                  visibleVariable={showModal}
+                  closeModal={closeModal}
                   handleAction={handleAction}
-                  message={`Are you sure you want to block ${profile.name}? Their posts won't be visible to you and they won't be able to chat with you.`}
-                  options={["CANCEL", "BLOCK"]}
-                  actions={["cancel", "block-confirmed"]}
+                  keys={["user", modalKey]}
+                  name={profile.name}
                 />
-                <ModalAlert
-                  visibleVariable={hideAlert}
-                  closeModal={closeAlertModal}
-                  handleAction={handleAction}
-                  message={`Hide ${profile.name} and all of ${profile.name}'s post ?`}
-                  options={["CANCEL", "YES, HIDE"]}
-                  actions={["cancel", "hide-confirmed"]}
-                />
-                <ModalAlert
-                  visibleVariable={unblockMsg}
-                  closeModal={closeMsgModal}
-                  handleAction={handleAction}
-                  message={`${profile.name} was unblocked`}
-                />
-                <ModalAlert
-                  visibleVariable={unhideMsg}
-                  closeModal={closeMsgModal}
-                  handleAction={handleAction}
-                  message={`${profile.name}'s posts have been unhidden`}
-                />
-                <ModalAlert
-                  visibleVariable={hideMsg}
-                  closeModal={closeMsgModal}
-                  handleAction={handleAction}
-                  message={`${profile.name}'s posts will no longer be visible to you`}
-                />
-
                 <View style={styles.popupMenuOutterContainer}>
-                  {popupMenu && renderPopoutMenu()}
+                  {showHeaderMenu && renderHeaderMenu()}
                 </View>
                 {/* MEMBER INFO */}
                 <View style={styles.margin}>

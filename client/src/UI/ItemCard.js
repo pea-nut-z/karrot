@@ -13,9 +13,9 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
-  const [showModalMenu, setShowModalMenu] = useState(false);
-  const [showModalAlert, setShowModalAlert] = useState(false);
-  const [selectedAction, setSelectedAction] = useState("");
+  const [showOutterModal, setShowOutterModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalKey, setModalKey] = useState("");
 
   useEffect(() => {
     setProfile(accountInfo);
@@ -29,8 +29,8 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
   }, [accountInfo, listing]);
 
   const closeModal = () => {
-    setShowModalMenu(false);
-    setShowModalAlert(false);
+    setShowOutterModal(false);
+    setShowModal(false);
   };
 
   const handleAction = (action) => {
@@ -38,8 +38,8 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
       case "Hide":
       case "Unhide":
       case "Delete":
-        setSelectedAction(action)
-        setShowModalAlert(true)
+        setModalKey(action)
+        setShowModal(true)
         break;
       case "Confirm-Hide":
         closeModal()
@@ -109,12 +109,12 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  setShowModalMenu(true);
+                  setShowOutterModal(true);
                 }}
               >
                 <Ionicons name={"ellipsis-vertical-circle"} size={40} />
               </TouchableOpacity>
-              <Modal isVisible={showModalMenu} onBackdropPress={() => { closeModal() }}>
+              <Modal isVisible={showOutterModal} onBackdropPress={() => { closeModal() }}>
               {variables['detailedItemStatusOptions'][item.status].map((action) => {
                 return (
                   <TouchableOpacity
@@ -134,10 +134,10 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
                 )
               })}
                 <ModalAlert
-                  visibleVariable={showModalAlert}
+                  visibleVariable={showModal}
                   closeModal={closeModal}
                   handleAction={handleAction}
-                  keys={["listing",selectedAction]}
+                  keys={["listing",modalKey]}
                 />
               </Modal>
             </View>
