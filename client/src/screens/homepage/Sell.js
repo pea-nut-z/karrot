@@ -62,10 +62,10 @@ export default function Sell({ route, navigation }) {
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
   const [category, setCategory] = useState("");
-  const [showInvalidFieldModal, setShowInvalidFieldModal, ] = useState(false);
-  const [showDraftModal, setShowDraftModal] = useState(false);
-  const [alertOption, setAlertOption] = useState("");
   const [draft, setDraft] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalOption, setModalOption] = useState("");
+
 
   // no itemId is a draft and with itemId is a edit 
   const itemId = useRef(route.params.itemId).current;
@@ -80,13 +80,13 @@ export default function Sell({ route, navigation }) {
           setCategory(doc.category)
       })
     } else {
-    axios
+      axios
       .get(`${helper.proxy}/profile/draft`)
       .then((res) => {
         const myDraft = res["data"]["doc"]["draft"];
         if (myDraft) {
           setDraft({ ...myDraft, numOfImg: myDraft.images.length })
-          setShowDraftModal(true)
+          openModal("draft")
         }
       })
       .catch((err) => console.error("Homepage get draft error: ", err));
@@ -109,28 +109,41 @@ export default function Sell({ route, navigation }) {
   const updateListingValue = (data) => {
     listingDispatch({type:"update", listing:data})
   }
+  
+  const handleAction = (action) => {
+    closeModal();
 
-  const handleDraftAction = (action) => {
-    if (action == "No") {
-      axios
+  switch (action) {
+    case "Remove-Draft":
+    return axios
         .patch(`${helper.proxy}/profile/update`, { draft: false })
         .then(() => {
           setDraft(null);
-        })
+         })
         .catch((err) => {
           console.error("Sell->delete draft error: ", err);
         });
-    } else {
+    case "Use-Draft":
       listingDispatch({ type: "update", listing: draft })
       setCategory(draft.category)
+      break;
+    case "Exit":
+      navigation.goBack();
+    case "Cancel":
+      return;
+    default:
+      console.error("Sell->Modal handleAction error: ", err);
     }
-    closeModal();
   };
 
   const closeModal = () => {
-    setShowDraftModal(false);
-    setShowInvalidFieldModal(false);
+    setShowModal(false)
   };
+
+  const openModal = (option) => {
+    setModalOption(option)
+    setShowModal(true)
+  }
 
   const choosePhotoFromLibrary = async () => {
     (async () => {
@@ -190,37 +203,33 @@ export default function Sell({ route, navigation }) {
         });
     } else {
       axios
-        .post(`${helper.proxy}/listing/create`, listing)
-        .then((res) => {
-          navigation.navigate("ItemDetails", {
-            memberId: helper.myId,
-            itemId: res.date.itemId,
-            newItem: true,
-          });
-        })
-        .catch((err) => {
-          console.error("Sell -> submit new listing error: ", err);
+      .post(`${helper.proxy}/listing/create`, listing)
+      .then(() => {
+        navigation.navigate("ItemDetails", {
+          memberId: helper.myId,
+          itemId: res.date.itemId,
+          newItem: true,
         });
+      })
+      .catch((err) => {
+        console.error("Sell -> submit new listing error: ", err);
+      });
     }
   };
 
   const checkFields = () => {
     const { title, category, description } = listing;
     const invalidField = !title ? "title" : !category ? "category" : !description ? "description" : description.length < 20 ? "descLength" : null;
-    if (invalidField) {
-      setAlertOption(invalidField)
-      setShowInvalidFieldModal(true)
-    } else { 
-      submitListing()
-    }
-  };
+    invalidField ? openModal(invalidField) : submitListing()
+  }
 
   const saveDraft = () => {
     const values = Object.values(listing)
     const blankField = (val) => typeof val == "boolean" || !val || val.length == 0
     const blankListing = values.every((val) => blankField(val));
     if (!blankListing) {
-      axios.patch(`${helper.proxy}/profile/update`, {draft: listing}).catch((err) => {
+      axios.patch(`${helper.proxy}/profile/update`, { draft: listing })
+        .catch((err) => {
         console.error("Sell->add draft error: ", err);
       });
     }
@@ -232,10 +241,11 @@ export default function Sell({ route, navigation }) {
       <Header
         navigation={navigation}
         title={itemId ? "Edit Post" : "Post For Sale"}
-        saveDraft={saveDraft}
         useBackBtn={true}
         useRightBtns={["checkmark-done"]}
+        saveDraft={saveDraft}
         submitFunc={checkFields}
+        openModal={openModal}
       />
 
       <KeyboardAwareScrollView
@@ -354,97 +364,96 @@ export default function Sell({ route, navigation }) {
           />
         </View>
       </KeyboardAwareScrollView>
-      <ModalAlert visibleVariable={showInvalidFieldModal} closeModal={closeModal} option={alertOption} />
       <ModalAlert
-        visibleVariable={showDraftModal}
+        visibleVariable={showModal}
         closeModal={closeModal}
-        handleAction={handleDraftAction}
-        option="draft"
+        handleAction={handleAction}
+        keys={["post",modalOption]}
       />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: SIZES.padding * 2,
-    paddingVertical: SIZES.padding,
-    borderWidth: 1,
-    borderColor: COLORS.transparent,
-    borderBottomColor: COLORS.secondary,
-  },
-  uploadImgContainer: {
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  uploadImgBtn: {
-    height: SIZES.width / 5,
-    width: SIZES.width / 5,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: COLORS.secondary,
-    marginRight: SIZES.padding,
-  },
-  imgContainer: {
-    height: SIZES.width / 5,
-    width: SIZES.width / 5,
-    marginRight: SIZES.padding,
-  },
-  img: {
-    height: "100%",
-    width: "100%",
-  },
-  deleteImgBtn: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-  },
-  regularHeight: {
-    height: SIZES.height * 0.066,
-    justifyContent: "center",
-  },
-  freeNegotiableContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  freeLabel: {
-    height: 30,
-    width: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.white,
-  },
-  checkMarkContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  checkMark: {
-    width: 20,
-    height: 20,
-    marginRight: SIZES.padding,
-  },
-  dropDown: {
-    borderRadius: 0,
-    borderColor: "transparent",
-    backgroundColor: COLORS.lightGray4,
-    borderBottomColor: COLORS.secondary,
-  },
-  dropDownContainer: {
-    borderRadius: 0,
-    borderColor: COLORS.secondary,
-  },
-  dropDownHolder: {
-    color: COLORS.secondary,
-    marginLeft: SIZES.padding,
-  },
-  textareaContainer: {
-    height: SIZES.height * 0.45,
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: SIZES.padding * 2,
+      paddingVertical: SIZES.padding,
+      borderWidth: 1,
+      borderColor: COLORS.transparent,
+      borderBottomColor: COLORS.secondary,
+    },
+    uploadImgContainer: {
+      flex: 1,
+      alignItems: "center",
+      flexDirection: "row",
+    },
+    uploadImgBtn: {
+      height: SIZES.width / 5,
+      width: SIZES.width / 5,
+      justifyContent: "center",
+      alignItems: "center",
+      borderWidth: 1,
+      borderColor: COLORS.secondary,
+      marginRight: SIZES.padding,
+    },
+    imgContainer: {
+      height: SIZES.width / 5,
+      width: SIZES.width / 5,
+      marginRight: SIZES.padding,
+    },
+    img: {
+      height: "100%",
+      width: "100%",
+    },
+    deleteImgBtn: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+    },
+    regularHeight: {
+      height: SIZES.height * 0.066,
+      justifyContent: "center",
+    },
+    freeNegotiableContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    freeLabel: {
+      height: 30,
+      width: 100,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 15,
+      borderWidth: 1,
+      borderColor: COLORS.primary,
+      backgroundColor: COLORS.white,
+    },
+    checkMarkContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    checkMark: {
+      width: 20,
+      height: 20,
+      marginRight: SIZES.padding,
+    },
+    dropDown: {
+      borderRadius: 0,
+      borderColor: "transparent",
+      backgroundColor: COLORS.lightGray4,
+      borderBottomColor: COLORS.secondary,
+    },
+    dropDownContainer: {
+      borderRadius: 0,
+      borderColor: COLORS.secondary,
+    },
+    dropDownHolder: {
+      color: COLORS.secondary,
+      marginLeft: SIZES.padding,
+    },
+    textareaContainer: {
+      height: SIZES.height * 0.45,
+    },
+  });
