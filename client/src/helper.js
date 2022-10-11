@@ -2,7 +2,8 @@ export const myId = "z69D";
 
 export const proxy =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3001"
+    ? "http://10.0.0.243:3001"
+    // ? "http://localhost:3001"
     : "https://marketplace-v942-production-yeccqhdvqq-wm.a.run.app";
 
 console.log({ proxy });
