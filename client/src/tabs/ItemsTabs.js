@@ -16,17 +16,19 @@ const initialItems = {
 }
 
 const itemsReducer =(state, action)=> {
-  const {type,fromStatus,toStatus,id,newState} =action
+  const { type, fromStatus, toStatus, itemId, newState } = action
+  
   switch (type) {
     case "set":
       return ({
         ...state, ...newState
       })
     case "update":
-      const item = state[fromStatus].filter(item => item.itemId !== id)
-      return ({
+      const item = state[fromStatus].filter(item => item.itemId == itemId)
+      item[0]['status'] = toStatus
+  return ({
         ...state,
-        [fromStatus]: state.filter(item => item.itemId == id),
+        [fromStatus]: state[fromStatus].filter(item=>item.itemId != itemId),
         [toStatus]: [...state[toStatus], ...item]
       });
     default:
@@ -37,7 +39,7 @@ const itemsReducer =(state, action)=> {
 export default function ItemsTabs({ route, navigation }) {
   const atMyProfile = useRef(route.params.atMyProfile).current;
   const [profile, setProfile] = useState({});
-  const [items, itemsDispatch] = useReducer(itemsReducer,initialItems)
+  const [items, itemDispatch] = useReducer(itemsReducer,initialItems)
 
   useEffect(() => {
     const memberId = route.params.memberId;
@@ -49,13 +51,17 @@ export default function ItemsTabs({ route, navigation }) {
         .then((res) => {
           const { profile, listings } = res.data;
           setProfile(profile);
-          itemsDispatch({type:'set',newState:listings})
+          itemDispatch({type:'set',newState:listings})
         })
         .catch((err) => console.error("itemsTabs get listings error: ", err));
     });
 
     return unsubscribe;
   }, []);
+
+  const updateItemStatus = (fromStatus, toStatus, itemId) => {
+    itemDispatch({type:"update", fromStatus,toStatus,itemId})
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -86,6 +92,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Active}
               message={"No active items"}
               navigation={navigation}
+              updateItemStatus={atMyProfile? updateItemStatus : null}
             />
           )}
         />
@@ -97,6 +104,7 @@ export default function ItemsTabs({ route, navigation }) {
               listings={items.Sold}
               message={"No sold items"}
               navigation={navigation}
+              updateItemStatus={atMyProfile? updateItemStatus : null}
             />
           )}
         />
@@ -109,6 +117,7 @@ export default function ItemsTabs({ route, navigation }) {
                 listings={items.Hidden}
                 message={"No hidden items"}
                 navigation={navigation}
+                updateItemStatus={updateItemStatus}
               />
             )}
           />

@@ -9,7 +9,7 @@ import axios from "axios";
 import Modal from "react-native-modal";
 
 
-export default function ItemCard({ accountInfo, listing,navigation,removeFav }) {
+export default function ItemCard({ accountInfo, listing,navigation,removeFav,updateItemStatus }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -41,11 +41,15 @@ export default function ItemCard({ accountInfo, listing,navigation,removeFav }) 
         setSelectedOption(option)
         setShowModalAlert(true)
         break;
+      case "Confirm-Hide":
+        closeModal()
+        updateItemStatus(item.status, "Hidden", item.itemId)
+        break;
       case "Edit":
         closeModal()
-        navigation.navigate("Sell", { itemId :item.itemId });
+        navigation.navigate("Sell", { itemId: item.itemId });
         
-
+        break;
       default:
         closeModal()
    }

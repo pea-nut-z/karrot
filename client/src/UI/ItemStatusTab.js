@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { ItemCard } from "./index";
 import { COLORS } from "../constants";
 
-export default function ItemStatusTab({ accountInfo, listings, message,navigation }) {
+export default function ItemStatusTab({ accountInfo, listings, message,navigation,updateItemStatus }) {
   const [profile, setProfile] = useState({});
   const [items, setItems] = useState();
 
@@ -23,13 +23,14 @@ export default function ItemStatusTab({ accountInfo, listings, message,navigatio
         <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
           <View style={styles.ListingContainer}>
             {items &&
-              items.map((item) => {
+              items.map((item,index) => {
                 return (
                   <ItemCard
                     key={item.itemId}
                     accountInfo={profile}
                     listing={item}
                     navigation={navigation}
+                    updateItemStatus={updateItemStatus}
                   />
                 );
               })}
