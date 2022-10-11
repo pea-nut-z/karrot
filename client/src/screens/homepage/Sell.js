@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import {
   View,
   StyleSheet,
@@ -21,75 +21,113 @@ import * as ImagePicker from "expo-image-picker";
 import * as helper from "../../helper";
 import * as variables from "../../variables";
 import axios from "axios";
+import ShortUniqueId from "short-unique-id";
+
+const uid = new ShortUniqueId({ length: 4 });
+
+const initialListing = {
+  images: [],
+  numOfImg:0,
+  title: "",
+  price: null,
+  free: false,
+  negotiable: true,
+  category: "",
+  description: "",
+}
+
+const listingReducer = (state, action) => {
+  const { type, listing, image } = action
+  switch (type) {
+    case "update":
+      return ({
+        ...state,...listing
+      })
+    case "add-image":
+      return ({
+        ...state,images:[...state.images,image],numOfImg: state.numOfImg+1
+      })
+      case "remove-image":
+        return ({
+          ...state,images:state.images.filter(img=> img != image),numOfImg: state.numOfImg-1
+        })
+    default:
+      throw new Error();
+  }
+}
 
 export default function Sell({ route, navigation }) {
+
+  const [listing, listingDispatch] = useReducer(listingReducer, initialListing);
   const [dropDown, setDropDown] = useState(false);
   const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
-  const [numOfImg, setNumOfImg] = useState(0);
-  const [images, setImages] = useState([]);
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState(0);
-  const [free, setFree] = useState(false);
-  const [negotiable, setNegotiable] = useState(true);
   const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [alert, setAlert] = useState(false);
-  const [submitAlert, setSubmitAlert] = useState("");
-  const [draftAlert, setDraftAlert] = useState(false);
+  const [showInvalidFieldModal, setShowInvalidFieldModal, ] = useState(false);
+  const [showDraftModal, setShowDraftModal] = useState(false);
+  const [alertOption, setAlertOption] = useState("");
   const [draft, setDraft] = useState(false);
 
+  // no itemId is a draft and with itemId is a edit 
   const itemId = useRef(route.params.itemId).current;
 
   useEffect(() => {
+    if (itemId) {
+      axios.get(`${helper.proxy}/listing/read/my-item/${itemId}`)
+        .then((res) => {
+          const { doc } = res.data
+          const numOfImg = typeof doc.images[0] == 'string' ? doc.images.length : 0 
+          listingDispatch({ type: "update",listing:{...doc,numOfImg } })
+          setCategory(doc.category)
+      })
+    } else {
     axios
       .get(`${helper.proxy}/profile/draft`)
       .then((res) => {
-        const existngDraft = res["data"]["doc"]["draft"];
-        if (existngDraft) {
-          setDraftAlert(true);
-          setDraft(existngDraft);
-        }
+        const myDraft = res["data"]["doc"]["draft"];
+        myDraft && setDraft({ ...myDraft, numOfImg: myDraft.images.length })
+        setShowDraftModal(true)
       })
-      .catch((err) => console.error("Homepage data error: ", err));
+      .catch((err) => console.error("Homepage get draft error: ", err));
+    }
   }, []);
 
   useEffect(() => {
-    if (price === 0) {
-      setFree(true);
-      setPrice(null);
+    if (listing.price === 0) {
+      updateListingValue({
+        free: true,
+        price:null
+      })
     }
-  }, [price]);
+
+    if (category != listing.category) {
+      updateListingValue({category})
+    }
+  }, [listing.price, category]);
+
+  const updateListingValue = (data) => {
+    listingDispatch({type:"update", listing:data})
+  }
 
   const handleDraftOption = (option) => {
-    if (option === "no") {
+    if (option == "No") {
       axios
         .patch(`${helper.proxy}/profile/update`, { draft: false })
         .then(() => {
-          setDraft(false);
+          setDraft(null);
         })
         .catch((err) => {
           console.error("Sell->delete draft error: ", err);
         });
     } else {
-      const { images, title, price, free, negotiable, category, description } = draft;
-      setNumOfImg(images.length);
-      setImages(images);
-      setTitle(title);
-      setPrice(price);
-      setFree(free);
-      setNegotiable(negotiable);
-      setCategory(category);
-      setDescription(description);
+      listingDispatch({ type: "update", listing: draft })
+      setCategory(draft.category)
     }
-    closeDraftModal();
-  };
-
-  const closeDraftModal = () => {
-    setDraftAlert(false);
+    closeModal();
   };
 
   const closeModal = () => {
-    setAlert(false);
+    setShowDraftModal(false);
+    setShowInvalidFieldModal(false);
   };
 
   const choosePhotoFromLibrary = async () => {
@@ -110,58 +148,36 @@ export default function Sell({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      setNumOfImg(numOfImg + 1);
-      setImages([...images, result.uri]);
+      listingDispatch({type:"add-image", image:result.uri})
     }
   };
 
-  const renderImage = ({ img }) => {
+  const renderImage = ({ item }) => {
     return (
       <View style={styles.imgContainer}>
         <ImageBackground
-          source={typeof img === "number" ? img : { uri: img }}
+          source={{ uri: item }}
           style={styles.img}
         ></ImageBackground>
-        <TouchableOpacity onPress={() => deleteImg(img)} style={styles.deleteImgBtn}>
+        <TouchableOpacity onPress={() => {
+          listingDispatch({ type: "remove-image", image: item })
+        }} style={styles.deleteImgBtn}>
           <Ionicons name="close-circle" size={25} />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const deleteImg = (selectedImg) => {
-    const newImgs = images.filter((img) => {
-      return img !== selectedImg;
-    });
-    setImages(newImgs);
-    setNumOfImg(numOfImg - 1);
-  };
-
   const submitListing = () => {
-    let imgPath;
-    if (images.length === 0) {
-      const obj = categoryOptions.find((obj) => obj.name === category);
-      imgPath = [obj.icon];
-    } else {
-      imgPath = images;
+    if (listing.images.length === 0) {
+      const category = categoryOptions.find((category) => category.name === listing.category);
+      listingDispatch({type:"add-image", image: category.icon})
     }
 
-    const listing = {
-      images: imgPath,
-      title,
-      price,
-      free,
-      negotiable,
-      category,
-      description,
-    };
-
     if (itemId) {
-      // it is a edit with itemId
       axios
         .patch(`${helper.proxy}/listing/update/${itemId}`, listing)
-        .then((res) => {
-          // console.log("update: ", res.data.doc);
+        .then(() => {
           navigation.navigate("ItemDetails", {
             memberId: helper.myId,
             itemId,
@@ -171,11 +187,9 @@ export default function Sell({ route, navigation }) {
           console.error("Sell -> submit existing listing error: ", err);
         });
     } else {
-      // it is a draft or new item without itemId
       axios
         .post(`${helper.proxy}/listing/create`, listing)
         .then((res) => {
-          // console.log("post: ", res.data.doc);
           navigation.navigate("ItemDetails", {
             memberId: helper.myId,
             itemId: res.date.itemId,
@@ -189,37 +203,22 @@ export default function Sell({ route, navigation }) {
   };
 
   const checkFields = () => {
-    if (!title) {
-      setSubmitAlert("Enter a title");
-      setAlert(true);
-    } else if (!category) {
-      setSubmitAlert("Select a category");
-      setAlert(true);
-    } else if (!description) {
-      setSubmitAlert("Enter a description");
-      setAlert(true);
-    } else if (description.length < 20) {
-      setSubmitAlert("Tell us a bit more for description - minimum 20 characters");
-      setAlert(true);
-    } else {
-      submitListing();
+    const { title, category, description } = listing;
+    const invalidField = !title ? "title" : !category ? "category" : !description ? "description" : description.length < 20 ? "descLength" : null;
+    if (invalidField) {
+      setAlertOption(invalidField)
+      setShowInvalidFieldModal(true)
+    } else { 
+      submitListing()
     }
   };
 
   const saveDraft = () => {
-    const listing = {
-      images,
-      title,
-      price,
-      category,
-      description,
-    };
-    const notBlank = (value) => value !== "" && value?.length !== 0 && value !== null;
+    const notBlank = (value) => value != "" && value?.length != 0 && value != null;
     const values = Object.values(listing);
     const listingIsNotBlank = values.some((val) => notBlank(val));
-
     if (listingIsNotBlank) {
-      axios.patch(`${helper.proxy}/profile/update`, listing).catch((err) => {
+      axios.patch(`${helper.proxy}/profile/update`, {draft: listing}).catch((err) => {
         console.error("Sell->add draft error: ", err);
       });
     }
@@ -246,7 +245,7 @@ export default function Sell({ route, navigation }) {
         <View style={[styles.container, styles.uploadImgContainer]}>
           <TouchableOpacity
             onPress={() => {
-              numOfImg < variables.maxUploadImg
+              listing.numOfImg < variables.maxUploadImg
                 ? choosePhotoFromLibrary()
                 : Alert.alert("Choose up to 10 images");
             }}
@@ -254,22 +253,24 @@ export default function Sell({ route, navigation }) {
           >
             <Ionicons name="camera" size={25} color={COLORS.secondary} />
             <Text>
-              {numOfImg} / {variables.maxUploadImg}
+              {listing.numOfImg} / {variables.maxUploadImg}
             </Text>
           </TouchableOpacity>
-          <FlatList
-            data={images}
+          {typeof listing['images'][0] == "string" && <FlatList
+            data={listing['images']}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(img, index) => `img-${index}`}
+            keyExtractor={()=>uid()}
             renderItem={renderImage}
-          />
+          />}
         </View>
         {/* TITLE */}
         <TextInput
           maxLength={64}
-          defaultValue={title}
-          onChangeText={setTitle}
+          defaultValue={listing.title}
+          onChangeText={val => {
+            updateListingValue({ title: val })
+          }}
           placeholder="Title"
           style={[styles.container, styles.regularHeight]}
         />
@@ -277,12 +278,10 @@ export default function Sell({ route, navigation }) {
         <View style={[styles.freeNegotiableContainer, styles.container]}>
           {/* FREE LABEL */}
           {/* PRICE */}
-          {free ? (
+          {listing.free ? (
             <View style={styles.regularHeight}>
               <TouchableOpacity
-                onPress={() => {
-                  setFree(false);
-                }}
+                onPress={()=> updateListingValue({free:false})}
                 style={styles.freeLabel}
               >
                 <Text style={{ color: COLORS.primary }}>Free X</Text>
@@ -290,8 +289,8 @@ export default function Sell({ route, navigation }) {
             </View>
           ) : (
             <CurrencyInput
-              value={price}
-              onChangeValue={setPrice}
+              value={listing.price}
+              onChangeValue={val=> updateListingValue({price: val})}
               unit="$  "
               delimiter=","
               separator="."
@@ -308,17 +307,17 @@ export default function Sell({ route, navigation }) {
           <TouchableOpacity
             style={styles.checkMarkContainer}
             onPress={() => {
-              setNegotiable(!negotiable);
+              updateListingValue({ negotiable: !listing.negotiable })
             }}
           >
             <Ionicons
               name="checkmark-circle-outline"
               size={25}
-              color={negotiable ? COLORS.primary : COLORS.secondary}
+              color={listing.negotiable ? COLORS.primary : COLORS.secondary}
             />
             <Text
               style={{
-                color: negotiable ? COLORS.black : COLORS.secondary,
+                color: listing.negotiable ? COLORS.black : COLORS.secondary,
               }}
             >
               Negotiable
@@ -344,8 +343,8 @@ export default function Sell({ route, navigation }) {
         <View style={{ height: 200 }}>
           <Textarea
             containerStyle={[styles.container, styles.textareaContainer]}
-            defaultValue={description}
-            onChangeText={setDescription}
+            defaultValue={listing.description}
+            onChangeText={val=>updateListingValue({description:val})}
             maxLength={600}
             placeholder={"Describe your item in as much detail as you can."}
             underlineColorAndroid={"transparent"}
@@ -353,14 +352,12 @@ export default function Sell({ route, navigation }) {
           />
         </View>
       </KeyboardAwareScrollView>
-      <ModalAlert visibleVariable={alert} closeModal={closeModal} message={submitAlert} />
+      <ModalAlert visibleVariable={showInvalidFieldModal} closeModal={closeModal} option={alertOption} />
       <ModalAlert
-        visibleVariable={draftAlert}
-        closeModal={closeDraftModal}
+        visibleVariable={showDraftModal}
+        closeModal={closeModal}
         handleOption={handleDraftOption}
-        message={"You have a saved draft. Continue writing?"}
-        options={["YES", "NO"]}
-        actions={["yes", "no"]}
+        option="draft"
       />
     </SafeAreaView>
   );
