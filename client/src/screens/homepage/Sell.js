@@ -84,8 +84,10 @@ export default function Sell({ route, navigation }) {
       .get(`${helper.proxy}/profile/draft`)
       .then((res) => {
         const myDraft = res["data"]["doc"]["draft"];
-        myDraft && setDraft({ ...myDraft, numOfImg: myDraft.images.length })
-        setShowDraftModal(true)
+        if (myDraft) {
+          setDraft({ ...myDraft, numOfImg: myDraft.images.length })
+          setShowDraftModal(true)
+        }
       })
       .catch((err) => console.error("Homepage get draft error: ", err));
     }
@@ -214,10 +216,10 @@ export default function Sell({ route, navigation }) {
   };
 
   const saveDraft = () => {
-    const notBlank = (value) => value != "" && value?.length != 0 && value != null;
-    const values = Object.values(listing);
-    const listingIsNotBlank = values.some((val) => notBlank(val));
-    if (listingIsNotBlank) {
+    const values = Object.values(listing)
+    const blankField = (val) => typeof val == "boolean" || !val || val.length == 0
+    const blankListing = values.every((val) => blankField(val));
+    if (!blankListing) {
       axios.patch(`${helper.proxy}/profile/update`, {draft: listing}).catch((err) => {
         console.error("Sell->add draft error: ", err);
       });
