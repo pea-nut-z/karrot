@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
 
@@ -9,6 +8,7 @@ export default function Header({
   useWhiteBtns,
   newItem,
   navigation,
+  openModal,
   saveDraft,
   showPopoutMenu,
   submitFunc,
@@ -19,7 +19,6 @@ export default function Header({
   useHomeBtn,
   useRightBtns,
 }) {
-  const [backBtnAlert, setBackBtnAlert] = useState(false);
 
   const renderBackBtn = () => {
     return (
@@ -28,7 +27,7 @@ export default function Header({
           if (title === "Filter") {
             toggleFilterScreen();
           } else if (title === "Edit Post") {
-            setBackBtnAlert(true);
+            openModal("edit");
           } else if (title === "Post For Sale") {
             saveDraft();
           } else if (newItem) {
@@ -43,20 +42,6 @@ export default function Header({
     );
   };
 
-  const closeModal = () => {
-    setBackBtnAlert(false);
-  };
-
-  const handleAction = (action) => {
-    closeModal();
-    switch (action) {
-      case "Yes":
-        navigation.goBack();
-      default:
-        return;
-    }
-  };
-
   const renderRightBtn = () => {
     return (
       <View
@@ -64,10 +49,10 @@ export default function Header({
           flexDirection: "row",
         }}
       >
-        {useRightBtns.map((buttonName, index) => {
+        {useRightBtns.map((buttonName) => {
           return (
             <HeaderButton
-              key={`button-${index}`}
+              key={buttonName}
               userId={userId}
               name={buttonName}
               navigation={navigation}
@@ -94,13 +79,6 @@ export default function Header({
         {useHomeBtn && (
           <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
         )}
-        {title == "Edit Post" && <ModalAlert
-          visibleVariable={backBtnAlert}
-          closeModal={closeModal}
-          handleAction={handleAction}
-          option="editPost"
-        />}
-
         {/* TITLE */}
         {title && <Text style={styles.boldText}>{title}</Text>}
       </View>
