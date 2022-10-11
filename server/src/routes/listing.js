@@ -200,6 +200,15 @@ router.post("/create", async (req, res) => {
   );
 });
 
+// my item
+router.get("/read/my-item/:itemId", (req, res) => {
+  const { itemId } = req.params
+  Account.findOne({ privateId }, { _id:0 ,items: {$elemMatch:{itemId}} }, (err, doc) => {
+    if (err) throw err;
+    res.json({ doc:doc.items[0] })
+  })
+})
+
 router.patch("/update/:itemId", async (req, res) => {
   const data = req.body;
   const changes = Object.keys(req.body).reduce(
