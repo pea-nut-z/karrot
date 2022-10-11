@@ -8,7 +8,7 @@ export default function ModalAlert({
   visibleVariable,
   closeModal,
   handleAction,
-  option
+  keys
 }) {
   
   return (
@@ -31,7 +31,7 @@ export default function ModalAlert({
           }}
         >
           <Text>
-            {variables['alertOptions'][option]?.message}
+            {variables['alertOptions'][keys[0]]?.[keys[1]]?.message}
           </Text>
         </View>
         <View
@@ -41,10 +41,10 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {variables['alertOptions'][option]?.options?.map((answer, idx) => {
-            const action = variables['alertOptions'][option]['actions'][idx]
+          {variables['alertOptions'][keys[0]]?.[keys[1]]?.options?.map((option, idx) => {
+            const action = variables['alertOptions'][keys[0]][keys[1]]['actions'][idx]
             return (
-              <TouchableOpacity key={answer} onPress={() => handleAction(action)}>
+              <TouchableOpacity key={option} onPress={() => handleAction(action)}>
                 <Text
                   style={{
                     color: COLORS.primary,
@@ -52,7 +52,7 @@ export default function ModalAlert({
                     marginTop: SIZES.padding * 2,
                   }}
                 >
-                  {answer}
+                  {option}
                 </Text>
               </TouchableOpacity>
             );

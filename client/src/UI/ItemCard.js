@@ -137,7 +137,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
                   visibleVariable={showModalAlert}
                   closeModal={closeModal}
                   handleAction={handleAction}
-                  option={selectedAction}
+                  keys={["listing",selectedAction]}
                 />
               </Modal>
             </View>
