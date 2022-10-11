@@ -10,6 +10,7 @@ export default function ModalAlert({
   handleOption,
   option
 }) {
+  
   return (
     <Modal isVisible={visibleVariable} onBackdropPress={() => {
       closeModal()
@@ -40,9 +41,10 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {variables['alertOptions'][option]?.options.map((option) => {
+          {variables['alertOptions'][option]?.options?.map((answer, idx) => {
+            const action = variables['alertOptions'][option]['actions'][idx]
             return (
-              <TouchableOpacity key={option} onPress={() => handleOption(option)}>
+              <TouchableOpacity key={answer} onPress={() => handleOption(action)}>
                 <Text
                   style={{
                     color: COLORS.primary,
@@ -50,7 +52,7 @@ export default function ModalAlert({
                     marginTop: SIZES.padding * 2,
                   }}
                 >
-                  {option}
+                  {answer}
                 </Text>
               </TouchableOpacity>
             );
