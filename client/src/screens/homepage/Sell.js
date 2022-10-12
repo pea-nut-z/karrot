@@ -43,7 +43,7 @@ const listingReducer = (state, action) => {
       return ({
         ...state,...listing
       })
-    case "add-image":
+      case "add-image":
       return ({
         ...state,images:[...state.images,image],numOfImg: state.numOfImg+1
       })
@@ -65,11 +65,17 @@ export default function Sell({ route, navigation }) {
   const [draft, setDraft] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalKey, setModalKey] = useState("");
-
+  const [readyToSubmit, setReadyToSubmit] = useState(false);
 
   // no itemId is a draft and with itemId is a edit 
   const itemId = useRef(route.params.itemId).current;
 
+  useEffect(() => {
+    if (readyToSubmit) {
+      submitListing()
+    }
+  }, [readyToSubmit])
+  
   useEffect(() => {
     if (itemId) {
       axios.get(`${helper.proxy}/listing/read/my-item/${itemId}`)
@@ -184,11 +190,6 @@ export default function Sell({ route, navigation }) {
   };
 
   const submitListing = () => {
-    if (listing.images.length === 0) {
-      const category = categoryOptions.find((category) => category.name === listing.category);
-      listingDispatch({type:"add-image", image: category.icon})
-    }
-
     if (itemId) {
       axios
         .patch(`${helper.proxy}/listing/update/${itemId}`, listing)
@@ -204,10 +205,10 @@ export default function Sell({ route, navigation }) {
     } else {
       axios
       .post(`${helper.proxy}/listing/create`, listing)
-      .then(() => {
+      .then((res) => {
         navigation.navigate("ItemDetails", {
           memberId: helper.myId,
-          itemId: res.date.itemId,
+          itemId: res.data.itemId,
           newItem: true,
         });
       })
@@ -218,9 +219,19 @@ export default function Sell({ route, navigation }) {
   };
 
   const checkFields = () => {
+    const checkImgAndPrice = () => {
+      if (listing.images.length === 0) {
+        const category = categoryOptions.find((category) => category.name === listing.category);
+        listingDispatch({ type: "add-image", image: category.icon })
+      }
+      if (!listing.price) {
+        updateListingValue({free: true, price:0})
+      }
+      setReadyToSubmit(true)
+    }
     const { title, category, description } = listing;
     const invalidField = !title ? "title" : !category ? "category" : !description ? "description" : description.length < 20 ? "descLength" : null;
-    invalidField ? openModal(invalidField) : submitListing()
+    invalidField ? openModal(invalidField) : checkImgAndPrice()
   }
 
   const saveDraft = () => {
