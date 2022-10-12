@@ -20,7 +20,6 @@ const itemCardFields = {
 };
 
 router.get("/filter", async (req, res) => {
-  console.log("reached backend");
   const { feeds, category } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });
@@ -186,7 +185,7 @@ router.get("/read/items", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", (req, res) => {
   const listing = req.body;
   const itemId = uid();
   Account.findOneAndUpdate(
@@ -209,14 +208,15 @@ router.get("/read/my-item/:itemId", (req, res) => {
   })
 })
 
-router.patch("/update/:itemId", async (req, res) => {
+router.patch("/update/:itemId", (req, res) => {
   const data = req.body;
-  const changes = Object.keys(req.body).reduce(
+  const { itemId } = req.params;
+  
+  const changes = Object.keys(data).reduce(
     (acc, cur) => Object.assign(acc, { [`items.$.${cur}`]: data[cur] }),
     {}
-  );
+    );
 
-  const { itemId } = req.params;
   Account.findOneAndUpdate(
     { privateId, "items.itemId": itemId },
     {
@@ -229,5 +229,23 @@ router.patch("/update/:itemId", async (req, res) => {
     }
   );
 });
+
+router.delete("/delete/:itemId", (req, res) => {
+  const { itemId } = req.params
+  Account.findOneAndUpdate(
+    { privateId },
+    {
+      $pull: {
+        items: {
+          itemId  
+        }
+    }
+    },
+    ((err) => {
+      if (err) throw err;
+      res.send("removed item")
+  })
+  )
+})
 
 export default router;

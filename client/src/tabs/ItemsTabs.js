@@ -26,12 +26,14 @@ const itemsReducer =(state, action)=> {
     case "update":
       const item = state[fromStatus].filter(item => item.itemId == itemId)
       item[0]['status'] = toStatus
+      axios.patch(`${helper.proxy}/listing/update/${itemId}`,{status:toStatus}).catch(err => console.error("itemsTabs update error: ", err))
       return ({
         ...state,
         [fromStatus]: state[fromStatus].filter(item=>item.itemId != itemId),
         [toStatus]: [...state[toStatus], ...item]
       });
     case "delete":
+      axios.patch(`${helper.proxy}/listing/delete/${itemId}`).catch(err => console.error("itemsTabs delete error: ", err))
       return ({
         ...state,
         [fromStatus]:state[fromStatus].filter(item=>item.itemId != itemId)
