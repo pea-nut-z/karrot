@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import DropDownPicker from "react-native-dropdown-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { Border, Header, ImageScrollView, MemberInfo, MemberRating, OtherItem } from "../UI";
-import { FONTS, SIZES, itemStatusOptions, COLORS } from "../constants";
+import { SIZES, itemStatusOptions, COLORS } from "../constants";
 import axios from "axios";
 import * as helper from "../helper";
 
@@ -26,7 +26,6 @@ export default function ItemDetails({ route, navigation }) {
   const [average, setAverage] = useState();
 
   useEffect(() => {
-    // if (helper.myId !== memberId) {
     axios
       .get(`${helper.proxy}/listing/read/item/${memberId}/${itemId}`)
       .then((res) => {
@@ -46,7 +45,6 @@ export default function ItemDetails({ route, navigation }) {
         );
       })
       .catch((err) => console.error("itemDetail get listing error: ", err));
-    // }
 
     if (window === undefined) {
       window.scrollTo(0, 0);
@@ -141,12 +139,11 @@ export default function ItemDetails({ route, navigation }) {
 
                 {/* SEE ALL ITEMS BUTTON */}
                 <TouchableOpacity
-                // onPress={() => {
-                //   navigation.navigate("SellerItemsTabs", {
-                //     userId,
-                //     sellerId,
-                //   });
-                // }}
+                onPress={() => {
+                  navigation.navigate("ItemsTabs", {
+                    memberId
+                  });
+                }}
                 >
                   <Text style={styles.seeAllText}>See all</Text>
                 </TouchableOpacity>
