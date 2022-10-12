@@ -16,7 +16,7 @@ export default function Favourites({ navigation }) {
   }, []);
 
   const removeFav = (itemId) => {
-    const newItems = items.filter(item => item.itemId == itemId)
+    const newItems = items.filter(item => item.details.items[0].itemId != itemId)
     setItems(newItems)
   }
 
