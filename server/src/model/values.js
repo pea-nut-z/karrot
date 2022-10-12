@@ -22,7 +22,7 @@ export const reqId = {
 
 export const defaultDate = {
   type: String,
-  default: Date.now(),
+  default: new Date(),
 };
 
 export const defaultNum = {
