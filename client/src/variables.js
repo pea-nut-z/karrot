@@ -3,9 +3,9 @@ export const maxUploadImg = 10;
 export const starRatingArr = [1, 2, 3, 4, 5];
 
 export const detailedItemStatusOptions = {
-    Active:["Edit", "Hide", "Delete"],
+    Active:["Edit", "Hide", "Sold", "Delete"],
     Sold: ["Change to active", "Edit", "Hide", "Delete"],
-    Hidden: ["Edit", "Delete"]
+    Hidden: ["Edit", "Delete","Unhide"]
   }
 
 export const getRestrictActions = (block,hide)=>{
@@ -45,7 +45,7 @@ class ModalActions {
             actions: ["Cancel", "Confirm-Hide"]
         },
         Unhide : {
-            message:()=> "Post unhidden",
+            message:()=> "Other users will be able to see your post. Unhide post?",
             options: ["Cancel", "Unhide"],
             actions: ["Cancel", "Confirm-Unhide"]
         },

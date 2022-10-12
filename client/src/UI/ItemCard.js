@@ -49,9 +49,14 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
         closeModal()
         changeItemStatus.delete(item.status,item.itemId)
         break;
+      case "Confirm-Unhide":
       case "Change to active":
         closeModal()
         changeItemStatus.update(item.status, "Active", item.itemId)
+        break;
+      case "Sold":
+        closeModal()
+        changeItemStatus.update(item.status, "Sold", item.itemId)
         break;
       case "Edit":
         closeModal()
@@ -112,7 +117,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
                   setShowOutterModal(true);
                 }}
               >
-                <Ionicons name={"ellipsis-vertical-circle"} size={40} />
+                <Ionicons name={"ellipsis-vertical-circle"} size={35} />
               </TouchableOpacity>
               <Modal isVisible={showOutterModal} onBackdropPress={() => { closeModal() }}>
               {variables['detailedItemStatusOptions'][item.status].map((action) => {
@@ -188,7 +193,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: COLORS.secondary,
   },
-  infoContainer: { paddingHorizontal: SIZES.padding * 2 },
+  infoContainer: { paddingHorizontal: SIZES.padding },
   titleText: {
     paddingVertical: SIZES.padding,
   },
