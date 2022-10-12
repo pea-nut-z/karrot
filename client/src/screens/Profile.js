@@ -58,6 +58,7 @@ export default function Profile({ route, navigation }) {
 
   const closeModal = () => {
     setShowModal(false)
+    setShowHeaderMenu(false);
   };
 
   const handleAction = (action) => {
@@ -116,9 +117,9 @@ export default function Profile({ route, navigation }) {
   const renderHeaderMenu = () => {
     if (atMyProfile) {
       return (
-        <View style={styles.popupMenuContainer}>
+        <View style={styles.headerMenuContainer}>
           <TouchableOpacity
-            style={styles.popupMenuOption}
+            style={styles.headerMenuOption}
             onPress={() => {
               toggleHeaderMenu()
               navigation.navigate("EditProfile", { name: profile.name, image: profile.image });
@@ -132,12 +133,12 @@ export default function Profile({ route, navigation }) {
       const actions = variables.getRestrictActions(block,hide)
 
       return (
-        <View style={styles.popupMenuContainer}>
+        <View style={styles.headerMenuContainer}>
           {actions.map((action) => {
             return (
               <TouchableOpacity
                 key={action}
-                style={styles.popupMenuOption}
+                style={styles.headerMenuOption}
                 onPress={() => {
                   toggleHeaderMenu()
                   handleAction(action);
@@ -176,7 +177,7 @@ export default function Profile({ route, navigation }) {
         <View style={{ flex: 1 }}>
           <View style={styles.topContainer}>
             {profile && (
-              <View>
+              <View >
                 <ModalAlert
                   visibleVariable={showModal}
                   closeModal={closeModal}
@@ -184,7 +185,7 @@ export default function Profile({ route, navigation }) {
                   keys={["user", modalKey]}
                   name={profile.name}
                 />
-                <View style={styles.popupMenuOutterContainer}>
+                <View style={styles.headerMenuOutterContainer}>
                   {showHeaderMenu && renderHeaderMenu()}
                 </View>
                 {/* MEMBER INFO */}
@@ -283,13 +284,13 @@ const styles = StyleSheet.create({
     borderColor: COLORS.transparent,
     borderBottomColor: COLORS.secondary,
   },
-  popupMenuOutterContainer: {
+  headerMenuOutterContainer: {
     position: "absolute",
-    top: 65,
-    right: SIZES.padding * 2,
+    top: -115,
+    left: 120,
     zIndex: 1,
   },
-  popupMenuContainer: {
+  headerMenuContainer: {
     backgroundColor: COLORS.white,
     shadowOffset: { width: 3, height: 3 },
     shadowColor: COLORS.darkgray,
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.secondary,
     paddingVertical: SIZES.padding / 2,
   },
-  popupMenuOption: {
+  headerMenuOption: {
     minWidth: 100,
     justifyContent: "center",
     paddingHorizontal: SIZES.padding * 2,
