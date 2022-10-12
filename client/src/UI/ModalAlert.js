@@ -42,7 +42,7 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {variables['modalActions'][keys[0]][keys[1]]?.['options'].map((option, index) => {
+          {variables['modalActions'][keys[0]][keys[1]]?.['options']?.map((option, index) => {
             const action = variables['modalActions'][keys[0]][keys[1]]?.['actions'][index]
             return (
               <TouchableOpacity key={option} onPress={() => handleAction(action)}>

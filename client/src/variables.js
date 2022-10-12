@@ -63,18 +63,18 @@ class ModalActions {
             actions: ["Cancel", "Blocked"]
         },
         Hide : {
-            message:()=> `Hide ${this.member} and all of ${this.member}'s post ?`,
+            message:(name)=> `Hide ${name} and all of ${name}'s post ?`,
             options:["Cancel", "Hide"],
             actions: ["Cancel", "Hid"]
         },
         Unblock: {
-            message:()=> `${this.member} was unblocked`
+            message:(name)=> `${name} was unblocked`
         },
         Hid: {
-            message:()=> `${this.member}'s posts will no longer be visible to you`
+            message:(name)=> `${name}'s posts will no longer be visible to you`
         },
         Unhide: {
-            message:()=>()=>`${this.member}'s posts have been unhidden`
+            message:(name)=>`${name}'s posts have been unhidden`
         },
     }
     
