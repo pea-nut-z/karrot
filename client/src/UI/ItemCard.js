@@ -110,7 +110,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
 
         {/* FEATURES FOR MY ITEM */}
         <View>
-          {helper.myId == profile.id && (
+          {(helper.myId == profile.id && !removeFav) && (
             <View>
               <TouchableOpacity
                 onPress={() => {
