@@ -1,25 +1,25 @@
 import express from "express";
-import { Account, Activity, Restriction, Review } from "../model/index.js";
+import { Account, Restriction, Review } from "../model/index.js";
 const router = express.Router();
-let privateId = "62e87ec387aecd786da8d937";
+let privateId = "6346355173799d48dc57d225";
 
 router.patch("/update", (req, res) => {
   const changes = req.body;
-  Account.findOneAndUpdate({ privateId }, { ...changes }, (err) => {
+  Account.findOneAndUpdate({ _id:privateId }, { ...changes }, (err) => {
     if (err) throw err;
     res.send("resolved");
   });
 });
 
 router.get("/read", (req, res) => {
-  Account.findOne({ privateId }, { image: 1, name: 1, location: 1, id: 1 }, (err, doc) => {
+  Account.findOne({ _id: privateId }, { image: 1, name: 1, location: 1, id: 1 }, (err, doc) => {
     if (err) throw err;
     res.json(doc);
   });
 });
 
 router.get("/draft", (req, res) => {
-  Account.findOne({ privateId }, { draft: 1, _id: 0 }, (err, doc) => {
+  Account.findOne({ _id:privateId }, { draft: 1, _id: 0 }, (err, doc) => {
     if (err) throw err;
     res.json({ doc });
   });
@@ -27,10 +27,6 @@ router.get("/draft", (req, res) => {
 
 router.get("/get/:memberId", (req, res) => {
   const { memberId } = req.params;
-  // get profile -> name image location
-  // get number of items -> othersProfile: no hidden items; myProfilo: Hidden,Sold,Active
-  // get reviews -> numOfReview
-  // get block -> if othersProfile; access by privateId and check if member block by me
   const getAccount = Account.findOne(
     { id: memberId },
     { name: 1, image: 1, location: 1, numOfItems: 1, id: 1, _id: 0 }

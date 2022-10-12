@@ -1,7 +1,7 @@
 import express from "express";
-import { Review, Activity, Account } from "../model/index.js";
+import { Review, Activity } from "../model/index.js";
 const router = express.Router();
-const privateId = "62e87ec387aecd786da8d937";
+const privateId = "6346355173799d48dc57d225";
 
 router.get("/read/:memberId", async (req, res) => {
   const { memberId } = req.params;
@@ -62,13 +62,5 @@ router.post("/create/:memberId", (req, res) => {
       throw err;
     });
 });
-
-// router.patch("/update", (req, res) => {
-//   const changes = req.body;
-//   Account.findOneAndUpdate({ privateId }, { ...changes }, (err) => {
-//     if (err) throw err;
-//     res.send("resolved");
-//   });
-// });
 
 export default router;

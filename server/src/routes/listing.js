@@ -6,7 +6,7 @@ import ShortUniqueId from "short-unique-id";
 const router = express.Router();
 const uid = new ShortUniqueId({ length: 4 });
 
-let privateId = "62e87ec387aecd786da8d937";
+let privateId = "6346355173799d48dc57d225";
 const hideVIDFields = { _id: 0, __v: 0 };
 const itemCardFields = {
   id: 1,
@@ -189,7 +189,7 @@ router.post("/create", (req, res) => {
   const listing = req.body;
   const itemId = uid();
   Account.findOneAndUpdate(
-    { privateId },
+    { _id: privateId },
     { $push: { items: { itemId, ...listing } }, $inc: { numOfItems: 1 } },
     { new: true, select: hideVIDFields },
     (err, doc) => {
@@ -202,7 +202,7 @@ router.post("/create", (req, res) => {
 // my item
 router.get("/read/my-item/:itemId", (req, res) => {
   const { itemId } = req.params
-  Account.findOne({ privateId }, { _id:0 ,items: {$elemMatch:{itemId}} }, (err, doc) => {
+  Account.findOne({_id: privateId }, { _id:0 ,items: {$elemMatch:{itemId}} }, (err, doc) => {
     if (err) throw err;
     res.json({ doc:doc.items[0] })
   })
@@ -218,7 +218,7 @@ router.patch("/update/:itemId", (req, res) => {
     );
 
   Account.findOneAndUpdate(
-    { privateId, "items.itemId": itemId },
+    { _id: privateId, "items.itemId": itemId },
     {
       $set: { ...changes },
     },
@@ -233,7 +233,7 @@ router.patch("/update/:itemId", (req, res) => {
 router.delete("/delete/:itemId", (req, res) => {
   const { itemId } = req.params
   Account.findOneAndUpdate(
-    { privateId },
+    { _id: privateId },
     {
       $pull: {
         items: {
