@@ -1,7 +1,7 @@
 import express from "express";
 import { Account, Activity } from "../model/index.js";
+import { privateId } from "./helper.js";
 const router = express.Router();
-let privateId = "6346355173799d48dc57d225";
 
 router.get("/read/favourites", async (req, res) => {
   const doc = await Activity.aggregate([
@@ -73,7 +73,6 @@ router.patch("/add/favourite/:memberId/:itemId", async (req, res) => {
     const update = { $inc: { "items.$.favourites": 1 } };
     await Account.findOneAndUpdate(query, update);
     res.send("added favourite");
-    
   } catch (err) {
     throw err;
   }
@@ -95,7 +94,6 @@ router.patch("/remove/favourite/:memberId/:itemId", async (req, res) => {
     const update = { $inc: { "items.$.favourites": -1 } };
     await Account.findOneAndUpdate(query, update);
     res.send("removed favourite");
-
   } catch (err) {
     throw err;
   }

@@ -1,11 +1,11 @@
 import express from "express";
 import { Account, Restriction, Review } from "../model/index.js";
+import { privateId } from "./helper.js";
 const router = express.Router();
-let privateId = "6346355173799d48dc57d225";
 
 router.patch("/update", (req, res) => {
   const changes = req.body;
-  Account.findOneAndUpdate({ _id:privateId }, { ...changes }, (err) => {
+  Account.findOneAndUpdate({ _id: privateId }, { ...changes }, (err) => {
     if (err) throw err;
     res.send("resolved");
   });
@@ -19,7 +19,7 @@ router.get("/read", (req, res) => {
 });
 
 router.get("/draft", (req, res) => {
-  Account.findOne({ _id:privateId }, { draft: 1, _id: 0 }, (err, doc) => {
+  Account.findOne({ _id: privateId }, { draft: 1, _id: 0 }, (err, doc) => {
     if (err) throw err;
     res.json({ doc });
   });

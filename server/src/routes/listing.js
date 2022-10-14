@@ -1,12 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import { Account, Activity, Restriction, Review } from "../model/index.js";
+import { privateId } from "./helper.js";
 import ShortUniqueId from "short-unique-id";
 
 const router = express.Router();
 const uid = new ShortUniqueId({ length: 4 });
 
-let privateId = "6346355173799d48dc57d225";
 const hideVIDFields = { _id: 0, __v: 0 };
 const itemCardFields = {
   id: 1,
@@ -167,7 +167,7 @@ router.get("/read/items", async (req, res) => {
     const listings = {
       Active: [],
       Sold: [],
-      Hidden:[],
+      Hidden: [],
     };
 
     for (const group of groups) {
@@ -201,21 +201,21 @@ router.post("/create", (req, res) => {
 
 // my item
 router.get("/read/my-item/:itemId", (req, res) => {
-  const { itemId } = req.params
-  Account.findOne({_id: privateId }, { _id:0 ,items: {$elemMatch:{itemId}} }, (err, doc) => {
+  const { itemId } = req.params;
+  Account.findOne({ _id: privateId }, { _id: 0, items: { $elemMatch: { itemId } } }, (err, doc) => {
     if (err) throw err;
-    res.json({ doc:doc.items[0] })
-  })
-})
+    res.json({ doc: doc.items[0] });
+  });
+});
 
 router.patch("/update/:itemId", (req, res) => {
   const data = req.body;
   const { itemId } = req.params;
-  
+
   const changes = Object.keys(data).reduce(
     (acc, cur) => Object.assign(acc, { [`items.$.${cur}`]: data[cur] }),
     {}
-    );
+  );
 
   Account.findOneAndUpdate(
     { _id: privateId, "items.itemId": itemId },
@@ -231,21 +231,21 @@ router.patch("/update/:itemId", (req, res) => {
 });
 
 router.delete("/delete/:itemId", (req, res) => {
-  const { itemId } = req.params
+  const { itemId } = req.params;
   Account.findOneAndUpdate(
     { _id: privateId },
     {
       $pull: {
         items: {
-          itemId  
-        }
-    }
+          itemId,
+        },
+      },
     },
-    ((err) => {
+    (err) => {
       if (err) throw err;
-      res.send("removed item")
-  })
-  )
-})
+      res.send("removed item");
+    }
+  );
+});
 
 export default router;

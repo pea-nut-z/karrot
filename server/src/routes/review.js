@@ -1,7 +1,7 @@
 import express from "express";
 import { Review, Activity } from "../model/index.js";
+import { privateId } from "./helper.js";
 const router = express.Router();
-const privateId = "6346355173799d48dc57d225";
 
 router.get("/read/:memberId", async (req, res) => {
   const { memberId } = req.params;
