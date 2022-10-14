@@ -13,7 +13,7 @@ There are two versions :
 [Redux Version](https://expo.dev/@peanutz/karrot)  
 Hardcoded data and utilizes Redux to maintain state. You can find the code under the “redux_version” branch.
 
-[Full Stack Version](https://expo.dev/@/projects/marketplace)  
+[Full Stack Version](https://expo.dev/@peanutz/marketplace)  
 Connected to the backend and database using RESTful APIs and MongoDB. Work in progress.
 
 ### View In The Browser
@@ -30,6 +30,8 @@ The app should open up in a new tab. Once loaded, do the following in the new ta
 <img src="client/assets/readme-instruction.jpg" width="500" height="500">
 
 ### To navigate
+
+The Redux version has all the features listed and the Full-Stack version has some of them (in development).
 
 Your username is Tony once you are on the app. The app includes:
 
