@@ -13,7 +13,7 @@ There are two versions :
 [Redux Version](https://expo.dev/@peanutz/karrot)  
 Hardcoded data and utilizes Redux to maintain state. You can find the code under the “redux_version” branch.
 
-[Full Stack Version](https://expo.dev/@peanutz/marketplace) - in development
+[Full Stack Version](https://expo.dev/@peanutz/marketplace) - in development  
 Connected to the backend and database using RESTful APIs and MongoDB.
 
 ### View In The Browser
