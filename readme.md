@@ -4,11 +4,24 @@
 
 ### View On A Mobile Device
 
-eMarketplace requires an app called Expo Go to run. So, on your mobile device in App/Play Store, please download Expo Go. After that click [here](https://expo.dev/@peanutz/karrot) to get the QR code of eMarketplace, scan the code using Expo Go on your phone, and the app should open.
+- on a mobile device download Expo Go in the App/Play Store
+- click on the version you would like to view below to reveal the QR code
+- scan the code using Expo Go on your phone, and the app should open
+
+There are two versions :
+
+[Redux Version](https://expo.dev/@peanutz/karrot)
+Hardcoded data and utilizes Redux to maintain state for exploring purposes. You can find the code under the “redux_version” branch.
+
+[Full Stack Version](https://expo.dev/@/projects/marketplace)
+Connected to the backend and database using RESTful APIs and MongoDB. Work in progress.
 
 ### View In The Browser
 
-- right click [here](https://peanutz-emarketplace.herokuapp.com/) and select "Open Link in New Tab"
+- right click on one of the link below and select "Open Link in New Tab"
+
+[Redux Version](https://peanutz-emarketplace.herokuapp.com/)
+[Full Stack Version](https://marketplace-ipcn.onrender.com/)
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
@@ -47,14 +60,16 @@ Your username is Tony once you are on the app. The app includes:
 
 - JavaScript
 - React Native
-- Redux
-- Expo
+- RESTFUL APIs
+- MongoDB
 - Android Studio
 - xCode
+- Redux
+- Expo
 
 ### Context
 
-This app is built using React Native and Redux. I intend to reverse engineer an app called [Karrot](https://uk.karrotmarket.com/)- a marketplace. Initially, my purpose was to demonstrate how the state is maintained using Redux. Therefore, Chat, share and some functionalities under 'My Account' are unavailable. However, the plan has changed, and I will go deeper and expand on this project. I want to challenge myself on a larger scale project.
+I intend to reverse engineer an app called [Karrot](https://uk.karrotmarket.com/)- a marketplace. Initially, my purpose was to demonstrate how the state is maintained using Redux. Therefore, Chat, share and some functionalities under 'My Account' are unavailable. However, the plan has changed, and I want to challenge myself on a larger scale project. Therefore, I am expand the project to a full stack application.
 
 ### Road blocks
 
@@ -65,7 +80,7 @@ Resolved
 
 ### To Be Added
 
-- [ ] External Data storage
+- [x] External Data storage
 
 - [ ] Authentication - login
 
