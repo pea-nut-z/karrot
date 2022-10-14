@@ -1,4 +1,4 @@
-## Web/Mobile App - eMarketplace
+## Web/Mobile App - Marketplace
 
 [DEMO](https://drive.google.com/file/d/13r3OjZL79GkNJdT6bAutL0Z8CqEVVwmH/view?usp=sharing)
 
@@ -10,18 +10,17 @@
 
 There are two versions :
 
-[Redux Version](https://expo.dev/@peanutz/karrot)
-Hardcoded data and utilizes Redux to maintain state for exploring purposes. You can find the code under the “redux_version” branch.
+[Redux Version](https://expo.dev/@peanutz/karrot)  
+Hardcoded data and utilizes Redux to maintain state. You can find the code under the “redux_version” branch.
 
-[Full Stack Version](https://expo.dev/@/projects/marketplace)
+[Full Stack Version](https://expo.dev/@/projects/marketplace)  
 Connected to the backend and database using RESTful APIs and MongoDB. Work in progress.
 
 ### View In The Browser
 
-- right click on one of the link below and select "Open Link in New Tab"
+- right click on your chosen version below and select "Open Link in New Tab"
 
-[Redux Version](https://peanutz-emarketplace.herokuapp.com/)
-[Full Stack Version](https://marketplace-ipcn.onrender.com/)
+[Redux Version](https://peanutz-emarketplace.herokuapp.com/) | [Full Stack Version](https://marketplace-ipcn.onrender.com/)
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
@@ -69,7 +68,7 @@ Your username is Tony once you are on the app. The app includes:
 
 ### Context
 
-I intend to reverse engineer an app called [Karrot](https://uk.karrotmarket.com/)- a marketplace. Initially, my purpose was to demonstrate how the state is maintained using Redux. Therefore, Chat, share and some functionalities under 'My Account' are unavailable. However, the plan has changed, and I want to challenge myself on a larger scale project. Therefore, I am expand the project to a full stack application.
+I intend to reverse engineer an app called [Karrot](https://uk.karrotmarket.com/)- a marketplace. Initially, my purpose was to demonstrate how the state is maintained using Redux. Therefore, Chat, share and some functionalities under 'My Account' are unavailable. However, the plan has changed, and I want to challenge myself on a larger-scale project. Therefore, I am expanding the project to a full-stack application.
 
 ### Road blocks
 
