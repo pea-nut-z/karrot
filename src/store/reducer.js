@@ -238,7 +238,9 @@ const listings = {
       chats: 0,
       favourites: 0,
       views: 0,
-      images: [10],
+      images: [
+        "https://www.gardeningknowhow.com/wp-content/uploads/2012/03/houseplant-sansevieria.jpg",
+      ],
       title: "plant",
       price: 10,
       free: false,
