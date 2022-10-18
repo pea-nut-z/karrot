@@ -23,6 +23,7 @@ router.get("/filter", async (req, res) => {
   const { feeds, category } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });
+
   const baseFilters = [
     { _id: { $nin: [mongoose.Types.ObjectId(privateId)] } },
     { id: { $nin: restriction.blockBy } },

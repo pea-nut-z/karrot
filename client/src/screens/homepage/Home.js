@@ -32,7 +32,7 @@ export default function Home({ navigation }) {
       <StatusBar />
       <Header
         navigation={navigation}
-        title={"Location"}
+        title={"Marketplace"}
         useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
       />
       <View style={{ flex: 1 }}>
