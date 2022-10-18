@@ -13,40 +13,45 @@ const initialItems = {
   Active: [],
   Sold: [],
   Hidden: [],
-}
+};
 
 const itemsReducer = (state, action) => {
-  const { type, fromStatus, toStatus, itemId, newState } = action
-  
+  const { type, fromStatus, toStatus, itemId, newState } = action;
+
   switch (type) {
     case "set":
-      return ({
-        ...state, ...newState
-      })
+      return {
+        ...state,
+        ...newState,
+      };
     case "update":
-      const item = state[fromStatus].filter(item => item.itemId == itemId)
-      item[0]['status'] = toStatus
-      axios.patch(`${helper.proxy}/listing/update/${itemId}`, { status: toStatus }).catch(err => console.error("itemsTabs update error: ", err))
-      return ({
+      const item = state[fromStatus].filter((item) => item.itemId == itemId);
+      item[0]["status"] = toStatus;
+      axios
+        .patch(`${helper.proxy}/my-item/update/${itemId}`, { status: toStatus })
+        .catch((err) => console.error("itemsTabs update error: ", err));
+      return {
         ...state,
-        [fromStatus]: state[fromStatus].filter(item => item.itemId != itemId),
-        [toStatus]: [...state[toStatus], ...item]
-      });
+        [fromStatus]: state[fromStatus].filter((item) => item.itemId != itemId),
+        [toStatus]: [...state[toStatus], ...item],
+      };
     case "delete":
-      axios.delete(`${helper.proxy}/listing/delete/${itemId}`).catch(err => console.error("itemsTabs delete error: ", err));
-      return ({
+      axios
+        .delete(`${helper.proxy}/my-item/delete/${itemId}`)
+        .catch((err) => console.error("itemsTabs delete error: ", err));
+      return {
         ...state,
-        [fromStatus]: state[fromStatus].filter(item => item.itemId != itemId)
-      })
+        [fromStatus]: state[fromStatus].filter((item) => item.itemId != itemId),
+      };
     default:
       throw new Error();
   }
-}
+};
 
 export default function ItemsTabs({ route, navigation }) {
   const atMyProfile = useRef(route.params.atMyProfile).current;
   const [profile, setProfile] = useState({});
-  const [items, itemDispatch] = useReducer(itemsReducer,initialItems)
+  const [items, itemDispatch] = useReducer(itemsReducer, initialItems);
 
   useEffect(() => {
     const memberId = route.params.memberId;
@@ -58,7 +63,7 @@ export default function ItemsTabs({ route, navigation }) {
         .then((res) => {
           const { profile, listings } = res.data;
           setProfile(profile);
-          itemDispatch({type:'set',newState:listings})
+          itemDispatch({ type: "set", newState: listings });
         })
         .catch((err) => console.error("itemsTabs get listings error: ", err));
     });
@@ -67,15 +72,15 @@ export default function ItemsTabs({ route, navigation }) {
   }, []);
 
   class ChangeItemStatus {
-    update(fromStatus, toStatus, itemId){
-      itemDispatch({type:"update", fromStatus,toStatus,itemId})
+    update(fromStatus, toStatus, itemId) {
+      itemDispatch({ type: "update", fromStatus, toStatus, itemId });
     }
     delete(fromStatus, itemId) {
-      itemDispatch({type:"delete", fromStatus,itemId})
+      itemDispatch({ type: "delete", fromStatus, itemId });
     }
   }
 
-  const changeItemStatus = new ChangeItemStatus()
+  const changeItemStatus = new ChangeItemStatus();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -132,7 +137,7 @@ export default function ItemsTabs({ route, navigation }) {
                 message={"No hidden items"}
                 navigation={navigation}
                 changeItemStatus={changeItemStatus}
-                />
+              />
             )}
           />
         )}

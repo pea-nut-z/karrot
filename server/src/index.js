@@ -22,6 +22,7 @@ app.use("/account", routes.account);
 app.use("/profile", routes.profile);
 app.use("/activity", routes.activity);
 app.use("/listing", routes.listing);
+app.use("/my-item", routes.myItem);
 app.use("/review", routes.review);
 app.use("/restrict", routes.restrict);
 

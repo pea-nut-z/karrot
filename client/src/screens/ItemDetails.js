@@ -100,7 +100,7 @@ export default function ItemDetails({ route, navigation }) {
                     setValue={setItemStatus}
                     onChangeValue={(value) => {
                       axios
-                        .patch(`${helper.proxy}/listing/update/${itemId}`, { status: value })
+                        .patch(`${helper.proxy}/my-item/update/${itemId}`, { status: value })
                         .then(() => setItemStatus(value))
                         .catch((err) => console.error("itemDetail change item status error: ", err));
                     }}
@@ -139,11 +139,11 @@ export default function ItemDetails({ route, navigation }) {
 
                 {/* SEE ALL ITEMS BUTTON */}
                 <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("ItemsTabs", {
-                    memberId
-                  });
-                }}
+                  onPress={() => {
+                    navigation.navigate("ItemsTabs", {
+                      memberId,
+                    });
+                  }}
                 >
                   <Text style={styles.seeAllText}>See all</Text>
                 </TouchableOpacity>
