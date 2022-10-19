@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { ItemCard } from "./index";
+import { ItemCard, NoItemsMsg } from "./index";
 import { COLORS } from "../constants";
 
-export default function ItemStatusTab({ accountInfo, listings, message,navigation,changeItemStatus }) {
+export default function ItemStatusTab({
+  accountInfo,
+  listings,
+  message,
+  navigation,
+  changeItemStatus,
+}) {
   const [profile, setProfile] = useState({});
   const [items, setItems] = useState();
 
@@ -16,9 +22,7 @@ export default function ItemStatusTab({ accountInfo, listings, message,navigatio
   return (
     <View style={{ flex: 1 }}>
       {listings.length === 0 ? (
-        <View style={styles.noListingMsgContainer}>
-          <Text style={styles.noListingText}>{message}</Text>
-        </View>
+        <NoItemsMsg message={message} />
       ) : (
         <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
           <View style={styles.ListingContainer}>
@@ -42,13 +46,5 @@ export default function ItemStatusTab({ accountInfo, listings, message,navigatio
 }
 
 const styles = StyleSheet.create({
-  noListingMsgContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  noListingText: {
-    color: COLORS.secondary,
-  },
   ListingContainer: { paddingBottom: 50 },
 });
