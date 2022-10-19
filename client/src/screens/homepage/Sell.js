@@ -10,7 +10,7 @@ import {
   ImageBackground,
   SafeAreaView,
 } from "react-native";
-import { COLORS, SIZES, categoryOptions, categoryDropDown } from "../../constants";
+import { COLORS, SIZES, categoryDropDown } from "../../constants";
 import { Header, ModalAlert } from "../../UI";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CurrencyInput from "react-native-currency-input";
@@ -71,7 +71,7 @@ export default function Sell({ route, navigation }) {
   const [modalKey, setModalKey] = useState("");
   const [readyToSubmit, setReadyToSubmit] = useState(false);
 
-  // no itemId is a draft and with itemId is a edit
+  // no itemId is a draft and with itemId is an edit
   const itemId = useRef(route.params.itemId).current;
 
   useEffect(() => {
@@ -224,7 +224,7 @@ export default function Sell({ route, navigation }) {
   const checkFields = () => {
     const checkImgAndPrice = () => {
       if (listing.images.length === 0) {
-        const category = categoryOptions.find((category) => category.name === listing.category);
+        const category = variables.categories.find((category) => category.name === listing.category);
         listingDispatch({ type: "add-image", image: category.icon });
       }
       if (!listing.price) {

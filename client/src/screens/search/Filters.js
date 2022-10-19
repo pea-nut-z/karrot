@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, SafeAreaView, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import CurrencyInput from "react-native-currency-input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { COLORS, categoryOptions, SIZES, FONTS } from "../../constants";
+import { COLORS, SIZES } from "../../constants";
 import { Border, Header } from "../../UI";
+import * as variables from "../../variables";
 
 export default function Filters({ toggleFilterScreen, createFilters, filters }) {
   const [newFilters, setNewFilters] = useState(filters);
@@ -30,7 +31,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
       <KeyboardAwareScrollView>
         <Text style={styles.subheader}>Categories</Text>
         <View style={styles.categoriesContainer}>
-          {categoryOptions.map((option, index) => {
+          {variables.categories.map((option, index) => {
             const { name } = option;
             return (
               <TouchableOpacity

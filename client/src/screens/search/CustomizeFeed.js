@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
-import { categoryOptions, COLORS, FONTS, SIZES } from "../../constants";
-// import * as actions from "../../store/actionTypes";
+import { COLORS, SIZES } from "../../constants";
 import { Header, ModalAlert } from "../../UI";
+import * as variables from "../../variables";
 
 export default function CustomizeFeed({ route, navigation }) {
   const { userId } = route.params;
@@ -56,7 +56,7 @@ export default function CustomizeFeed({ route, navigation }) {
             flexWrap: "wrap",
           }}
         >
-          {categoryOptions.map((option, index) => {
+          {variables.categories.map((option, index) => {
             return (
               <TouchableOpacity
                 key={`option-${index}`}
