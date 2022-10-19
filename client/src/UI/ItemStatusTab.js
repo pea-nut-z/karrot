@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ItemCard, NoItemsMsg } from "./index";
-import { COLORS } from "../constants";
 
 export default function ItemStatusTab({
   accountInfo,
