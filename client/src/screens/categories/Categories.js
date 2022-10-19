@@ -6,20 +6,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import * as variables from "../../variables";
 
 export default function Categories({ navigation }) {
-  // MOCK USERID
-  const userId = 111;
-
   const navigateTo = (option) => {
     navigation.navigate("Category", {
-      userId,
-      selectedCategory: option.name,
+      category: option.name,
     });
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
-        userId={userId}
         navigation={navigation}
         title={"Categories"}
         useRightBtns={["search-outline", "notifications-outline"]}
@@ -43,6 +38,5 @@ const styles = StyleSheet.create({
   subheader: {
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
-    // ...FONTS.h4,
   },
 });

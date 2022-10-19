@@ -1,51 +1,35 @@
-import React, { useMemo } from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { FONTS, COLORS } from "../../constants";
-import { Header, ItemCards } from "../../UI";
+import { Header, NoItemsMsg, ItemCards } from "../../UI";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useSelector } from "react-redux";
+import * as helper from "../../helper";
+import axios from "axios";
 
 export default function Category({ route, navigation }) {
-  // const { userId, selectedCategory } = route.params;
-  // const getItemsByCategory = useMemo(filterListings, []);
-  // const itemsByCategory = useSelector((state) =>
-  //   getItemsByCategory(
-  //     userId,
-  //     state.listings,
-  //     state.members,
-  //     state.restrictions,
-  //     state.feeds,
-  //     "category",
-  //     selectedCategory
-  //   )
-  // );
+  const { category } = route.params;
+
+  useEffect(() => {
+    axios.get(`${helper.proxy}/listings/`);
+  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <Header
+      <Header
         navigation={navigation}
-        title={selectedCategory}
+        title={category}
         useBackBtn={true}
         useRightBtns={["search-outline", "notifications-outline"]}
-      /> */}
+      />
 
-      {/* <KeyboardAwareScrollView
-        contentContainerStyle={itemsByCategory.length === 0 ? styles.noItemsContainer : null}
-        enableOnAndroid
-      > */}
-      {/* {itemsByCategory.length === 0 ? (
-          <Text
-            style={{
-              color: COLORS.secondary,
-              // ...FONTS.body2
-            }}
-          >
-            Oops, no listings under this category.
-          </Text>
+      <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }} enableOnAndroid>
+        {0 == 0 ? (
+          <NoItemsMsg message={"Oops, no listings under this category."} />
         ) : (
-          <ItemCards userId={userId} items={itemsByCategory} navigation={navigation} />
-        )} */}
-      {/* </KeyboardAwareScrollView> */}
+          // <ItemCards userId={userId} items={itemsByCategory} navigation={navigation} />
+          <Text>Testing</Text>
+        )}
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
