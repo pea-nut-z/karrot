@@ -62,6 +62,9 @@ router.delete("/delete/:itemId", (req, res) => {
           itemId,
         },
       },
+      $inc: {
+        numOfItems: -1,
+      },
     },
     (err) => {
       if (err) throw err;
