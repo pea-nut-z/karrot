@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView} from "react-native";
+import { SafeAreaView } from "react-native";
 import { Header, ItemCard, NoItemsMsg } from "../../UI";
 import * as helper from "../../helper";
 import axios from "axios";
@@ -16,27 +16,28 @@ export default function Favourites({ navigation }) {
   }, []);
 
   const removeFav = (itemId) => {
-    const newItems = items.filter(item => item.details.items[0].itemId != itemId)
-    setItems(newItems)
-  }
+    const newItems = items.filter((item) => item.details.items[0].itemId != itemId);
+    setItems(newItems);
+  };
 
   return (
-    <SafeAreaView style={{flex:"1"}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header title={"Favourites"} useBackBtn={true} navigation={navigation} />
-      {items.length ? (items.map((item) => {
-        return (
-          <ItemCard
-            key={item.details.items[0].itemId}
-            accountInfo={item.details}
-            listing={item.details.items[0]}
-            navigation={navigation}
-            removeFav={removeFav}
-          />
-        );
-      })) : (
-          <NoItemsMsg/>
+      {items.length ? (
+        items.map((item) => {
+          return (
+            <ItemCard
+              key={item.details.items[0].itemId}
+              accountInfo={item.details}
+              listing={item.details.items[0]}
+              navigation={navigation}
+              removeFav={removeFav}
+            />
+          );
+        })
+      ) : (
+        <NoItemsMsg />
       )}
     </SafeAreaView>
   );
 }
-
