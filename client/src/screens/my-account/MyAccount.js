@@ -2,16 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  SIZES,
-  COLORS,
-  viewOptions,
-  locationOptions,
-  rewardsOption,
-  infoOptions,
-} from "../../constants";
+import { SIZES, COLORS } from "../../constants";
 import { Header, CircleButtons, FlatButtons, MemberInfo } from "../../UI";
 import * as helper from "../../helper";
+import * as variables from "../../variables";
 import axios from "axios";
 
 export default function MyAccount({ navigation }) {
@@ -72,19 +66,19 @@ export default function MyAccount({ navigation }) {
           </TouchableOpacity>
 
           <View style={[styles.circleButtons, styles.margin]}>
-            <CircleButtons options={viewOptions} navigation={navigation} />
+            <CircleButtons options={variables.myItemViewOptions} navigation={navigation} />
           </View>
         </View>
 
         <View>
           <View style={styles.flatBtnsContainer}>
-            <FlatButtons options={locationOptions} navigateTo={navigateTo} />
+            <FlatButtons options={variables.locationOptions} navigateTo={navigateTo} />
           </View>
           <View style={styles.flatBtnsContainer}>
-            <FlatButtons options={rewardsOption} navigateTo={navigateTo} />
+            <FlatButtons options={variables.rewardsOption} navigateTo={navigateTo} />
           </View>
           <View style={styles.flatBtnsContainer}>
-            <FlatButtons options={infoOptions} navigateTo={navigateTo} />
+            <FlatButtons options={variables.infoOptions} navigateTo={navigateTo} />
           </View>
         </View>
       </KeyboardAwareScrollView>
