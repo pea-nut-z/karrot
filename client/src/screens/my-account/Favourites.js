@@ -36,7 +36,7 @@ export default function Favourites({ navigation }) {
           );
         })
       ) : (
-        <NoItemsMsg />
+        <NoItemsMsg message={"No Items"} />
       )}
     </SafeAreaView>
   );
