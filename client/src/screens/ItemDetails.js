@@ -4,12 +4,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import DropDownPicker from "react-native-dropdown-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { Border, Header, ImageScrollView, MemberInfo, MemberRating, OtherItem } from "../UI";
-import { SIZES, itemStatusOptions, COLORS } from "../constants";
+import { SIZES, COLORS } from "../constants";
 import axios from "axios";
 import * as helper from "../helper";
+import * as variables from "../variables";
 
 export default function ItemDetails({ route, navigation }) {
   const memberId = useRef(route.params.memberId).current;
+
   const itemId = useRef(route.params.itemId).current;
   const newItem = useRef(route.params.newItem).current;
   const [profile, setProfile] = useState();
@@ -20,7 +22,7 @@ export default function ItemDetails({ route, navigation }) {
   const [numOfFavs, setNumOfFavs] = useState();
   const [hide, setHide] = useState();
   const [dropDown, setDropDown] = useState(false);
-  const [dropDownItems, setDropDownItems] = useState(itemStatusOptions);
+  const [dropDownItems, setDropDownItems] = useState(variables.itemStatusOptions);
   const [useWhiteBtns, setUseWhiteBtns] = useState();
   const [numOfReviews, setNumOfReivews] = useState();
   const [average, setAverage] = useState();
@@ -89,7 +91,7 @@ export default function ItemDetails({ route, navigation }) {
               {/* RENDER ITEM INFO */}
               {/* RENDER STATUS DROPDOWN ONLY TO SELLER */}
               <View style={styles.itemInfoContainer}>
-                {helper.myId === memberId && (
+                {helper.myId === memberId && itemStatus && (
                   <DropDownPicker
                     listMode="SCROLLVIEW"
                     open={dropDown}

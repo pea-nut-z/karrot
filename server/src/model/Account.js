@@ -21,6 +21,7 @@ const item = new Schema({
 
 const schema = new Schema({
   id: reqStr,
+  privateId: reqStr,
   name: reqStr,
   location: reqStr,
   image: reqStr,

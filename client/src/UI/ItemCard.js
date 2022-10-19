@@ -8,8 +8,7 @@ import * as variables from "../variables";
 import axios from "axios";
 import Modal from "react-native-modal";
 
-
-export default function ItemCard({ accountInfo,listing,navigation,removeFav,changeItemStatus }) {
+export default function ItemCard({ accountInfo, listing, navigation, removeFav, changeItemStatus }) {
   const [profile, setProfile] = useState({});
   const [item, setItem] = useState({});
   const [image, setImage] = useState();
@@ -38,35 +37,37 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
       case "Hide":
       case "Unhide":
       case "Delete":
-        setModalKey(action)
-        setShowModal(true)
+        setModalKey(action);
+        setShowModal(true);
         break;
       case "Confirm-Hide":
-        closeModal()
-        changeItemStatus.update(item.status, "Hidden", item.itemId)
+        closeModal();
+        changeItemStatus.update(item.status, "Hidden", item.itemId);
         break;
       case "Confirm-Delete":
-        closeModal()
-        changeItemStatus.delete(item.status,item.itemId)
+        closeModal();
+        changeItemStatus.delete(item.status, item.itemId);
         break;
       case "Confirm-Unhide":
       case "Change to active":
-        closeModal()
-        changeItemStatus.update(item.status, "Active", item.itemId)
+        closeModal();
+        changeItemStatus.update(item.status, "Active", item.itemId);
         break;
       case "Sold":
-        closeModal()
-        changeItemStatus.update(item.status, "Sold", item.itemId)
+        closeModal();
+        changeItemStatus.update(item.status, "Sold", item.itemId);
         break;
       case "Edit":
-        closeModal()
+        closeModal();
         navigation.navigate("Sell", { itemId: item.itemId });
         break;
+      case "Cancel":
+        closeModal();
       default:
-        closeModal()
-   }
-     
-  }
+        closeModal();
+        console.error("Uncaught modal action");
+    }
+  };
 
   return (
     <View>
@@ -110,7 +111,7 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
 
         {/* FEATURES FOR MY ITEM */}
         <View>
-          {(helper.myId == profile.id && !removeFav) && (
+          {helper.myId == profile.id && !removeFav && (
             <View>
               <TouchableOpacity
                 onPress={() => {
@@ -119,36 +120,39 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
               >
                 <Ionicons name={"ellipsis-vertical-circle"} size={35} />
               </TouchableOpacity>
-              <Modal isVisible={showOutterModal} onBackdropPress={() => { closeModal() }}>
-              {variables['detailedItemStatusOptions'][item.status].map((action) => {
-                return (
-                  <TouchableOpacity
-                    key={action}
-                    onPress={() => handleAction(action)}
-                    style={{
-                      height: 50,
-                      backgroundColor: COLORS.white,
-                      paddingHorizontal: SIZES.padding,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text>
-                      {action}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })}
+              <Modal
+                isVisible={showOutterModal}
+                onBackdropPress={() => {
+                  closeModal();
+                }}
+              >
+                {variables["detailedItemStatusOptions"][item.status].map((action) => {
+                  return (
+                    <TouchableOpacity
+                      key={action}
+                      onPress={() => handleAction(action)}
+                      style={{
+                        height: 50,
+                        backgroundColor: COLORS.white,
+                        paddingHorizontal: SIZES.padding,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text>{action}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
                 <ModalAlert
                   visibleVariable={showModal}
                   closeModal={closeModal}
                   handleAction={handleAction}
-                  keys={["listing",modalKey]}
+                  keys={["listing", modalKey]}
                 />
               </Modal>
             </View>
           )}
 
-          { removeFav && (
+          {removeFav && (
             <View
               style={{
                 height: "100%",
@@ -157,10 +161,11 @@ export default function ItemCard({ accountInfo,listing,navigation,removeFav,chan
             >
               <TouchableOpacity
                 onPress={() => {
-                  axios.patch(`${helper.proxy}/activity/remove/favourite/${profile.id}/${item.itemId}`)
+                  axios
+                    .patch(`${helper.proxy}/activity/remove/favourite/${profile.id}/${item.itemId}`)
                     .then(() => {
-                    removeFav(item.itemId)
-                  })
+                      removeFav(item.itemId);
+                    });
                 }}
               >
                 <Ionicons name={"heart"} size={30} color={COLORS.primary} />

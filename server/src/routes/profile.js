@@ -5,21 +5,21 @@ const router = express.Router();
 
 router.patch("/update", (req, res) => {
   const changes = req.body;
-  Account.findOneAndUpdate({ _id: privateId }, { ...changes }, (err) => {
+  Account.findOneAndUpdate({ privateId }, { ...changes }, (err) => {
     if (err) throw err;
     res.send("resolved");
   });
 });
 
 router.get("/read", (req, res) => {
-  Account.findOne({ _id: privateId }, { image: 1, name: 1, location: 1, id: 1 }, (err, doc) => {
+  Account.findOne({ privateId }, { image: 1, name: 1, location: 1, id: 1 }, (err, doc) => {
     if (err) throw err;
     res.json(doc);
   });
 });
 
 router.get("/draft", (req, res) => {
-  Account.findOne({ _id: privateId }, { draft: 1, _id: 0 }, (err, doc) => {
+  Account.findOne({ privateId }, { draft: 1, _id: 0 }, (err, doc) => {
     if (err) throw err;
     res.json({ doc });
   });

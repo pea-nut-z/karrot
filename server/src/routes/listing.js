@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import { Account, Activity, Restriction, Review } from "../model/index.js";
 import { privateId } from "./helper.js";
-import ShortUniqueId from "short-unique-id";
 
 const router = express.Router();
 

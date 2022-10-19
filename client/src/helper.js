@@ -5,7 +5,7 @@ export const proxy =
     ? "http://10.0.0.243:3001"
     : "https://marketplace-v942-production-yeccqhdvqq-wm.a.run.app";
 
-console.log({ proxy });
+// console.log({ proxy });
 
 export const timeSince = (date) => {
   if (typeof date !== "object") {

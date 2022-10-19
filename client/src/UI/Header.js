@@ -14,12 +14,11 @@ export default function Header({
   submitFunc,
   title,
   toggleFilterScreen,
-  userId,
+  // userId,
   useBackBtn,
   useHomeBtn,
   useRightBtns,
 }) {
-
   const renderBackBtn = () => {
     return (
       <TouchableOpacity
@@ -49,7 +48,7 @@ export default function Header({
           flexDirection: "row",
         }}
       >
-        {useRightBtns.map((buttonName) => {
+        {/* {useRightBtns.map((buttonName) => {
           return (
             <HeaderButton
               key={buttonName}
@@ -61,7 +60,7 @@ export default function Header({
               submitFunc={submitFunc}
             />
           );
-        })}
+        })} */}
       </View>
     );
   };

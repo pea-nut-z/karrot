@@ -12,7 +12,7 @@ router.post("/create", (req, res) => {
   const listing = req.body;
   const itemId = uid();
   Account.findOneAndUpdate(
-    { _id: privateId },
+    { privateId },
     { $push: { items: { itemId, ...listing } }, $inc: { numOfItems: 1 } },
     { new: true, select: hideVIDFields },
     (err, doc) => {
@@ -24,7 +24,7 @@ router.post("/create", (req, res) => {
 
 router.get("/read/:itemId", (req, res) => {
   const { itemId } = req.params;
-  Account.findOne({ _id: privateId }, { _id: 0, items: { $elemMatch: { itemId } } }, (err, doc) => {
+  Account.findOne({ privateId }, { _id: 0, items: { $elemMatch: { itemId } } }, (err, doc) => {
     if (err) throw err;
     res.json({ doc: doc.items[0] });
   });
@@ -40,7 +40,7 @@ router.patch("/update/:itemId", (req, res) => {
   );
 
   Account.findOneAndUpdate(
-    { _id: privateId, "items.itemId": itemId },
+    { privateId, "items.itemId": itemId },
     {
       $set: { ...changes },
     },
@@ -55,7 +55,7 @@ router.patch("/update/:itemId", (req, res) => {
 router.delete("/delete/:itemId", (req, res) => {
   const { itemId } = req.params;
   Account.findOneAndUpdate(
-    { _id: privateId },
+    { privateId },
     {
       $pull: {
         items: {

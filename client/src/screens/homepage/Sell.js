@@ -10,7 +10,7 @@ import {
   ImageBackground,
   SafeAreaView,
 } from "react-native";
-import { COLORS, SIZES, categoryDropDown } from "../../constants";
+import { COLORS, SIZES } from "../../constants";
 import { Header, ModalAlert } from "../../UI";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CurrencyInput from "react-native-currency-input";
@@ -64,7 +64,7 @@ const listingReducer = (state, action) => {
 export default function Sell({ route, navigation }) {
   const [listing, listingDispatch] = useReducer(listingReducer, initialListing);
   const [dropDown, setDropDown] = useState(false);
-  const [dropDownItems, setDropDownItems] = useState(categoryDropDown);
+  const [dropDownItems, setDropDownItems] = useState(variables.categoryDropDown);
   const [category, setCategory] = useState("");
   const [draft, setDraft] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -82,12 +82,15 @@ export default function Sell({ route, navigation }) {
 
   useEffect(() => {
     if (itemId) {
-      axios.get(`${helper.proxy}/my-item/read/${itemId}`).then((res) => {
-        const { doc } = res.data;
-        const numOfImg = typeof doc.images[0] == "string" ? doc.images.length : 0;
-        listingDispatch({ type: "update", listing: { ...doc, numOfImg } });
-        setCategory(doc.category);
-      });
+      axios
+        .get(`${helper.proxy}/my-item/read/${itemId}`)
+        .then((res) => {
+          const { doc } = res.data;
+          const numOfImg = typeof doc.images[0] == "string" ? doc.images.length : 0;
+          listingDispatch({ type: "update", listing: { ...doc, numOfImg } });
+          setCategory(doc.category);
+        })
+        .catch((err) => console.error("Sell page edit item error: ", err));
     } else {
       axios
         .get(`${helper.proxy}/profile/draft`)
@@ -98,12 +101,12 @@ export default function Sell({ route, navigation }) {
             openModal("draft");
           }
         })
-        .catch((err) => console.error("Homepage get draft error: ", err));
+        .catch((err) => console.error("Sell page get draft error: ", err));
     }
   }, []);
 
   useEffect(() => {
-    if (listing.price === 0) {
+    if (listing.price == 0) {
       updateListingValue({
         free: true,
         price: null,
