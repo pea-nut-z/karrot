@@ -11,27 +11,27 @@ export default function HeaderButton({
   navigation,
 }) {
   const navigateTo = (keyword) => {
-    // switch (keyword) {
-    //   case "checkmark":
-    //   case "DONE":
-    //     return submitFunc();
-    //   case "search":
-    //     return navigation.navigate("SearchTabs", {
-    //       userId,
-    //     });
-    //   case "funnel":
-    //     return navigation.navigate("CustomizeFeed", {
-    //       userId,
-    //     });
-    //   case "notifications":
-    //     return navigation.navigate("NotificationsTabs", {
-    //       userId,
-    //     });
-    //   case "home":
-    //     return navigation.navigate("Home");
-    //   default:
-    return;
-    // }
+    switch (keyword) {
+      case "checkmark":
+      case "DONE":
+        return submitFunc();
+      case "search":
+        return navigation.navigate("SearchTabs", {
+          userId,
+        });
+      case "funnel":
+        return navigation.navigate("CustomizeFeed", {
+          userId,
+        });
+      case "notifications":
+        return navigation.navigate("NotificationsTabs", {
+          userId,
+        });
+      case "home":
+        return navigation.navigate("Home");
+      default:
+        throw new Error("Header Button-> uncaught button action");
+    }
   };
   return (
     <View>

@@ -140,11 +140,11 @@ export default function Sell({ route, navigation }) {
         setCategory(draft.category);
         break;
       case "Exit":
-        navigation.goBack();
+        return navigation.goBack();
       case "Cancel":
         return;
       default:
-        console.error("Sell->Modal handleAction error: ", err);
+        throw new Error(`Sell-> uncaught modal action: ${action}`);
     }
   };
 

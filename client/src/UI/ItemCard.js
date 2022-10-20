@@ -65,7 +65,7 @@ export default function ItemCard({ accountInfo, listing, navigation, removeFav, 
         closeModal();
       default:
         closeModal();
-        console.error("Uncaught modal action");
+        throw new Error(`Item Card-> uncaught modal action: ${action}`);
     }
   };
 

@@ -52,12 +52,12 @@ export default function Profile({ route, navigation }) {
   };
 
   const openModal = (action) => {
-    setShowModal(true)
-    setModalKey(action)
-  }
+    setShowModal(true);
+    setModalKey(action);
+  };
 
   const closeModal = () => {
-    setShowModal(false)
+    setShowModal(false);
     setShowHeaderMenu(false);
   };
 
@@ -69,18 +69,18 @@ export default function Profile({ route, navigation }) {
         return navigation.navigate("Report", { memberId });
       case "Hide":
       case "Block":
-        return openModal(action)
+        return openModal(action);
       case "Unblock":
         endpoint = `pull/block`;
         callback = () => {
-          openModal(action)
+          openModal(action);
           setBlock(false);
         };
         break;
       case "Unhide":
         endpoint = `pull/hide`;
         callback = () => {
-          openModal(action)
+          openModal(action);
           setHide(false);
         };
         break;
@@ -94,14 +94,14 @@ export default function Profile({ route, navigation }) {
       case "Hid":
         endpoint = `push/hide`;
         callback = () => {
-          openModal(action)
+          openModal(action);
           setHide(true);
         };
         break;
       case "Cancel":
         return closeModal();
       default:
-        throw new Error("Profile->uncaught swtich action")
+        throw new Error(`Profile->uncaught modal action: ${action}`);
     }
 
     axios
@@ -121,7 +121,7 @@ export default function Profile({ route, navigation }) {
           <TouchableOpacity
             style={styles.headerMenuOption}
             onPress={() => {
-              toggleHeaderMenu()
+              toggleHeaderMenu();
               navigation.navigate("EditProfile", { name: profile.name, image: profile.image });
             }}
           >
@@ -130,7 +130,7 @@ export default function Profile({ route, navigation }) {
         </View>
       );
     } else {
-      const actions = variables.getRestrictActions(block,hide)
+      const actions = variables.getRestrictActions(block, hide);
 
       return (
         <View style={styles.headerMenuContainer}>
@@ -140,7 +140,7 @@ export default function Profile({ route, navigation }) {
                 key={action}
                 style={styles.headerMenuOption}
                 onPress={() => {
-                  toggleHeaderMenu()
+                  toggleHeaderMenu();
                   handleAction(action);
                 }}
               >
@@ -177,7 +177,7 @@ export default function Profile({ route, navigation }) {
         <View style={{ flex: 1 }}>
           <View style={styles.topContainer}>
             {profile && (
-              <View >
+              <View>
                 <ModalAlert
                   visibleVariable={showModal}
                   closeModal={closeModal}

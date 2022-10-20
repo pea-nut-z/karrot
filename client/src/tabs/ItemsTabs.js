@@ -44,7 +44,7 @@ const itemsReducer = (state, action) => {
         [fromStatus]: state[fromStatus].filter((item) => item.itemId != itemId),
       };
     default:
-      throw new Error();
+      throw new Error(`Item Tabs-> uncaught item reducer type: ${type}`);
   }
 };
 
