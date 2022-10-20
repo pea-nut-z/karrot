@@ -4,7 +4,7 @@ import { privateId } from "./helper.js";
 const router = express.Router();
 
 router.get("/read/favourites", async (req, res) => {
-  const doc = await Activity.aggregate([
+  const docs = await Activity.aggregate([
     {
       $match: {
         privateId,
@@ -40,7 +40,12 @@ router.get("/read/favourites", async (req, res) => {
       },
     },
   ]);
-  res.json(doc);
+
+  const flattenDocs = docs.reduce((acc, cur) => {
+    return acc.concat({ ...cur.details, items: cur.details.items[0] });
+  }, []);
+
+  res.json({ docs: flattenDocs });
 });
 
 router.patch("/add/favourite/:memberId/:itemId", async (req, res) => {

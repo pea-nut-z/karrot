@@ -1,21 +1,17 @@
-import React,{useEffect} from "react";
+import React from "react";
 import Modal from "react-native-modal";
 import { View, Text, TouchableOpacity } from "react-native";
 import { SIZES, COLORS } from "../constants";
-import * as variables from "../variables"
+import * as variables from "../variables";
 
-export default function ModalAlert({
-  visibleVariable,
-  closeModal,
-  handleAction,
-  keys,
-  name
-}) {
-  
+export default function ModalAlert({ visibleVariable, closeModal, handleAction, keys, name }) {
   return (
-    <Modal isVisible={visibleVariable} onBackdropPress={() => {
-      closeModal()
-    }}>
+    <Modal
+      isVisible={visibleVariable}
+      onBackdropPress={() => {
+        closeModal();
+      }}
+    >
       <View
         style={{
           backgroundColor: COLORS.white,
@@ -31,9 +27,7 @@ export default function ModalAlert({
             borderRadius: 5,
           }}
         >
-          <Text>
-            {variables['modalActions'][keys[0]][keys[1]]?.['message'](name)}
-          </Text>
+          <Text>{variables["modalActions"][keys[0]][keys[1]]?.["message"](name)}</Text>
         </View>
         <View
           style={{
@@ -42,8 +36,8 @@ export default function ModalAlert({
             justifyContent: "flex-end",
           }}
         >
-          {variables['modalActions'][keys[0]][keys[1]]?.['options']?.map((option, index) => {
-            const action = variables['modalActions'][keys[0]][keys[1]]?.['actions'][index]
+          {variables["modalActions"][keys[0]][keys[1]]?.["options"]?.map((option, index) => {
+            const action = variables["modalActions"][keys[0]][keys[1]]?.["actions"][index];
             return (
               <TouchableOpacity key={option} onPress={() => handleAction(action)}>
                 <Text

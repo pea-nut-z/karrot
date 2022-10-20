@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { ItemCards } from "../../UI";
+import { ItemCard } from "../../UI";
 import { SIZES, COLORS, FONTS } from "../../constants";
 
 export default function ForSale({
@@ -122,7 +122,7 @@ export default function ForSale({
         }}
       >
         <View style={{ paddingBottom: 30 }}>
-          {/* {items && <ItemCards userId={userId} items={items} navigation={navigation} />} */}
+          {/* {items && <ItemCard userId={userId} items={items} navigation={navigation} />} */}
         </View>
       </KeyboardAwareScrollView>
     </View>

@@ -273,7 +273,6 @@ export default function Sell({ route, navigation }) {
       />
 
       <KeyboardAwareScrollView
-        style={{ flex: 1 }}
         extraHeight={100}
         enableOnAndroid
         showsVerticalScrollIndicator={false}

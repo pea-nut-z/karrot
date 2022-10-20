@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import * as actions from "../store/actionTypes";
 import Modal from "react-native-modal";
 
-export default function ItemCards({
+export default function ItemCard({
   // userId,
   items,
   navigation,
@@ -74,9 +74,7 @@ export default function ItemCards({
                 justifyContent: "center",
               }}
             >
-              <Text>
-                {option}
-              </Text>
+              <Text>{option}</Text>
             </TouchableOpacity>
           );
         })}

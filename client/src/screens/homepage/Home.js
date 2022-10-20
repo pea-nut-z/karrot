@@ -10,19 +10,20 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { COLORS, SIZES } from "../../constants";
-import { Header, ItemCard } from "../../UI";
+import { Header, ItemCard, NoItemsMsg } from "../../UI";
 import axios from "axios";
 import * as helper from "../../helper";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
-  const [profiles, setProfiles] = useState();
+  const [items, setItems] = useState();
+
   useEffect(() => {
     axios
-      .get(`${helper.proxy}/listing/filter?feeds=true`)
+      .get(`${helper.proxy}/listing/filter/feeds`)
       .then((res) => {
-        setProfiles(res.data.docs);
+        setItems(res.data.docs);
       })
       .catch((err) => console.error("Homepage listing error: ", err));
   }, []);
@@ -36,7 +37,6 @@ export default function Home({ navigation }) {
         useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
       />
       <View style={{ flex: 1 }}>
-        {/* SELL BUTTON */}
         <TouchableOpacity
           style={styles.sellBtn}
           onPress={() => {
@@ -45,42 +45,31 @@ export default function Home({ navigation }) {
         >
           <Text style={styles.btnText}>+ Sell</Text>
         </TouchableOpacity>
-        <View style={{ flex: 1 }}>
-          {profiles && profiles.length !== 0 && (
-            <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
-              {profiles.map((profile) => {
-                return profile.items.map((item) => {
-                  return (
-                    <View key={item.itemId} style={styles.itemCard}>
-                      <ItemCard accountInfo={profile} listing={item} navigation={navigation} />
-                    </View>
-                  );
-                });
-              })}
-            </KeyboardAwareScrollView>
-          )}
-          <View style={styles.noItemsMsgContainer}>
-            {!profiles && <Text style={styles.noItemsText}>Loading...</Text>}
-            {profiles && profiles.length == 0 && <Text style={styles.noItemsText}>No Items</Text>}
-          </View>
-        </View>
+        {!items && <NoItemsMsg message={"Loading..."} />}
+        {items && !items.length && (
+          <NoItemsMsg message={"No items at all. Maybe too many filters!"} />
+        )}
+        {items && items.length && (
+          <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
+            {items.map((profile) => {
+              return (
+                <ItemCard
+                  key={profile.items.itemId}
+                  profile={profile}
+                  item={profile.items}
+                  image={profile.items.images[0]}
+                  navigation={navigation}
+                />
+              );
+            })}
+          </KeyboardAwareScrollView>
+        )}
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-  },
-  itemCard: {
-    flex: 1,
-    paddingBottom: 10,
-  },
   sellBtn: {
     position: "absolute",
     zIndex: 1,
@@ -96,13 +85,5 @@ const styles = StyleSheet.create({
   btnText: {
     color: COLORS.white,
     fontSize: 19,
-  },
-  noItemsMsgContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  noItemsText: {
-    color: COLORS.secondary,
   },
 });

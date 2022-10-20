@@ -27,5 +27,5 @@ export {
   ModalMenu,
   ModalAlert,
   OtherItem,
-  NoItemsMsg
+  NoItemsMsg,
 };

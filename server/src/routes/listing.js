@@ -16,8 +16,9 @@ const itemCardFields = {
   "items.status": 1,
 };
 
-router.get("/filter", async (req, res) => {
-  const { feeds, category } = req.query;
+router.get("/filter/:by", async (req, res) => {
+  const { by } = req.params;
+  const { value } = req.query;
 
   const restriction = await Restriction.findOne({ privateId });
 
@@ -28,39 +29,30 @@ router.get("/filter", async (req, res) => {
     { id: { $nin: restriction.block } },
   ];
 
-  let docs;
+  let mainFilter;
 
-  if (feeds) {
-    docs = await Account.aggregate([
-      { $match: { $and: [...baseFilters] } },
-      { $unwind: "$items" },
-      {
-        $match: {
-          $and: [{ "items.category": { $in: restriction.feeds } }, { "items.status": "Active" }],
-        },
-      },
-      {
-        $project: itemCardFields,
-      },
-      {
-        $group: {
-          _id: "$_id",
-          id: {
-            $first: "$id",
-          },
-          location: {
-            $first: "$location",
-          },
-          items: {
-            $addToSet: "$items",
-          },
-        },
-      },
-    ]);
+  switch (by) {
+    case "category":
+      mainFilter = { "items.category": value };
+      break;
+    default:
+      mainFilter = { "items.category": { $in: restriction.feeds } };
   }
 
-  // handle error
+  let docs = await Account.aggregate([
+    { $match: { $and: [...baseFilters] } },
+    { $unwind: "$items" },
+    {
+      $match: {
+        $and: [mainFilter, { "items.status": "Active" }],
+      },
+    },
+    {
+      $project: itemCardFields,
+    },
+  ]);
 
+  // handle error
   res.json({ docs });
 });
 
@@ -140,44 +132,23 @@ router.get("/read/items", async (req, res) => {
   const query = memberId ? { id: memberId } : { _id: mongoose.Types.ObjectId(privateId) };
 
   try {
-    const groups = await Account.aggregate([
+    const unwindDocs = await Account.aggregate([
       { $match: query },
       { $unwind: "$items" },
       { $project: itemCardFields },
-      {
-        $group: {
-          _id: "$items.status",
-          id: {
-            $first: "$id",
-          },
-          location: {
-            $first: "$location",
-          },
-          items: {
-            $addToSet: "$items",
-          },
-        },
-      },
     ]);
 
-    let getProfile = true;
-    const profile = {};
-    const listings = {
+    const docs = {
       Active: [],
       Sold: [],
       Hidden: [],
     };
 
-    for (const group of groups) {
-      if (memberId && group._id == "Hidden") continue;
-      if (getProfile) {
-        profile.id = group.id;
-        profile.location = group.location;
-        getProfile = false;
-      }
-      listings[group._id] = group.items;
+    for (const doc of unwindDocs) {
+      if (memberId && doc.items.status == "Hidden") continue;
+      docs[doc.items.status].push(doc);
     }
-    res.json({ profile, listings });
+    res.json({ docs });
   } catch (err) {
     throw err;
   }

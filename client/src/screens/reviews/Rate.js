@@ -40,7 +40,7 @@ export default function Rate({ route, navigation }) {
         navigation={navigation}
       />
 
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1, ...styles.container }}>
           <Text style={styles.subtitle}>Overall rating</Text>
           <View style={styles.starContainer}>

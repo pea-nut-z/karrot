@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from "react";
+import React, { useEffect, useRef, useReducer } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header, ItemStatusTab } from "../UI";
@@ -25,14 +25,14 @@ const itemsReducer = (state, action) => {
         ...newState,
       };
     case "update":
-      const item = state[fromStatus].filter((item) => item.itemId == itemId);
-      item[0]["status"] = toStatus;
+      const item = state[fromStatus].filter((profile) => profile.items.itemId == itemId);
+      item[0]["items"]["status"] = toStatus;
       axios
         .patch(`${helper.proxy}/my-item/update/${itemId}`, { status: toStatus })
         .catch((err) => console.error("itemsTabs update error: ", err));
       return {
         ...state,
-        [fromStatus]: state[fromStatus].filter((item) => item.itemId != itemId),
+        [fromStatus]: state[fromStatus].filter((profile) => profile.items.itemId != itemId),
         [toStatus]: [...state[toStatus], ...item],
       };
     case "delete":
@@ -41,7 +41,7 @@ const itemsReducer = (state, action) => {
         .catch((err) => console.error("itemsTabs delete error: ", err));
       return {
         ...state,
-        [fromStatus]: state[fromStatus].filter((item) => item.itemId != itemId),
+        [fromStatus]: state[fromStatus].filter((profile) => profile.items.itemId != itemId),
       };
     default:
       throw new Error(`Item Tabs-> uncaught item reducer type: ${type}`);
@@ -50,25 +50,18 @@ const itemsReducer = (state, action) => {
 
 export default function ItemsTabs({ route, navigation }) {
   const atMyProfile = useRef(route.params.atMyProfile).current;
-  const [profile, setProfile] = useState({});
   const [items, itemDispatch] = useReducer(itemsReducer, initialItems);
 
   useEffect(() => {
     const memberId = route.params.memberId;
     const IDquery = !atMyProfile ? "?memberId=" + memberId : "";
 
-    const unsubscribe = navigation.addListener("focus", () => {
-      axios
-        .get(`${helper.proxy}/listing/read/items${IDquery}`)
-        .then((res) => {
-          const { profile, listings } = res.data;
-          setProfile(profile);
-          itemDispatch({ type: "set", newState: listings });
-        })
-        .catch((err) => console.error("itemsTabs get listings error: ", err));
-    });
-
-    return unsubscribe;
+    axios
+      .get(`${helper.proxy}/listing/read/items${IDquery}`)
+      .then((res) => {
+        itemDispatch({ type: "set", newState: res.data.docs });
+      })
+      .catch((err) => console.error("itemsTabs get listings error: ", err));
   }, []);
 
   class ChangeItemStatus {
@@ -95,8 +88,7 @@ export default function ItemsTabs({ route, navigation }) {
             name="All"
             children={() => (
               <ItemStatusTab
-                accountInfo={profile}
-                listings={[...items.Active, ...items.Sold]}
+                items={[...items.Active, ...items.Sold]}
                 message={"No listings"}
                 navigation={navigation}
               />
@@ -107,8 +99,7 @@ export default function ItemsTabs({ route, navigation }) {
           name="Active"
           children={() => (
             <ItemStatusTab
-              accountInfo={profile}
-              listings={items.Active}
+              items={items.Active}
               message={"No active items"}
               navigation={navigation}
               changeItemStatus={atMyProfile ? changeItemStatus : null}
@@ -119,8 +110,7 @@ export default function ItemsTabs({ route, navigation }) {
           name="Sold"
           children={() => (
             <ItemStatusTab
-              accountInfo={profile}
-              listings={items.Sold}
+              items={items.Sold}
               message={"No sold items"}
               navigation={navigation}
               changeItemStatus={atMyProfile ? changeItemStatus : null}
@@ -132,8 +122,7 @@ export default function ItemsTabs({ route, navigation }) {
             name="Hidden"
             children={() => (
               <ItemStatusTab
-                accountInfo={profile}
-                listings={items.Hidden}
+                items={items.Hidden}
                 message={"No hidden items"}
                 navigation={navigation}
                 changeItemStatus={changeItemStatus}
