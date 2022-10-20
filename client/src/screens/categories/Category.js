@@ -27,24 +27,25 @@ export default function Category({ route, navigation }) {
         useBackBtn={true}
         useRightBtns={["search-outline", "notifications-outline"]}
       />
-
-      <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+      <View style={{ flex: 1 }}>
         {items.length ? (
-          <NoItemsMsg message={"Oops, no listings under this category."} />
+          <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+            {items.map((profile) => {
+              return (
+                <ItemCard
+                  key={profile.items.itemId}
+                  profile={profile}
+                  item={profile.items}
+                  image={profile.items.images[0]}
+                  navigation={navigation}
+                />
+              );
+            })}
+          </KeyboardAwareScrollView>
         ) : (
-          items.map((profile) => {
-            return (
-              <ItemCard
-                key={profile.items.itemId}
-                profile={profile}
-                item={profile.items}
-                image={profile.items.images[0]}
-                navigation={navigation}
-              />
-            );
-          })
+          <NoItemsMsg message={"Oops, no listings under this category."} />
         )}
-      </KeyboardAwareScrollView>
+      </View>
     </SafeAreaView>
   );
 }
