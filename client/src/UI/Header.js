@@ -14,7 +14,6 @@ export default function Header({
   submitFunc,
   title,
   toggleFilterScreen,
-  // userId,
   useBackBtn,
   useHomeBtn,
   useRightBtns,
@@ -48,11 +47,10 @@ export default function Header({
           flexDirection: "row",
         }}
       >
-        {/* {useRightBtns.map((buttonName) => {
+        {useRightBtns.map((buttonName) => {
           return (
             <HeaderButton
               key={buttonName}
-              userId={userId}
               name={buttonName}
               navigation={navigation}
               useWhiteBtns={useWhiteBtns}
@@ -60,7 +58,7 @@ export default function Header({
               submitFunc={submitFunc}
             />
           );
-        })} */}
+        })}
       </View>
     );
   };
@@ -73,15 +71,12 @@ export default function Header({
           justifyContent: "center",
         }}
       >
-        {/* BACK BUTTON */}
         {useBackBtn && renderBackBtn()}
         {useHomeBtn && (
           <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
         )}
-        {/* TITLE */}
         {title && <Text style={styles.boldText}>{title}</Text>}
       </View>
-      {/* RIGHT BUTTONS */}
       {useRightBtns && renderRightBtn()}
     </View>
   );

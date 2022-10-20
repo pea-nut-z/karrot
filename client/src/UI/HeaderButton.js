@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HeaderButton({
-  userId,
   name,
   toggleHeaderMenu,
   useWhiteBtns,
@@ -16,17 +15,20 @@ export default function HeaderButton({
       case "DONE":
         return submitFunc();
       case "search":
-        return navigation.navigate("SearchTabs", {
-          userId,
-        });
+        return;
+      // navigation.navigate("SearchTabs", {
+      //   userId,
+      // });
       case "funnel":
-        return navigation.navigate("CustomizeFeed", {
-          userId,
-        });
+        return;
+      // navigation.navigate("CustomizeFeed", {
+      //   userId,
+      // });
       case "notifications":
-        return navigation.navigate("NotificationsTabs", {
-          userId,
-        });
+        return;
+      // navigation.navigate("NotificationsTabs", {
+      //   userId,
+      // });
       case "home":
         return navigation.navigate("Home");
       default:
