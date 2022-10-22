@@ -5,7 +5,6 @@ import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
 
 export default function Header({
-  useWhiteBtns,
   newItem,
   navigation,
   openModal,
@@ -17,51 +16,22 @@ export default function Header({
   useBackBtn,
   useHomeBtn,
   useRightBtns,
+  useWhiteBtns,
 }) {
-  const renderBackBtn = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          if (title === "Filter") {
-            toggleFilterScreen();
-          } else if (title === "Edit Post") {
-            openModal("edit");
-          } else if (title === "Post For Sale") {
-            saveDraft();
-          } else if (newItem) {
-            navigation.navigate("Home");
-          } else {
-            navigation.goBack();
-          }
-        }}
-      >
-        <Ionicons name="arrow-back-outline" size={25} color={useWhiteBtns ? "#f5f5f5" : "black"} />
-      </TouchableOpacity>
-    );
+  const handleBackBtn = () => {
+    if (title === "Filter") {
+      toggleFilterScreen();
+    } else if (title === "Edit Post") {
+      openModal("edit");
+    } else if (title === "Post For Sale") {
+      saveDraft();
+    } else if (newItem) {
+      navigation.navigate("Home");
+    } else {
+      navigation.goBack();
+    }
   };
 
-  const renderRightBtn = () => {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
-        {useRightBtns.map((buttonName) => {
-          return (
-            <HeaderButton
-              key={buttonName}
-              name={buttonName}
-              navigation={navigation}
-              useWhiteBtns={useWhiteBtns}
-              toggleHeaderMenu={toggleHeaderMenu}
-              submitFunc={submitFunc}
-            />
-          );
-        })}
-      </View>
-    );
-  };
   return (
     <View style={[styles.header, useHomeBtn ? null : styles.headerBorder]}>
       <View
@@ -71,25 +41,44 @@ export default function Header({
           justifyContent: "center",
         }}
       >
-        {useBackBtn && renderBackBtn()}
+        {useBackBtn && (
+          <TouchableOpacity onPress={handleBackBtn}>
+            <Ionicons
+              name="arrow-back-outline"
+              size={25}
+              color={useWhiteBtns ? "#f5f5f5" : "black"}
+            />
+          </TouchableOpacity>
+        )}
         {useHomeBtn && (
           <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
         )}
         {title && <Text style={styles.boldText}>{title}</Text>}
       </View>
-      {useRightBtns && renderRightBtn()}
+      {useRightBtns && (
+        <View style={{ flexDirection: "row" }}>
+          {useRightBtns.map((buttonName) => {
+            return (
+              <HeaderButton
+                key={buttonName}
+                name={buttonName}
+                navigation={navigation}
+                useWhiteBtns={useWhiteBtns}
+                toggleHeaderMenu={toggleHeaderMenu}
+                submitFunc={submitFunc}
+              />
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  regularText: {
-    // ...FONTS.body4,
-  },
   boldText: {
     fontWeight: "bold",
     fontSize: 18,
-    // ...FONTS.h4,
   },
   header: {
     paddingVertical: SIZES.padding,

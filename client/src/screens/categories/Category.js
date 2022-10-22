@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
-import { FONTS, COLORS } from "../../constants";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import { Header, NoItemsMsg, ItemCard } from "../../UI";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as helper from "../../helper";
