@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import CurrencyInput from "react-native-currency-input";
@@ -7,54 +7,56 @@ import { COLORS, SIZES } from "../../constants";
 import { Border, Header } from "../../UI";
 import * as variables from "../../variables";
 
-export default function Filters({ toggleFilterScreen, createFilters, filters }) {
-  const [newFilters, setNewFilters] = useState(filters);
+const filtersReducer = (state, action) => {
+  const { type, filter, value } = action;
+  switch (type) {
+    case "update":
+      return { ...state, [filter]: value };
+    case "add-category":
+      if (!state.categories) {
+        return { ...state, categories: [value] };
+      } else {
+        return { ...state, categories: [...state.categories, value] };
+      }
+    case "remove-category":
+      if (state.categories.length == 1) {
+        return { ...state, categories: null };
+      } else {
+        return { ...state, categories: state.categories.filter((category) => category != value) };
+      }
+    case "clear":
+      return { ...state, ...variables.emptyFilters };
+    default:
+      throw new Error(`Filters -> uncaught filter reducer type: ${type}`);
+  }
+};
 
-  const clearNewFilters = () => {
-    setNewFilters({
-      ...newFilters,
-      categories: [],
-      sort: "",
-      minPrice: 0,
-      maxPrice: 0,
-    });
-  };
+export default function Filters({ toggleFilterScreen, createFilters, filters }) {
+  const [newFilters, filterDispath] = useReducer(filtersReducer, filters);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
+    <SafeAreaView style={{ flex: 1 }}>
       <Header useBackBtn={true} toggleFilterScreen={toggleFilterScreen} title={"Filter"} />
       {/* CATEGORIES */}
       <KeyboardAwareScrollView>
         <Text style={styles.subheader}>Categories</Text>
         <View style={styles.categoriesContainer}>
-          {variables.categories.map((option, index) => {
+          {variables.categories.map((option) => {
             const { name } = option;
             return (
               <TouchableOpacity
-                key={`option-${index}`}
-                onPress={() =>
-                  newFilters.categories.includes(name)
-                    ? setNewFilters({
-                        ...newFilters,
-                        categories: [
-                          ...newFilters.categories.filter((category) => category !== name),
-                        ],
-                      })
-                    : setNewFilters({
-                        ...newFilters,
-                        categories: [...newFilters.categories, name],
-                      })
-                }
+                key={name}
+                onPress={() => {
+                  newFilters.categories?.includes(name)
+                    ? filterDispath({ type: "remove-category", value: name })
+                    : filterDispath({ type: "add-category", value: name });
+                }}
                 style={styles.categories}
               >
                 <Ionicons
                   name="checkmark-circle-outline"
                   size={25}
-                  color={newFilters.categories.includes(name) ? COLORS.primary : COLORS.secondary}
+                  color={newFilters.categories?.includes(name) ? COLORS.primary : COLORS.secondary}
                 />
                 <Text style={styles.regularText}>
                   {name.includes("Games") ? "Games, hobbies..." : name}
@@ -80,7 +82,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
             }}
           >
             <TouchableOpacity
-              onPress={() => setNewFilters({ ...newFilters, sort: "Relevance" })}
+              onPress={() => filterDispath({ type: "update", filter: "sort", value: "Relevance" })}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -96,7 +98,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => setNewFilters({ ...newFilters, sort: "Most recent" })}
+              onPress={() => filterDispath({ type: "update", filter: "sort", value: "Most recent" })}
               style={{
                 width: "50%",
                 flexDirection: "row",
@@ -121,7 +123,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
           <View style={styles.priceContainer}>
             <CurrencyInput
               value={newFilters.minPrice}
-              onChangeValue={(value) => setNewFilters({ ...newFilters, minPrice: value })}
+              onChangeValue={(value) => filterDispath({ type: "update", filter: "minPrice", value })}
               delimiter=""
               separator=""
               precision={0}
@@ -133,7 +135,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
             <Text>~</Text>
             <CurrencyInput
               value={newFilters.maxPrice}
-              onChangeValue={(value) => setNewFilters({ ...newFilters, maxPrice: value })}
+              onChangeValue={(value) => filterDispath({ type: "update", filter: "maxPrice", value })}
               delimiter=""
               separator=""
               precision={0}
@@ -150,7 +152,7 @@ export default function Filters({ toggleFilterScreen, createFilters, filters }) 
 
       {/* BUTTONS */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={clearNewFilters} style={styles.clearBtn}>
+        <TouchableOpacity onPress={() => filterDispath({ type: "clear" })} style={styles.clearBtn}>
           <Text>Clear fields</Text>
         </TouchableOpacity>
         <TouchableOpacity
