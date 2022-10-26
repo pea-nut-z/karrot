@@ -159,7 +159,8 @@ export default function ItemCard({ profile, item, image, navigation, removeFav, 
                   .patch(`${helper.proxy}/activity/remove/favourite/${profile.id}/${item.itemId}`)
                   .then(() => {
                     removeFav(item.itemId);
-                  });
+                  })
+                  .catch((err) => console.error("Remove favourite error: ", err));
               }}
             >
               <Ionicons name={"heart"} size={30} color={COLORS.primary} />
