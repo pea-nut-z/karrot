@@ -4,6 +4,13 @@ export const maxUploadImg = 10;
 
 export const starRatingArr = [1, 2, 3, 4, 5];
 
+export const emptyFilters = {
+  categories: null,
+  sort: "",
+  minPrice: 0,
+  maxPrice: 0,
+};
+
 export const detailedItemStatusOptions = {
   Active: ["Edit", "Hide", "Sold", "Delete"],
   Sold: ["Change to active", "Edit", "Hide", "Delete"],
