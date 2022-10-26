@@ -34,7 +34,11 @@ router.get("/filter/:by", async (req, res) => {
   switch (by) {
     case "category":
       filters = {
-        $and: [...baseFilters, { "items.category": value }, { "items.status": "Active" }],
+        $and: [
+          ...baseFilters,
+          { "items.category": { $regex: value } },
+          { "items.status": "Active" },
+        ],
       };
       break;
     case "word":
@@ -63,6 +67,8 @@ router.get("/filter/:by", async (req, res) => {
       };
   }
 
+  console.log({ filters });
+
   let docs = await Account.aggregate([
     { $unwind: "$items" },
     {
@@ -74,6 +80,7 @@ router.get("/filter/:by", async (req, res) => {
       $project: itemCardFields,
     },
   ]);
+  console.log({ docs });
 
   // handle error
   res.json({ docs });
