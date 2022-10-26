@@ -22,29 +22,52 @@ router.get("/filter/:by", async (req, res) => {
 
   const restriction = await Restriction.findOne({ privateId });
 
-  const baseFilters = [
+  let baseFilters = [
     { _id: { $nin: [mongoose.Types.ObjectId(privateId)] } },
     { id: { $nin: restriction.blockBy } },
     { id: { $nin: restriction.hide } },
     { id: { $nin: restriction.block } },
   ];
 
-  let mainFilter;
+  let filters;
 
   switch (by) {
     case "category":
-      mainFilter = { "items.category": value };
+      filters = {
+        $and: [...baseFilters, { "items.category": value }, { "items.status": "Active" }],
+      };
+      break;
+    case "word":
+      const expression = new RegExp(`\\b${value}\\b`, "i");
+      filters = {
+        $and: [
+          ...baseFilters,
+          {
+            $or: [
+              { "items.category": { $regex: expression } },
+              { "items.title": { $regex: expression } },
+              { "items.description": { $regex: expression } },
+            ],
+          },
+        ],
+        $or: [{ "items.status": "Active" }, { "items.status": "Sold" }],
+      };
       break;
     default:
-      mainFilter = { "items.category": { $in: restriction.feeds } };
+      filters = {
+        $and: [
+          ...baseFilters,
+          { "items.category": { $in: restriction.feeds } },
+          { "items.status": "Active" },
+        ],
+      };
   }
 
   let docs = await Account.aggregate([
-    { $match: { $and: [...baseFilters] } },
     { $unwind: "$items" },
     {
       $match: {
-        $and: [mainFilter, { "items.status": "Active" }],
+        ...filters,
       },
     },
     {

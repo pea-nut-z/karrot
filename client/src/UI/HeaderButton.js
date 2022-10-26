@@ -15,10 +15,7 @@ export default function HeaderButton({
       case "DONE":
         return submitFunc();
       case "search":
-        return;
-      // navigation.navigate("SearchTabs", {
-      //   userId,
-      // });
+        return navigation.navigate("SearchTabs");
       case "funnel":
         return;
       // navigation.navigate("CustomizeFeed", {

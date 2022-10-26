@@ -80,6 +80,12 @@ class ModalActions {
       message: (name) => `${name}'s posts have been unhidden`,
     },
   };
+
+  search = {
+    emptyField: {
+      message: () => "Search field is empty",
+    },
+  };
 }
 
 export const modalActions = new ModalActions();

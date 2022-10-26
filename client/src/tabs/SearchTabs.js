@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { View, TextInput, Text, ScrollView, StyleSheet, Platform, SafeAreaView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,22 +8,21 @@ import { Header, ModalAlert } from "../UI";
 import Filters from "../screens/search/Filters";
 import { COLORS, SIZES } from "../constants";
 const MaterialTopTabs = createMaterialTopTabNavigator();
+const initialFilters = {
+  categories: null,
+  sort: "",
+  minPrice: 0,
+  maxPrice: 0,
+};
 
-export default function SearchTabs({ route, navigation }) {
-  const { userId } = route.params;
+export default function SearchTabs({ navigation }) {
   const [searchHistory, setSearchHistory] = useState(["baseball", "fashion"]);
   const [searchString, setSearchString] = useState("");
   const [submittedSearchString, setSubmittedSearchString] = useState("");
   const [showSearchHistory, setShowSearchHistory] = useState(true);
   const [searchFieldAlert, setSearchFieldAlert] = useState(false);
   const [showFilterScreen, setShowFilterScreen] = useState(false);
-  const [filters, setFilters] = useState({
-    categories: [],
-    sort: "",
-    minPrice: 0,
-    maxPrice: 0,
-    hideSoldItems: false,
-  });
+  const [filters, setFilters] = useState(initialFilters);
   const searchBarRef = useRef();
 
   const toggleSearchHistoryBox = () => {
@@ -41,10 +40,7 @@ export default function SearchTabs({ route, navigation }) {
   const clearFilters = () => {
     setFilters({
       ...filters,
-      categories: [],
-      sort: "",
-      minPrice: 0,
-      maxPrice: 0,
+      ...initialFilters,
     });
   };
 
@@ -129,7 +125,7 @@ export default function SearchTabs({ route, navigation }) {
           <ScrollView>
             {searchHistory.map((item, index) => {
               return (
-                <View key={`item-${index}`} style={styles.recentSearchItemContainer}>
+                <View key={`${item}-${index}`} style={styles.recentSearchItemContainer}>
                   <TouchableOpacity
                     onPress={() => {
                       setSearchString(item);
@@ -170,34 +166,23 @@ export default function SearchTabs({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
-      {showFilterScreen && (
+    <SafeAreaView style={{ flex: 1 }}>
+      {showFilterScreen ? (
         <Filters
           toggleFilterScreen={toggleFilterScreen}
           createFilters={createFilters}
           filters={filters}
         />
-      )}
-      {!showFilterScreen && (
+      ) : (
         <View style={{ flex: 1 }}>
           <Header navigation={navigation} useBackBtn={true} />
-
-          {/* SEARCH INPUT  */}
           {renderSearchBar()}
           <ModalAlert
             visibleVariable={searchFieldAlert}
             closeModal={() => setSearchFieldAlert(false)}
-            message={"Search field is empty"}
+            keys={["search", "emptyField"]}
           />
-
-          {/* SEARCH HISTORY */}
           {renderSearchHistory()}
-
-          {/* SEARCH TABS - FOR SALE & USER */}
           <MaterialTopTabs.Navigator
             screenOptions={{
               tabBarIndicatorStyle: {
@@ -209,12 +194,13 @@ export default function SearchTabs({ route, navigation }) {
               name="For Sale"
               children={() => (
                 <ForSale
-                  userId={userId}
                   navigation={navigation}
                   submittedSearchString={submittedSearchString}
-                  toggleFilterScreen={toggleFilterScreen}
                   filters={filters}
+                  toggleFilterScreen={toggleFilterScreen}
                   toggleSearchHistoryBox={toggleSearchHistoryBox}
+                  createFilters={createFilters}
+                  clearFilters={clearFilters}
                 />
               )}
             />
@@ -222,7 +208,6 @@ export default function SearchTabs({ route, navigation }) {
               name="User"
               children={() => (
                 <User
-                  userId={userId}
                   navigation={navigation}
                   submittedSearchString={submittedSearchString}
                   toggleSearchHistoryBox={toggleSearchHistoryBox}

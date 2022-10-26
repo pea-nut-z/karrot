@@ -1,143 +1,128 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ItemCard } from "../../UI";
-import { SIZES, COLORS, FONTS } from "../../constants";
+import { SIZES, COLORS } from "../../constants";
+import axios from "axios";
+import * as helper from "../../helper";
 
 export default function ForSale({
-  userId,
   navigation,
   submittedSearchString,
-  toggleFilterScreen,
   filters,
+  toggleFilterScreen,
+  toggleSearchHistoryBox,
+  clearFilters,
 }) {
-  const [newFilters, setNewFilters] = useState(filters);
-  const [usedFilter, setUsedFilter] = useState();
-  const focused = useIsFocused();
-  // const getItems = useMemo(furtherFilterListings, []);
-  // const items = useSelector((state) => {
-  //   if (focused && submittedSearchString) {
-  //     return getItems(
-  //       userId,
-  //       state.listings,
-  //       state.members,
-  //       state.restrictions,
-  //       state.feeds,
-  //       "string",
-  //       submittedSearchString,
-  //       newFilters
-  //     );
-  //   }
-  // });
+  const [applyFilters, setApplyFilters] = useState(false);
+  const [hideSold, setHideSold] = useState(true);
+  const [items, setItems] = useState();
+  const [filteredItems, setFilteredItems] = useState();
 
-  // SET NEW FILTERS
   useEffect(() => {
-    setNewFilters({ ...newFilters, ...filters });
-  }, [filters]);
-
-  // SET FILTER FLAG
-  useEffect(() => {
-    let isFilterUsed = Object.values(filters);
-    isFilterUsed = isFilterUsed.some(
-      (value) =>
-        value !== undefined && value !== false && value !== true && value?.length !== 0 && value
-    );
-    isFilterUsed ? setUsedFilter(true) : setUsedFilter(false);
-  }, [filters]);
-
-  const renderFilterBtn = () => {
-    // if ((submittedSearchString && items) || !items & usedFilter) {
-    //   return (
-    //     <TouchableOpacity onPress={() => toggleFilterScreen()} style={styles.filterBtn}>
-    //       <Ionicons
-    //         name="funnel-outline"
-    //         size={20}
-    //         color={usedFilter ? COLORS.primary : COLORS.secondary}
-    //       />
-    //       <Text> Filter</Text>
-    //     </TouchableOpacity>
-    //   );
-    // }
-  };
-
-  const renderHideSoldBtn = () => {
-    if ((focused && submittedSearchString && items) || (!items && newFilters.hideSoldItems)) {
-      return (
-        <TouchableOpacity
-          // onPress={() => setNewFilters({ ...newFilters, hideSoldItems: !newFilters.hideSoldItems })}
-          style={styles.filterBtn}
-        >
-          {/* <Ionicons
-            name="checkmark-circle-outline"
-            size={25}
-            color={newFilters.hideSoldItems ? COLORS.primary : COLORS.secondary}
-          /> */}
-          <Text> Hide sold items</Text>
-        </TouchableOpacity>
-      );
+    if (submittedSearchString) {
+      setFilteredItems();
+      clearFilters();
+      setHideSold(true);
+      axios
+        .get(`${helper.proxy}/listing/filter/word?value=${submittedSearchString}`)
+        .then((res) => {
+          setItems(res.data.docs);
+        })
+        .catch((err) => console.error("ForSale error: ", err));
     }
-  };
+  }, [submittedSearchString]);
 
-  const renderNoResultsMsg = () => {
-    if (focused && submittedSearchString && !items) {
-      return (
+  useEffect(() => {
+    if (items) {
+      const useFilters = Object.values(filters).some((value) => value);
+      useFilters ? setApplyFilters(true) : setApplyFilters(false);
+      let newItems = items;
+      if (useFilters) {
+        newItems = newItems.filter((profile) => {
+          const item = profile.items;
+          return item.price >= filters.minPrice && item.price <= filters.maxPrice;
+        });
+      }
+
+      if (hideSold) {
+        newItems = newItems.filter((profile) => profile.items.status != "Sold");
+      }
+
+      if (filters.categories) {
+        newItems = newItems.filter((profile) =>
+          filters.categories.include(profile.items.categories)
+        );
+      }
+      setFilteredItems(newItems);
+    }
+  }, [filters, items, hideSold]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      {items?.length ? (
+        <View style={styles.filterWraper}>
+          <TouchableOpacity onPress={toggleFilterScreen} style={styles.filterBtn}>
+            <Ionicons
+              name="funnel-outline"
+              size={20}
+              color={applyFilters ? COLORS.primary : COLORS.secondary}
+            />
+            <Text> Filter</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setHideSold(!hideSold)} style={styles.filterBtn}>
+            <Ionicons
+              name="checkmark-circle-outline"
+              size={25}
+              color={hideSold ? COLORS.primary : COLORS.secondary}
+            />
+            <Text> Hide sold items</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+
+      {filteredItems && filteredItems.length ? (
+        <KeyboardAwareScrollView enableOnAndroid showsVerticalScrollIndicator={false}>
+          {filteredItems.map((profile) => {
+            return (
+              <ItemCard
+                key={profile.items.itemId}
+                profile={profile}
+                item={profile.items}
+                image={profile.items.images[0]}
+                navigation={navigation}
+              />
+            );
+          })}
+        </KeyboardAwareScrollView>
+      ) : null}
+
+      {filteredItems && !filteredItems.length ? (
         <View style={{ alignItems: "center" }}>
           <Text style={styles.boldText}>No results</Text>
-          {/* <View style={styles.noResultContainer}>
+          <View style={styles.noResultContainer}>
             <Text style={styles.boldText}>Tips</Text>
             <Text style={styles.regularText}>
               •Make sure your keyword was entered correctly.{"\n"}
               •Search in more general terms, e.g. bag not red bag.{"\n"}
               •Add search alerts and get notified of new listings.
             </Text>
-          </View> */}
+          </View>
         </View>
-      );
-    }
-  };
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          height: 40,
-        }}
-      >
-        {/* FILTER BUTTON */}
-        {renderFilterBtn()}
-        {/* hideSoldItem BUTTON */}
-        {renderHideSoldBtn()}
-      </View>
-      {renderNoResultsMsg()}
-      <KeyboardAwareScrollView
-        enableOnAndroid
-        showsVerticalScrollIndicator={false}
-        style={{
-          flex: 1,
-        }}
-      >
-        <View style={{ paddingBottom: 30 }}>
-          {/* {items && <ItemCard userId={userId} items={items} navigation={navigation} />} */}
-        </View>
-      </KeyboardAwareScrollView>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   boldText: {
-    // ...FONTS.h4,
     paddingVertical: SIZES.padding,
   },
   regularText: {
-    // ...FONTS.body4,
     paddingVertical: SIZES.padding,
   },
+  filterWraper: { flexDirection: "row", alignItems: "center", height: 40 },
   filterBtn: {
     flexDirection: "row",
     width: SIZES.width / 2,
