@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from "react
 import { SIZES, COLORS } from "../constants";
 
 export default function OtherItem({ memberId, itemId, image, title, price, navigation }) {
-  // if (Platform.OS === "web" && typeof image === "number") {
-  //   Image.resolveAssetSource = (source) => ({
-  //     uri: source,
-  //   });
-  // }
+  useEffect(() => {
+    if (Platform.OS === "web" && typeof image === "number") {
+      Image.resolveAssetSource = (source) => ({
+        uri: source,
+      });
+    }
+  }, []);
 
   return (
     <TouchableOpacity

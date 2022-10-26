@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { ModalAlert } from ".";
 import { SIZES, COLORS } from "../constants";
@@ -12,6 +12,14 @@ export default function ItemCard({ profile, item, image, navigation, removeFav, 
   const [showOutterModal, setShowOutterModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalKey, setModalKey] = useState("");
+
+  useEffect(() => {
+    if (Platform.OS === "web" && typeof image === "number") {
+      Image.resolveAssetSource = (source) => ({
+        uri: source,
+      });
+    }
+  }, []);
 
   const closeModal = () => {
     setShowModal(false);
@@ -57,7 +65,6 @@ export default function ItemCard({ profile, item, image, navigation, removeFav, 
   };
 
   return (
-    // <View style={{ flex: 1 }}>
     <TouchableOpacity
       style={styles.outterContainer}
       onPress={() =>
@@ -161,7 +168,6 @@ export default function ItemCard({ profile, item, image, navigation, removeFav, 
         )}
       </View>
     </TouchableOpacity>
-    // </View>
   );
 }
 
