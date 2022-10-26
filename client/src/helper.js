@@ -68,3 +68,39 @@ export const dateWithoutTime = () => {
 
   return `${monthLetters} ${date}, ${year}`;
 };
+
+export const filterSearchItems = (filters, hideSold, items) => {
+  let newItems = items;
+
+  if (filters.minPrice && !filters.maxPrice) {
+    newItems = newItems.filter((profile) => {
+      return profile.items.price >= filters.minPrice;
+    });
+  }
+
+  if (!filters.minPrice && filters.maxPrice) {
+    newItems = newItems.filter((profile) => {
+      return profile.items.price <= filters.maxPrice;
+    });
+  }
+
+  if (filters.minPrice && filters.maxPrice) {
+    newItems = newItems.filter((profile) => {
+      return profile.items.price >= filters.minPrice && profile.items.price <= filters.maxPrice;
+    });
+  }
+
+  if (hideSold) {
+    newItems = newItems.filter((profile) => profile.items.status != "Sold");
+  }
+
+  if (filters.categories) {
+    newItems = newItems.filter((profile) => filters.categories.include(profile.items.categories));
+  }
+
+  if (filters.sort == "Most recent") {
+    newItems = newItems.sort((a, b) => new Date(b.items.date) - new Date(a.items.date));
+  }
+
+  return newItems;
+};

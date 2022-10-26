@@ -36,28 +36,7 @@ export default function ForSale({
     if (items) {
       const useFilters = Object.values(filters).some((value) => value);
       useFilters ? setApplyFilters(true) : setApplyFilters(false);
-      let newItems = items;
-
-      if (filters.minPrice || filters.maxPrice) {
-        newItems = newItems.filter((profile) => {
-          return profile.items.price >= filters.minPrice && profile.items.price <= filters.maxPrice;
-        });
-      }
-
-      if (hideSold) {
-        newItems = newItems.filter((profile) => profile.items.status != "Sold");
-      }
-
-      if (filters.categories) {
-        newItems = newItems.filter((profile) =>
-          filters.categories.include(profile.items.categories)
-        );
-      }
-
-      if (filters.sort == "Most recent") {
-        newItems = newItems.sort((a, b) => new Date(b.items.date) - new Date(a.items.date));
-      }
-
+      const newItems = helper.filterSearchItems(filters, hideSold, items);
       setFilteredItems(newItems);
     }
   }, [filters, items, hideSold]);
