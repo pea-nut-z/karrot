@@ -20,7 +20,7 @@ Connected to the backend and database using RESTful APIs and MongoDB.
 
 - right click on your chosen version below and select "Open Link in New Tab"
 
-[Redux Version](https://peanutz-emarketplace.herokuapp.com/) | [Full Stack Version](https://marketplace-ipcn.onrender.com/)
+[Redux Version](https://marketplace-redux.netlify.app/) | [Full Stack Version](https://marketplace-ipcn.onrender.com/)
 
 The app should open up in a new tab. Once loaded, do the following in the new tab:
 
