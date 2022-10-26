@@ -21,11 +21,11 @@ export default function ImageScrollView({ images }) {
         })}
       >
         {images.map((img, index) => {
-          // if (Platform.OS === "web" && typeof image === "number") {
-          //   Image.resolveAssetSource = (source) => ({
-          //     uri: source,
-          //   });
-          // }
+          if (Platform.OS === "web" && typeof image === "number") {
+            Image.resolveAssetSource = (source) => ({
+              uri: source,
+            });
+          }
           return (
             <View key={`image-${index}`} style={{ alignItems: "center" }}>
               <View style={{ height: SIZES.height * 0.5 }}>

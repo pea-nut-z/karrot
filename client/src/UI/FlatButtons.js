@@ -7,7 +7,7 @@ export default function FlatButtons({ atCategories, options, navigateTo }) {
   return (
     <View style={styles.outterContainer}>
       {options.map((option, index) => {
-        if (Platform.OS === "web" && typeof img === "number") {
+        if (Platform.OS === "web") {
           Image.resolveAssetSource = (source) => ({
             uri: source,
           });
