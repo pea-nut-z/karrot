@@ -13,7 +13,6 @@ export default function ForSale({
   filters,
   toggleFilterScreen,
   toggleSearchHistoryBox,
-  clearFilters,
 }) {
   const [applyFilters, setApplyFilters] = useState(false);
   const [hideSold, setHideSold] = useState(true);
@@ -23,7 +22,6 @@ export default function ForSale({
   useEffect(() => {
     if (submittedSearchString) {
       setFilteredItems();
-      clearFilters();
       setHideSold(true);
       axios
         .get(`${helper.proxy}/listing/filter/word?value=${submittedSearchString}`)
@@ -39,10 +37,10 @@ export default function ForSale({
       const useFilters = Object.values(filters).some((value) => value);
       useFilters ? setApplyFilters(true) : setApplyFilters(false);
       let newItems = items;
-      if (useFilters) {
+
+      if (filters.minPrice || filters.maxPrice) {
         newItems = newItems.filter((profile) => {
-          const item = profile.items;
-          return item.price >= filters.minPrice && item.price <= filters.maxPrice;
+          return profile.items.price >= filters.minPrice && profile.items.price <= filters.maxPrice;
         });
       }
 
@@ -55,6 +53,11 @@ export default function ForSale({
           filters.categories.include(profile.items.categories)
         );
       }
+
+      if (filters.sort == "Most recent") {
+        newItems = newItems.sort((a, b) => new Date(b.items.date) - new Date(a.items.date));
+      }
+
       setFilteredItems(newItems);
     }
   }, [filters, items, hideSold]);
