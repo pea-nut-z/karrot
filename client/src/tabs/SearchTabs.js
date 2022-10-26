@@ -7,13 +7,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Header, ModalAlert } from "../UI";
 import Filters from "../screens/search/Filters";
 import { COLORS, SIZES } from "../constants";
+import * as variables from "../variables";
+
 const MaterialTopTabs = createMaterialTopTabNavigator();
-const initialFilters = {
-  categories: null,
-  sort: "",
-  minPrice: 0,
-  maxPrice: 0,
-};
 
 export default function SearchTabs({ navigation }) {
   const [searchHistory, setSearchHistory] = useState(["baseball", "fashion"]);
@@ -22,7 +18,7 @@ export default function SearchTabs({ navigation }) {
   const [showSearchHistory, setShowSearchHistory] = useState(true);
   const [searchFieldAlert, setSearchFieldAlert] = useState(false);
   const [showFilterScreen, setShowFilterScreen] = useState(false);
-  const [filters, setFilters] = useState(initialFilters);
+  const [filters, setFilters] = useState(variables.emptyFilters);
   const searchBarRef = useRef();
 
   const toggleSearchHistoryBox = () => {
@@ -38,10 +34,7 @@ export default function SearchTabs({ navigation }) {
   };
 
   const clearFilters = () => {
-    setFilters({
-      ...filters,
-      ...initialFilters,
-    });
+    setFilters(variables.emptyFilters);
   };
 
   const renderSearchBar = () => {
@@ -200,7 +193,6 @@ export default function SearchTabs({ navigation }) {
                   toggleFilterScreen={toggleFilterScreen}
                   toggleSearchHistoryBox={toggleSearchHistoryBox}
                   createFilters={createFilters}
-                  clearFilters={clearFilters}
                 />
               )}
             />
