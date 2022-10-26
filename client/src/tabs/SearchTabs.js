@@ -12,7 +12,7 @@ import * as variables from "../variables";
 const MaterialTopTabs = createMaterialTopTabNavigator();
 
 export default function SearchTabs({ navigation }) {
-  const [searchHistory, setSearchHistory] = useState(["baseball", "fashion"]);
+  const [searchHistory, setSearchHistory] = useState(["home", "animal"]);
   const [searchString, setSearchString] = useState("");
   const [submittedSearchString, setSubmittedSearchString] = useState("");
   const [showSearchHistory, setShowSearchHistory] = useState(true);
@@ -108,7 +108,6 @@ export default function SearchTabs({ navigation }) {
               <Text
                 style={{
                   color: COLORS.darkgray,
-                  // ...FONTS.body4,
                 }}
               >
                 Delete All
