@@ -174,11 +174,9 @@ const styles = StyleSheet.create({
   subheader: {
     paddingVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding * 2,
-    // ...FONTS.h4,
   },
   regularText: {
     paddingLeft: SIZES.padding,
-    // ...FONTS.body4,
   },
   categoriesContainer: {
     flex: 1,
