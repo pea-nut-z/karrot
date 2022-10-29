@@ -1,52 +1,35 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useSelector, useDispatch } from "react-redux";
 import { COLORS, SIZES } from "../../constants";
-import { Header, ModalAlert } from "../../UI";
+import { Header } from "../../UI";
+import * as helper from "../../helper";
 import * as variables from "../../variables";
+import axios from "axios";
 
-export default function CustomizeFeed({ route, navigation }) {
-  const { userId } = route.params;
+export default function CustomizeFeed({ navigation }) {
+  const [feed, setFeed] = useState([]);
 
-  const [alert, setAlert] = useState(false);
-
-  const feed = useSelector((state) => state.feeds[userId]);
-  const dispatch = useDispatch();
-
-  const closeModal = () => {
-    setAlert(false);
-  };
+  useEffect(() => {
+    axios
+      .get(`${helper.proxy}/restrict/read/feed`)
+      .then((res) => {
+        if (variables.categories.length != res.data.doc.feed.length) {
+          setFeed(res.data.doc.feed);
+        }
+      })
+      .catch((err) => {
+        console.error("CustomizeFeed get feed error: ", err);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header navigation={navigation} useBackBtn={true} title={"Customize feed"} />
-      <View
-        style={{
-          paddingHorizontal: SIZES.padding * 2,
-          paddingVertical: SIZES.padding,
-          flex: 1,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            // ...FONTS.body3,
-            fontWeight: "bold",
-            paddingVertical: SIZES.padding,
-          }}
-        >
+      <View style={styles.contentWrapper}>
+        <Text style={styles.header}>
           Personalized your feed.{"\n"}
           Choose the categories you want to see on the Home feed.
-        </Text>
-        <Text
-          style={{
-            // ...FONTS.body4,
-            textAlign: "center",
-            paddingVertical: SIZES.padding,
-          }}
-        >
-          At least one category must be chosen
         </Text>
         <View
           style={{
@@ -56,48 +39,64 @@ export default function CustomizeFeed({ route, navigation }) {
             flexWrap: "wrap",
           }}
         >
-          {variables.categories.map((option, index) => {
+          {variables.categories.map((option) => {
+            const category = option.name;
             return (
               <TouchableOpacity
-                key={`option-${index}`}
+                key={category}
                 onPress={() => {
-                  if (feed.includes(option.name) && feed.length === 1) {
-                    setAlert(true);
+                  let values;
+                  if (feed.includes(category)) {
+                    values = feed.filter((value) => value != category);
                   } else {
-                    // dispatch({
-                    //   type: feed.includes(option.name) ? actions.FEED_REMOVED : actions.FEED_ADDED,
-                    //   userId,
-                    //   feed: option.name,
-                    // });
+                    values = [...feed, category];
                   }
+
+                  setFeed(values);
+
+                  if (feed.length == 1 && feed.includes(category)) {
+                    values = variables.categories.map((value) => value.name);
+                  }
+
+                  axios.post(`${helper.proxy}/restrict/update/feed`, { values }).catch((err) => {
+                    console.error("CustomizeFeed update feed error: ", err);
+                  });
                 }}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: SIZES.padding,
-                  width: "50%",
-                  height: 60,
-                }}
+                style={styles.selectionWrapper}
               >
                 <Ionicons
                   name="checkmark-circle-outline"
                   size={25}
-                  color={feed.includes(option.name) ? COLORS.primary : COLORS.secondary}
+                  color={feed.includes(category) ? COLORS.primary : COLORS.secondary}
                 />
                 <Text style={{ marginLeft: SIZES.padding }}>
-                  {option.name.includes("Games") ? `Games,hobbies & ${"\n"}crafts` : option.name}
+                  {category.includes("Games") ? `Games,hobbies & ${"\n"}crafts` : category}
                 </Text>
               </TouchableOpacity>
             );
           })}
         </View>
       </View>
-      <ModalAlert
-        visibleVariable={alert}
-        closeModal={closeModal}
-        // handleAction={handleAction}
-        message={"You must select at least one category"}
-      />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  contentWrapper: {
+    paddingHorizontal: SIZES.padding * 2,
+    paddingVertical: SIZES.padding,
+    flex: 1,
+  },
+  header: {
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingVertical: SIZES.padding,
+  },
+  selectionWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: SIZES.padding,
+    width: "50%",
+    height: 60,
+  },
+});
