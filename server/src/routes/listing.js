@@ -61,13 +61,11 @@ router.get("/filter/:by", async (req, res) => {
       filters = {
         $and: [
           ...baseFilters,
-          { "items.category": { $in: restriction.feeds } },
+          { "items.category": { $in: restriction.feed } },
           { "items.status": "Active" },
         ],
       };
   }
-
-  console.log({ filters });
 
   let docs = await Account.aggregate([
     { $unwind: "$items" },
@@ -80,7 +78,6 @@ router.get("/filter/:by", async (req, res) => {
       $project: itemCardFields,
     },
   ]);
-  console.log({ docs });
 
   // handle error
   res.json({ docs });

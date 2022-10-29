@@ -9,7 +9,7 @@ const schema = new Schema({
   block: [String],
   blockBy: [String],
   hide: [String],
-  feeds: {
+  feed: {
     default: [
       "Electronics",
       "Furniture",
