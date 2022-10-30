@@ -1,17 +1,18 @@
-import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SIZES, COLORS } from "../constants";
 import { HeaderButton } from "./index";
 
 export default function Header({
+  title,
   newItem,
+  newFeed,
   navigation,
   openModal,
   saveDraft,
-  toggleHeaderMenu,
   submitFunc,
-  title,
+  toggleFeedScreen,
+  toggleHeaderMenu,
   toggleFilterScreen,
   useBackBtn,
   useHomeBtn,
@@ -19,16 +20,38 @@ export default function Header({
   useWhiteBtns,
 }) {
   const handleBackBtn = () => {
-    if (title === "Filter") {
-      toggleFilterScreen();
-    } else if (title === "Edit Post") {
-      openModal("edit");
-    } else if (title === "Post For Sale") {
-      saveDraft();
-    } else if (newItem) {
-      navigation.navigate("Home");
-    } else {
-      navigation.goBack();
+    switch (title) {
+      case "Filter":
+        return toggleFilterScreen();
+      case "Edit Post":
+        return openModal("edit");
+      case "Post For Sale":
+        return saveDraft();
+      case "Customize feed":
+        return toggleFeedScreen(newFeed);
+      default:
+        newItem ? navigation.navigate("Home") : navigation.goBack();
+    }
+  };
+
+  const handleRightBtn = (keyword) => {
+    switch (keyword) {
+      case "checkmark":
+      case "DONE":
+        return submitFunc();
+      case "search":
+        return navigation.navigate("SearchTabs");
+      case "funnel":
+        return toggleFeedScreen();
+      case "notifications":
+        return;
+      // navigation.navigate("NotificationsTabs", {
+      //   userId,
+      // });
+      case "home":
+        return navigation.navigate("Home");
+      default:
+        throw new Error("Header Button-> uncaught button action");
     }
   };
 
@@ -57,16 +80,25 @@ export default function Header({
       </View>
       {useRightBtns && (
         <View style={{ flexDirection: "row" }}>
-          {useRightBtns.map((buttonName) => {
+          {useRightBtns.map((name) => {
             return (
-              <HeaderButton
-                key={buttonName}
-                name={buttonName}
-                navigation={navigation}
-                useWhiteBtns={useWhiteBtns}
-                toggleHeaderMenu={toggleHeaderMenu}
-                submitFunc={submitFunc}
-              />
+              <TouchableOpacity
+                key={name}
+                onPress={() => {
+                  const keyword = name.split("-")[0];
+                  keyword === "ellipsis" ? toggleHeaderMenu() : handleRightBtn(keyword);
+                }}
+                style={{
+                  padding: 5,
+                  marginLeft: 5,
+                }}
+              >
+                {name === "DONE" ? (
+                  <Text>{name}</Text>
+                ) : (
+                  <Ionicons name={name} size={25} color={useWhiteBtns ? "#f5f5f5" : "black"} />
+                )}
+              </TouchableOpacity>
             );
           })}
         </View>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,58 +13,83 @@ import { COLORS, SIZES } from "../../constants";
 import { Header, ItemCard, NoItemsMsg } from "../../UI";
 import axios from "axios";
 import * as helper from "../../helper";
+import CustomizeFeed from "./CustomizeFeed";
 
 LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function Home({ navigation }) {
   const [items, setItems] = useState();
+  const [showFeedScreen, setShowFeedScreen] = useState(false);
+  const [updateFeed, setUpdateFeed] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`${helper.proxy}/listing/filter/feeds`)
-      .then((res) => {
-        setItems(res.data.docs);
-      })
-      .catch((err) => console.error("Homepage listing error: ", err));
-  }, []);
+    if (updateFeed) {
+      axios
+        .get(`${helper.proxy}/listing/filter/feed`)
+        .then((res) => {
+          setItems(res.data.docs);
+          setUpdateFeed(false);
+        })
+        .catch((err) => console.error("Homepage listing error: ", err));
+    }
+  }, [updateFeed]);
+
+  const toggleFeedScreen = (newFeed) => {
+    setShowFeedScreen(!showFeedScreen);
+    if (newFeed) {
+      axios
+        .post(`${helper.proxy}/restrict/update/feed`, { values: newFeed })
+        .then(() => {
+          setUpdateFeed(true);
+        })
+        .catch((err) => {
+          console.error("CustomizeFeed update feed error: ", err);
+        });
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
-      <Header
-        navigation={navigation}
-        title={"Marketplace"}
-        useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
-      />
-      <View style={{ flex: 1 }}>
-        <TouchableOpacity
-          style={styles.sellBtn}
-          onPress={() => {
-            navigation.navigate("Sell", { itemId: false });
-          }}
-        >
-          <Text style={styles.btnText}>+ Sell</Text>
-        </TouchableOpacity>
-        {!items && <NoItemsMsg message={"Loading..."} />}
-        {items && !items.length && (
-          <NoItemsMsg message={"No items at all. Maybe too many filters!"} />
-        )}
-        {items && items.length && (
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
-            {items.map((profile) => {
-              return (
-                <ItemCard
-                  key={profile.items.itemId}
-                  profile={profile}
-                  item={profile.items}
-                  image={profile.items.images[0]}
-                  navigation={navigation}
-                />
-              );
-            })}
-          </KeyboardAwareScrollView>
-        )}
-      </View>
+      {showFeedScreen ? (
+        <CustomizeFeed toggleFeedScreen={toggleFeedScreen} />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <Header
+            navigation={navigation}
+            title={"Marketplace"}
+            toggleFeedScreen={toggleFeedScreen}
+            useRightBtns={["search-outline", "funnel-outline", "notifications-outline"]}
+          />
+          <TouchableOpacity
+            style={styles.sellBtn}
+            onPress={() => {
+              navigation.navigate("Sell", { itemId: false });
+            }}
+          >
+            <Text style={styles.btnText}>+ Sell</Text>
+          </TouchableOpacity>
+          {!items ? <NoItemsMsg message={"Loading..."} /> : null}
+          {items && !items.length ? (
+            <NoItemsMsg message={"No items at all. Check your feed settings!"} />
+          ) : null}
+          {items && items.length ? (
+            <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid>
+              {items.map((profile) => {
+                return (
+                  <ItemCard
+                    key={profile.items.itemId}
+                    profile={profile}
+                    item={profile.items}
+                    image={profile.items.images[0]}
+                    navigation={navigation}
+                  />
+                );
+              })}
+            </KeyboardAwareScrollView>
+          ) : null}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
