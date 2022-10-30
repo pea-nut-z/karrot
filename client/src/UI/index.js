@@ -2,7 +2,6 @@ import Border from "./Border";
 import CircleButtons from "./CircleButtons";
 import FlatButtons from "./FlatButtons";
 import Header from "./Header";
-import HeaderButton from "./HeaderButton";
 import ImageScrollView from "./ImageScrollView";
 import ItemStatusTab from "./ItemStatusTab";
 import ItemCard from "./ItemCard";
@@ -18,7 +17,6 @@ export {
   CircleButtons,
   FlatButtons,
   Header,
-  HeaderButton,
   ImageScrollView,
   ItemStatusTab,
   ItemCard,
