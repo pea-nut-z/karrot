@@ -2,6 +2,7 @@
 // import Signup from "./auth/Signup";
 import Home from "./homepage/Home";
 import Sell from "./homepage/Sell";
+import CustomizeFeed from "./homepage/CustomizeFeed";
 import Categories from "./categories/Categories";
 import Category from "./categories/Category";
 import Chats from "./Chats";
@@ -12,7 +13,6 @@ import Favourites from "./my-account/Favourites";
 import ForSale from "./search/ForSale";
 import User from "./search/User";
 import Filters from "./search/Filters";
-import CustomizeFeed from "./search/CustomizeFeed";
 import Activity from "./notifications/Activity";
 import SearchAlerts from "./notifications/SearchAlerts";
 import Report from "./Report";
