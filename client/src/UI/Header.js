@@ -34,7 +34,7 @@ export default function Header({
     }
   };
 
-  const handleRightBtn = (keyword) => {
+  const handleHeaderBtn = (keyword) => {
     switch (keyword) {
       case "checkmark":
       case "DONE":
@@ -45,9 +45,8 @@ export default function Header({
         return toggleFeedScreen();
       case "notifications":
         return;
-      // navigation.navigate("NotificationsTabs", {
-      //   userId,
-      // });
+      case "share":
+        return;
       case "home":
         return navigation.navigate("Home");
       default:
@@ -74,7 +73,9 @@ export default function Header({
           </TouchableOpacity>
         )}
         {useHomeBtn && (
-          <HeaderButton name={"home-outline"} useWhiteBtns={useWhiteBtns} navigation={navigation} />
+          <TouchableOpacity onPress={() => handleHeaderBtn("home")} style={styles.headerBtnWrapper}>
+            <Ionicons name={"home-outline"} size={25} color={useWhiteBtns ? "#f5f5f5" : "black"} />
+          </TouchableOpacity>
         )}
         {title && <Text style={styles.boldText}>{title}</Text>}
       </View>
@@ -86,12 +87,9 @@ export default function Header({
                 key={name}
                 onPress={() => {
                   const keyword = name.split("-")[0];
-                  keyword === "ellipsis" ? toggleHeaderMenu() : handleRightBtn(keyword);
+                  keyword === "ellipsis" ? toggleHeaderMenu() : handleHeaderBtn(keyword);
                 }}
-                style={{
-                  padding: 5,
-                  marginLeft: 5,
-                }}
+                style={styles.headerBtnWrapper}
               >
                 {name === "DONE" ? (
                   <Text>{name}</Text>
@@ -126,5 +124,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.transparent,
     borderBottomColor: COLORS.secondary,
+  },
+  headerBtnWrapper: {
+    padding: 5,
+    marginLeft: 5,
   },
 });
