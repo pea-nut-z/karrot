@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: COLORS.secondary,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: COLORS.black,
   },
 });
